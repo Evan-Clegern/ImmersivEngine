@@ -6,7 +6,7 @@ Immersive Environment-Centric Artificial Intelligence (IECAI) is a prototype pro
 ### Introduction: _Target_
 > IECAI aims to make AI more intelligent, immersive, realistic and smooth. No more horses swimming mid-air.
 ### Introduction: _Developers_
-Currently, IECAI is being developed only by Evan Clegern in part for a final project with a Full IT/Programming course.
+- Head Dev: Evan Clegern; evanclegern.work@gmail.com
 
 ## Operation
 AI is built with multiple factors including: Risk, Self-Preservation, Route Planning, Basic Coordination for Squads, Threat Mitigation and Full Terrain Usage. The AI is built in the following structure:
