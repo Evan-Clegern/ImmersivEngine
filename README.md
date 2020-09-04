@@ -5,7 +5,7 @@ Immersive Environment-Centric Artificial Intelligence (IECAI) is a prototype pro
 Currently, it is still heavily in development, but a basic working version should be ready around November of 2020.
 
 ### Introduction: _Target_
-> IECAI aims to make AI more intelligent and smooth.
+> IECAI aims to make AI more intelligent, immersive, realistic and smooth. No more horses swimming mid-air.
 
 ## Operation
 AI is built with multiple factors including: Risk, Self-Preservation, Route Planning, Basic Coordination for Squads, Threat Mitigation and Full Terrain Usage. The AI is built in the following structure:
