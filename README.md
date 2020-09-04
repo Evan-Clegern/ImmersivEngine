@@ -1,4 +1,4 @@
-# iecai-project
+# IECAI-project
 PROTECTED UNDER A-GPL LICENSE.
 ## Introduction
 Immersive Environment-Centric Artificial Intelligence (IECAI) is a prototype project for games, written in C++, which aims to make NPC AI more Immersive and Realistic. The project began in August 2020, the repo in September and the first release likely in November. It uses a simple file to interface with a game engine (implements.h), which gives IECAI the base functions to operate with the NPCs in the game engine. These functions are just short placeholders in C++, but all of the IECAI Runtime operates off of them. 
