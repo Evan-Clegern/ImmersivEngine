@@ -7,6 +7,7 @@ REVISION: 4
 #define __IECAI_BASE_STRUCTURE__
 #include <vector>
 #include <string>
+#include <locale>
 //Windows Compile Options
 #ifdef __WIN32 || __WIN64 || _WIN32 || _WIN64
 	#include <windows.h>
@@ -39,7 +40,19 @@ namespace base {
 		public:
 			bool updateInput(std::string _in) {
 				if (self.base->expectNumber) {
-					//TODO: Test if string is a number
+					for (int i=0;i<_in.length();i++) {
+						std::string temp;
+						if (isdigit(_in.at(i)) or (_in.at(i) == '.')) {
+							temp += _in.at(i);
+						}
+					}
+					if (temp.length() > 0) {
+						self.input = temp;
+						self.valid = true;
+					} else {
+						self.input = "Err";
+						self.valid = false;
+					}
 				} else if (self.base->expectTF) {
 					std::string d = toupper(_in);
 					if ((d == "Y") or (d == "TRUE") or (d == "YES") or (d == "1")) {
@@ -52,8 +65,6 @@ namespace base {
 						self.input = "Wrong type";
 						self.valid = false;
 					}
-				} else if (base->expectReference) {
-					//TODO: Test if string is a reference
 				} else {
 					self.input = _in;
 					self.valid = true;
