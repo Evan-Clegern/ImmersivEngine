@@ -38,12 +38,19 @@ namespace base {
 			std::string input;
 			bool valid;
 		public:
+			value(value_layout& _base) : base(_base) {}
 			bool updateInput(std::string _in) {
 				if (self.base->expectNumber) {
 					for (int i=0;i<_in.length();i++) {
 						std::string temp;
-						if (isdigit(_in.at(i)) or (_in.at(i) == '.')) {
+						bool nodec = true;
+						if (isdigit(_in.at(i))) {
 							temp += _in.at(i);
+						}
+						if (nodec and (_in.at(i) == '.')) {
+							temp += '.';
+							nodec = false;
+							//Prevents it from registering more than one decimal point
 						}
 					}
 					if (temp.length() > 0) {
@@ -72,6 +79,43 @@ namespace base {
 				return self.valid;
 			}
 		};
+		struct global_object_options {
+			int numid, values;
+			bool for_npc, for_supply, for_vehicle, for_weapon, for_navigation;
+		};
+		global_object_options newOpt(int _id, int _vals, bool _n, bool _s, bool _v, bool _w, bool _nav) {
+			global_object_options value;
+			value.numid = _id;
+			value.values = _vals;
+			value.for_npc = _n;
+			value.for_supply = _s;
+			value.for_vehicle = _v;
+			value.for_navigation = _nav;
+			return value;
+		}
 	}
-	
+	class Object_Class {
+		//backup-only values
+		bool locked;
+		std::vector<object_components::value_base&> organized_bases;
+		std::vector<std::string> organized_defaults;
+	protected:
+		std::vector<object_components::value> organized_values;
+		object_components::global_object_options config;
+	public:
+		Object_Class(std::vector<object_components::value> _vals, std::vector<std::string> _defVals, \
+			     bool _npc, bool _supply, bool _vhcl, bool _wep, bool _nav, int _id) {
+			organized_defaults = _defVals;
+			organized_values = value;
+			std::vector<value_base&> temp;
+			int d = _defVals.size();
+			for (int i=0;i<d - 1;i++) {
+				temp.push_back(_defVals.at(i).base);
+			}
+			organized_bases = temp;
+			locked = false;
+			const object_components::global_object_options OPTS = object_components::newOpt(_id,d,_npc,_supply,_vhcl,_wep,_nav);
+			config = OPTS;
+		}
+	};
 }
