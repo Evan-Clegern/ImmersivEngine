@@ -79,18 +79,40 @@ namespace base {
 				return self.valid;
 			}
 		};
-		struct global_object_options {
-			int numid, values;
-			bool for_npc, for_supply, for_vehicle, for_weapon, for_navigation;
+		struct object_flag {
+			bool state;
+			std::string title, hint;
+			void toggle() {
+				if (state) {
+					state=false;
+				} else {
+					state=true;
+				}
+			}
+			object_flag(std::string _title, std::string _hint) : title(_title), hint(_hint) {
+				state = false;
+			}
+			object_flag(std::string _title, std::string _hint, bool _state) : title(_title), hint(_hint) {
+				state = _state;
+			}
 		};
-		global_object_options newOpt(int _id, int _vals, bool _n, bool _s, bool _v, bool _w, bool _nav) {
+		struct global_object_options {
+			int values;
+			object_flag for_npc, for_supply, for_vehicle, for_weapon, for_navigation;
+		};
+		global_object_options newOpt(int _vals, bool _n, bool _s, bool _v, bool _w, bool _nav) {
 			global_object_options value;
-			value.numid = _id;
 			value.values = _vals;
-			value.for_npc = _n;
-			value.for_supply = _s;
-			value.for_vehicle = _v;
-			value.for_navigation = _nav;
+			object_flag npc("For NPC","Object is a base class for an NPC class.",_n);
+			value.for_npc = npc;
+			object_flag supply("Supply Object","Object is a base class for supplies.",_s);
+			value.for_supply = supply;
+			object_flag vehic("Vehicle","Object is a base class for a vehicle.",_v);
+			value.for_vehicle = vehic;
+			object_flag navig("Navigational","Object is a base class for navigation hints.",_nav);
+			value.for_navigation = navig;
+			object_flag wep("For Weapon","Object is a base class for a weapon.",_w);
+			value.for_weapon = wep;
 			return value;
 		}
 	}
@@ -102,6 +124,8 @@ namespace base {
 	protected:
 		std::vector<object_components::value> organized_values;
 		object_components::global_object_options config;
+		std::vector<object_components::object_flag> organizedOtherFlags;
+		std::string classname;
 	public:
 		Object_Class(std::vector<object_components::value> _vals, std::vector<std::string> _defVals, \
 			     bool _npc, bool _supply, bool _vhcl, bool _wep, bool _nav, int _id) {
@@ -117,5 +141,17 @@ namespace base {
 			const object_components::global_object_options OPTS = object_components::newOpt(_id,d,_npc,_supply,_vhcl,_wep,_nav);
 			config = OPTS;
 		}
+		//Fetch, set and operate functions
+	};
+	class Object {
+		bool locked;
+		std::vector<std::string> valueStoreList;
+		std::vector<bool> flagStoreList;
+	protected:
+		const Object_Class& parent;
+		std::string name, hint, classname;
+		unsigned short int classTypeID;
+	public:
+		//CONSTRUCTOR HERE
 	};
 }
