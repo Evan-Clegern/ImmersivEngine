@@ -126,6 +126,8 @@ namespace base {
 		object_components::global_object_options config;
 		std::vector<object_components::object_flag> organizedOtherFlags;
 		std::string classname;
+		unsigned short int amountUsed;
+		std::vector<std::string> childrenNames;
 	public:
 		Object_Class(std::vector<object_components::value> _vals, std::vector<std::string> _defVals, \
 			     bool _npc, bool _supply, bool _vhcl, bool _wep, bool _nav, int _id) {
@@ -141,7 +143,6 @@ namespace base {
 			const object_components::global_object_options OPTS = object_components::newOpt(_id,d,_npc,_supply,_vhcl,_wep,_nav);
 			config = OPTS;
 		}
-		//Fetch, set and operate functions
 		void toggleLock() {
 			if (self.locked) {
 				locked = false;
@@ -149,18 +150,55 @@ namespace base {
 				locked = true;
 			}
 		}
+		unsigned short int registerNewChild(std::string name) {
+			if (!self.locked) {
+				self.amountUsed++;
+				self.children.push_back(name);
+				return self.amountUsed;
+			} else {
+				return 0;
+			}
+		}
+		bool deregisterChild(std::string name) {
+			if (self.locked) {
+				return false;
+			} else {
+				try {
+					self.amountUsed--;
+					for (int i=0;i<amountUsed;i++) {
+						if (self.children[i] == name) {
+							self.children.erase(self.children.begin()+i);
+						}
+					}
+				} catch {
+					return false;
+				}
+				return true;
+			}
+		}
 	};
 	class Object {
 		bool locked;
-		std::vector<std::string> internalData;
-		std::vector<object_components::object_flag> flagStoreList;
+		std::vector<object_components::object_flag> internalFlags;
 	protected:
 		const Object_Class& parent;
 		std::string name, hint, classname;
 		std::vector<std::string> setValuesOrd;
 		unsigned short int classTypeID;
+		unsigned int listID;
 	public:
 		//CONSTRUCTOR HERE
-		Object(
+		Object(Object_Class& _class, std::string _name, std::string _hint, std::vector<std::string> valueList, unsigned int _listLocator) {
+			classname = _class->classname; //Fetch the actual classname from the base class
+			name=_name;
+			hint=_hint;
+			setValuesOrd=valueList;
+			parent=_class;
+			locked=false;
+			classTypeID = parent->registerNewChild(_name);
+			listID=_listLocator;
+		}
 	};
+	//Developer note: KEEP A VECTOR OF ADDRESSES TO THESE OBJECTS.
+	//This will help us keep a full running list of references.
 }
