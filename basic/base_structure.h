@@ -176,6 +176,9 @@ namespace base {
 				return true;
 			}
 		}
+		bool updateValueInternal(int addr, string val) {
+			
+		}
 	};
 	class Object {
 		bool locked;
@@ -197,6 +200,10 @@ namespace base {
 			locked=false;
 			classTypeID = parent->registerNewChild(_name);
 			listID=_listLocator;
+		}
+		~Object() {
+			parent->deregisterChild(self.name);
+			//deleteObjlist(listID);
 		}
 	};
 	//Developer note: KEEP A VECTOR OF ADDRESSES TO THESE OBJECTS.
