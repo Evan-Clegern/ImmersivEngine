@@ -142,16 +142,25 @@ namespace base {
 			config = OPTS;
 		}
 		//Fetch, set and operate functions
+		void toggleLock() {
+			if (self.locked) {
+				locked = false;
+			} else {
+				locked = true;
+			}
+		}
 	};
 	class Object {
 		bool locked;
-		std::vector<std::string> valueStoreList;
-		std::vector<bool> flagStoreList;
+		std::vector<std::string> internalData;
+		std::vector<object_components::object_flag> flagStoreList;
 	protected:
 		const Object_Class& parent;
 		std::string name, hint, classname;
+		std::vector<std::string> setValuesOrd;
 		unsigned short int classTypeID;
 	public:
 		//CONSTRUCTOR HERE
+		Object(
 	};
 }
