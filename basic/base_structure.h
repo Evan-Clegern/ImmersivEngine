@@ -176,19 +176,39 @@ namespace base {
 				return true;
 			}
 		}
-		bool updateValueInternal(int addr, string val) {
-			
+		void resetDefault() {
+			for (int i = 0; i < self.organized_bases.size() - 1; i++) {
+				object_components::value t;
+				t.base = self.organized_bases.at(i);
+				t.updateInput(self.organized_defaults.at(i));
+			}
+		}
+		bool updateValueData(int _where, std::string _new, bool name) { // T = change name, F = change default
+			if (!self.locked) {
+				if (name) {
+					try {
+						self.organized_bases.at(_where).title = _new;
+					} catch {
+						return false;
+					}
+					return true;
+				} else {
+					return self.organized_values.at(_where).updateInput(_new);
+				}
+			} else {
+				return false;
+			}
 		}
 	};
 	class Object {
 		bool locked;
-		std::vector<object_components::object_flag> internalFlags;
 	protected:
 		const Object_Class& parent;
 		std::string name, hint, classname;
 		std::vector<std::string> setValuesOrd;
 		unsigned short int classTypeID;
 		unsigned int listID;
+		point midpoint;
 	public:
 		//CONSTRUCTOR HERE
 		Object(Object_Class& _class, std::string _name, std::string _hint, std::vector<std::string> valueList, unsigned int _listLocator) {
@@ -201,9 +221,26 @@ namespace base {
 			classTypeID = parent->registerNewChild(_name);
 			listID=_listLocator;
 		}
+		bool updatePosition(point _goto) {
+			if (self.locked) {
+				return false;
+			}
+			self.midpoint = _goto;
+			//Validation?
+			return true;
+		}
+		bool toggleLock() {
+			if (locked) {locked=false;} else {locked=true;}
+			return locked;
+		}
 		~Object() {
-			parent->deregisterChild(self.name);
+			self.parent->deregisterChild(self.name);
 			//deleteObjlist(listID);
+			delete self.name&;
+			delete self.hint&;
+			delete self.classname&;
+			delete self.classTypeID&;
+			delete self.listID&;
 		}
 	};
 	//Developer note: KEEP A VECTOR OF ADDRESSES TO THESE OBJECTS.
