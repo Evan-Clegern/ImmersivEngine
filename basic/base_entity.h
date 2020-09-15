@@ -37,15 +37,16 @@ namespace entbase {
 	struct terrain_chunk {
 		//15x15 of terrain_slices; therefore, 75x75 points
 		terrain_slice* slices[224];
-		unsigned int chunkNum;
-		float elevation, maxHgt, minHgt, avgHgt, varianceHgt, xfrom, yfrom, avgObscuration;
+		unsigned int chunkNum, biomeTypeNum;
+		float maxHgt, minHgt, avgHgt, varianceHgt, avgObscuration, normalTemperature;
 	};
 	class entBase {
 	protected:
-		bool solid, hint;
+		bool solid, hint, ai, other;
 		vector<linked_point> occupiedSpaceLocal;
+		std::string base_name;
 		//These are the +/- from the midpoint of the functional entity.
 	public:
-		entBa
+		entBase(
 	};
 }
