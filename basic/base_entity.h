@@ -44,14 +44,30 @@ namespace entbase {
 	protected:
 		bool solid, hint, ai, model;
 		std::vector<linked_point> occupiedSpaceLocal;
+		float volume;
 		std::string base_name;
 		//These are the +/- from the midpoint of the functional entity.
 	public:
+		std::vector<int&> addressChildren;
 		entBase(bool _s, bool _h, bool _ai, bool _m, std::string _entname, std::vector<linked_point> pnt) : solid(_s), hint(_h), ai(_ai), model(_m) {
 			base_name = _entname;
 			for (int i = 0; i < pnt.size() - 1; i++) {
 				occupiedSpaceLocal.push_back(pnt.at(i));
 			}
 		}
+	};
+	class entity {
+	protected:
+		entBase& base;
+		std::vector<linked_point> occupied_space;
+		point position;
+		int baseID;
+	public:
+		int registerSelf() {
+			int& ref = (int&)this;
+			entBase.addressChildren.push_back(ref);
+			return entBase.addressChildren.length() - 1;
+		}
+		
 	};
 }
