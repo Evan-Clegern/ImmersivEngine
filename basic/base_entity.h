@@ -3,12 +3,12 @@ FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
 VERSION: 7
-HEAD DEVELOPER NOTE: You may notice some similarities to Source-my first mapping project's engine
 */
 #define __IECAI_BASE_ENTITY__
 #include <vector>
 #include <string>
 namespace entbase {
+	enum axi {x,y,z};
 	struct point {
 		float posX,posY,posZ;
 		point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
@@ -18,7 +18,6 @@ namespace entbase {
 			return temp;
 		}
 	};
-	
 	point p(float x, float y, float z) {
 		point bob(x, y, x);
 		return bob;
@@ -27,11 +26,6 @@ namespace entbase {
 		//More or less enables us to have multi-dimensional and defined connections
 		point& base;
 		std::vector<point&> linkedTo;
-	};
-	struct brush_world {
-		vector<linked_point> points;
-		point midpoint;
-		bool solid, swimmable, flyable, destroyable;
 	};
 	struct terrain_slice {
 		//This needs to be a 5x5 square, where Z has the variance.
@@ -48,7 +42,7 @@ namespace entbase {
 	};
 	class entBase {
 	protected:
-		bool solid, hint, ai, model;
+		bool solid, hint, ai, model, control, other;
 		std::vector<linked_point> occupiedSpaceLocal;
 		float volume;
 		std::string base_name;
