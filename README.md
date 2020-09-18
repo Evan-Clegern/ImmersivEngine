@@ -22,3 +22,6 @@ The IECAI NPCs have multiple systems in the _NPC Class_ or _NPC Object_ to contr
   - **Relations** (flexible modifiers between classess or objects that define extra behaviors)
   - **Emotions** (pseudoroutines which convey extra facial movements and which modify behaviors)
   - **Hints** (point that modifies the behavior and emotion of any NPCs that have it within their look range)
+
+## Contact Us!
+You can email me at evanclegern.work@gmail.com, or join the Slack channel at iecai.slack.com
