@@ -12,7 +12,13 @@ namespace entbase {
 	struct point {
 		float posX,posY,posZ;
 		point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
+		inline point operator+(point a, point b) {
+			float pX,pY,pZ = a.posX + b.posX,a.posY+b.posY,a.posZ+b.posZ;
+			point temp(pX,pY,pZ);
+			return temp;
+		}
 	};
+	
 	point p(float x, float y, float z) {
 		point bob(x, y, x);
 		return bob;
@@ -68,6 +74,22 @@ namespace entbase {
 			entBase.addressChildren.push_back(ref);
 			return entBase.addressChildren.length() - 1;
 		}
-		
+		entity(entBase& parent, point location) {
+			std::vector<linked_point> d = parent->occupiedSpaceLocal;
+			for (int i = 0; i < d.length() - 1; i++) {
+				this.occupied_space.push_back(d.at(i) + location);
+			}
+			this.position = location;
+			this.base = parent;
+			registerSelf();
+		}
+		~entity() {
+			this.occupied_space.erase(this.occupied_space.begin(), this.occupied_space.end());
+			this.base->addressChildren.erase(this.base->addressChildren.begin() + this.baseID);
+			delete occupied_space;
+			base=NULL;
+			delete baseID;
+			delete position;
+		}
 	};
 }
