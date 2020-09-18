@@ -2,7 +2,7 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 2
+VERSION: 7
 HEAD DEVELOPER NOTE: You may notice some similarities to Source-my first mapping project's engine
 */
 #define __IECAI_BASE_ENTITY__
