@@ -16,3 +16,6 @@ vector<entity&> findSurroundingEntities(point at, int range) {}
 void setEngineOValue(entity& obj, string where, string value) {}
 string getEngineOValue(entity& obj, string where) {}
 void triggerEvent(string what, string data) {}
+void updateNPCValue(entity& inflictor, entity& victim, string what, string data) {}
+string getNPCValue(entity& target, string what) {}
+void log(string text) {}
