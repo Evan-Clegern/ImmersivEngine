@@ -7,21 +7,21 @@ VERSION: 9
 #define __IECAI_BASE_ENTITY__
 #include <vector>
 #include <string>
-namespace entbase {
-	enum axi {x,y,z};
-	struct point {
-		float posX,posY,posZ;
-		point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
-		inline point operator+(point a, point b) {
-			float pX,pY,pZ = a.posX + b.posX,a.posY+b.posY,a.posZ+b.posZ;
-			point temp(pX,pY,pZ);
-			return temp;
-		}
-	};
-	point p(float x, float y, float z) {
-		point bob(x, y, x);
-		return bob;
+enum axi {x,y,z};
+struct point {
+	float posX,posY,posZ;
+	point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
+	inline point operator+(point a, point b) {
+		float pX,pY,pZ = a.posX + b.posX,a.posY+b.posY,a.posZ+b.posZ;
+		point temp(pX,pY,pZ);
+		return temp;
 	}
+};
+point p(float x, float y, float z) {
+	point bob(x, y, x);
+	return bob;
+}
+namespace entbase {
 	struct linked_point { 
 		//More or less enables us to have multi-dimensional and defined connections
 		point& base;
