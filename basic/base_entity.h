@@ -27,16 +27,17 @@ namespace entbase {
 		point& base;
 		std::vector<point&> linkedTo;
 	};
+	//Very simple groups; put here so they aren't cluttering other header files
 	struct terrain_slice {
 		//This needs to be a 5x5 square, where Z has the variance.
-		linked_point* points[24];
+		linked_point points[24];
 		unsigned short int chunkChildID, obscuration;
 		//Obscuration is 0-100; helps with visibilty calculations
 		float avgHgt, maxHgt, minHgt, variance;
 	};
 	struct terrain_chunk {
 		//15x15 of terrain_slices; therefore, 75x75 points
-		terrain_slice* slices[224];
+		terrain_slice slices[224];
 		unsigned int chunkNum, biomeTypeNum;
 		float maxHgt, minHgt, avgHgt, varianceHgt, avgObscuration, normalTemperature;
 	};
@@ -75,7 +76,7 @@ namespace entbase {
 	protected:
 		entBase& base;
 		std::vector<linked_point> occupied_space;
-		point position;
+		point& position;
 		std::string name;
 		int baseID, engineID;
 	public:
@@ -85,7 +86,7 @@ namespace entbase {
 			this.base->addressChildren.push_back(ref);
 			return entBase.addressChildren.length() - 1;
 		}
-		entity(entBase& parent, point location, std::string title, std::vector<std::string> list) : name(title) {
+		entity(entBase& parent, point& location, std::string title, std::vector<std::string> list) : name(title) {
 			std::vector<linked_point> d = parent->occupiedSpaceLocal;
 			for (int i = 0; i < d.length() - 1; i++) {
 				occupied_space.push_back(d.at(i) + location);
@@ -103,7 +104,6 @@ namespace entbase {
 			delete occupied_space;
 			base=NULL;
 			delete baseID;
-			delete position;
 		}
 	};
 }
