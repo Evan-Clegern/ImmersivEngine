@@ -6,7 +6,7 @@ REVISION: 4
 */
 #define __IECAI_ENGINE_IMPLEMENT__
 #include "base_entity.h"
-using namespace base; //Reference the Base Structure Provider
+using namespace entbase;
 using namespace std;
 //I would recommend using custom properties with each item to provide for the 'entity&' data point.
 namespace npc_actions {
