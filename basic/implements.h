@@ -17,8 +17,6 @@ namespace npc_actions {
     void setEngineOValue(entity& obj, string where, string value) {}
     string getEngineOValue(entity& obj, string where) {}
     void triggerEvent(string what, string data) {}
-    void updateNPCValue(entity& inflictor, entity& victim, string what, string data) {}
-    string getNPCValue(entity& target, string what) {}
     void log(string text) {}
     bool waitMs(int milliseconds) {}
     //Engines have timing; we need this to return 'true' once the time has elapsed. Simple.
