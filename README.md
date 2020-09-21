@@ -25,3 +25,6 @@ The IECAI NPCs have multiple systems in the _NPC Class_ or _NPC Object_ to contr
 
 ## Contact Us!
 You can email me at evanclegern.work@gmail.com, or join the Slack channel at iecai.slack.com
+
+## Using IECAI in a game project
+As descirbed by the GNU Affero Public License, we need: License and Copyright Notice, a statement of any changes, source disclosure and the license being present. Other than that, use it freely with your game project. Basically, just give us credit, say what you did and don't mark it as your own.
