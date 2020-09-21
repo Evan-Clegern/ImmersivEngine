@@ -20,4 +20,6 @@ namespace npc_actions {
     void updateNPCValue(entity& inflictor, entity& victim, string what, string data) {}
     string getNPCValue(entity& target, string what) {}
     void log(string text) {}
+    bool waitMs(int milliseconds) {}
+    //Engines have timing; we need this to return 'true' once the time has elapsed. Simple.
 }
