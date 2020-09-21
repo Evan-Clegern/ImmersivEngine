@@ -48,7 +48,8 @@ namespace entbase {
 	};
 	class entBase {
 	protected:
-		bool solid, hint, ai, model, control, other;
+		bool solid, hint, npc, model, control, other;
+		int npcclassID; //Set to -1 if N/A, set to &(NPC_class) if applicabale
 		std::vector<linked_point> occupiedSpaceLocal;
 		float volume;
 		std::string base_name;
@@ -78,7 +79,7 @@ namespace entbase {
 		std::vector<linked_point> occupied_space;
 		point& position;
 		std::string name;
-		int baseID, engineID;
+		int baseID, engineID, linkedNPC; //Set linkedNPC to -1 if not applicable, set to &(npc) if applicable!
 	public:
 		std::vector<std::string> data_list; //The 'curValue' for each of the base's required items
 		int registerSelf() {
