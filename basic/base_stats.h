@@ -2,12 +2,12 @@
 FILE: base_stats.h
 TITLE: Base NPC Stat System Provider
 PURPOSE: Provide bases for health and other statistics involved in NPC actions
-REVISION: 3
+REVISION: 4
 */
 //Note: all distance-like stats are in POINTS.
 namespace statSys {
 	struct basicstats {
-		float health, stamina, speed, jumpHeight, cleverness, riskiness, sightRange, moodLevel, sleepiness;
+		float health, stamina, speed, jumpHeight, cleverness, riskiness, sightRange, moodLevel, sleepiness, accuracy;
 		//Cleverness, SighRange and Riskiness are CRITICAL for NPC behavior algorithms.
 		bool angry, sad, inCombat, scared, emboldened;
 		//These booleans, and the 'moodLevel' and 'sleepiness,' affect other algorithms and emotive behaviors.
