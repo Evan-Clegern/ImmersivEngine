@@ -15,6 +15,17 @@ struct NPC_hitchunk {
 	linked_point center;
 	vector<linked_point> frame;
 };
+enum animTypes {idle, walk, run, attack, hide, use, talk, special};
+struct NPC_animation { //Backend for 'setAnimation(entity& obj, string what)'
+	string anmName;
+	animTypes what;
+	int animTypeID;
+};
+struct NPC_config {
+	//Full-blown config for NPCs 
+	bool factionless, betrayable, agile, cautiousRelations;
+	int factionID, angleRandMax, defensiveness;
+};
 class NPC_class { 
 protected:
 	entBase& sister; //The entBase class has a field to link to the address of this NPC_class
@@ -22,6 +33,6 @@ protected:
 	vector<NPC_hitchunk> hitAreas;
 	advancedstats default_stats; //Typically, only the basicstats are needed, but use it anyway (useAdvanced below switches what to use)
 	bool useAdvanced;
-public:
-
+	NPC_config defaultData;
+	vector<NPC_animation> availableAnims;
 };
