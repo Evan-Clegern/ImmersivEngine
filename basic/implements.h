@@ -11,13 +11,17 @@ using namespace std;
 //I would recommend using custom properties with each item to provide for the 'entity&' data point.
 namespace npc_actions {
     void updateMidpoint(entity& obj) {}
+    void rotate(entity& obj, point rot) {}
+    point getRotation(entity& obj) {}
     void setAnimation(entity& obj, string what) {}
     terrain_chunk getSurroundingTerrain(point at) {}
     vector<entity&> findSurroundingEntities(point at, int range) {}
+}
+namespace eng_actions {
+    bool waitMs(int milliseconds) {}
+    //Engines have timing; we need this to return 'true' once the time has elapsed. Simple.
     void setEngineOValue(entity& obj, string where, string value) {}
     string getEngineOValue(entity& obj, string where) {}
     void triggerEvent(string what, string data) {}
-    void log(string text) {}
-    bool waitMs(int milliseconds) {}
-    //Engines have timing; we need this to return 'true' once the time has elapsed. Simple.
+    void log(string text) {}   
 }
