@@ -107,5 +107,9 @@ namespace entbase {
 			base=NULL;
 			delete baseID;
 		}
+		void updatePosition(point& pos, point& rot) {
+			this.position = pos;
+			this.effRotation = rot;
+		}
 	};
 }
