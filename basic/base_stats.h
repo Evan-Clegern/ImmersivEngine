@@ -8,9 +8,7 @@ REVISION: 4
 namespace statSys {
 	struct basicstats {
 		float health, stamina, speed, jumpHeight, cleverness, riskiness, sightRange, moodLevel, sleepiness, accuracy;
-		//Cleverness, SighRange and Riskiness are CRITICAL for NPC behavior algorithms.
-		bool angry, sad, inCombat, scared, emboldened;
-		//These booleans, and the 'moodLevel' and 'sleepiness,' affect other algorithms and emotive behaviors.
+		//Cleverness, SightRange and Riskiness are CRITICAL for NPC behavior algorithms.
 		int typeResist[11]; //Resistances to specific damage types, simplified to an integer.
 	};
 	struct advancedStats {
