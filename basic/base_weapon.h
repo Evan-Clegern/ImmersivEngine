@@ -17,7 +17,7 @@ namespace weaponry {
 		dmg toInflict;
 		point& offsetDistance;
 		//projectile really means the bullets/arrows/etc to spawn, at a velocity, when fired.
-		int clipSize, maxAmmo, projectilePerShot;
+		int clipSize, maxAmmo, projectilePerShot, maxRange; //maxRange must be low for a melee.
 		float velocity, reloadTime, projectileDeviationMax, projectileDeviationMin, zKickOnShot;
 		bool noFalloff, noGravity, silentToNPC;
 	};
