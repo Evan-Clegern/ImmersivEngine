@@ -16,6 +16,8 @@ namespace npc_actions {
     void setAnimation(entity& obj, string what) {}
     terrain_chunk getSurroundingTerrain(point at) {}
     vector<entity&> findSurroundingEntities(point at, int range) {}
+    void storeWep(entity& weilder, entity& what) {}
+    void takeOutWep(entity& weilder, entity& what) {}
 }
 namespace eng_actions {
     bool waitMs(int milliseconds) {}
@@ -23,5 +25,7 @@ namespace eng_actions {
     void setEngineOValue(entity& obj, string where, string value) {}
     string getEngineOValue(entity& obj, string where) {}
     void triggerEvent(string what, string data) {}
-    void log(string text) {}   
+    void log(string text) {}
+    void hide(entity& obj) {}
+    void show(entity& obj) {}
 }
