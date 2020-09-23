@@ -77,7 +77,7 @@ namespace entbase {
 	protected:
 		entBase& base;
 		std::vector<linked_point> occupied_space;
-		point& position;
+		point& position, effRotation;
 		std::string name;
 		int baseID, engineID, linkedNPC; //Set linkedNPC to -1 if not applicable, set to &(npc) if applicable!
 	public:
@@ -93,6 +93,7 @@ namespace entbase {
 				occupied_space.push_back(d.at(i) + location);
 			}
 			position = location;
+			effRotation = &(p(0.0,0.0,0.0));
 			base = parent;
 			registerSelf();
 			for (int i = 0; i < list.length() - 1; i++) {
