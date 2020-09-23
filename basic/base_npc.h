@@ -15,14 +15,14 @@ struct NPC_hitchunk {
 	linked_point center;
 	vector<linked_point> frame;
 };
-enum animTypes {idle, walk, run, attack, hide, use, talk, special};
+enum animTypes {idle, walk, run, attack, hide, use, talk, observe, death, oother};
 struct NPC_animation { //Backend for 'setAnimation(entity& obj, string what)'
 	string anmName;
 	animTypes what;
 	int animTypeID;
 };
 struct NPC_config {
-	//Full-blown config for NPCs 
+	//Full config for NPCs; with stats, absolutely critical for behavior algorithms
 	bool factionless, betrayable, agile, cautiousRelations;
 	int factionID, angleRandMax, defensiveness;
 };
