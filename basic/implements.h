@@ -2,7 +2,7 @@
 FILE: implements.h
 TITLE: Base Engine-IECAI Implentations
 PURPOSE: Provide 'hollow functions' to interface with target game engine.
-REVISION: 4
+REVISION: 5
 */
 #define __IECAI_ENGINE_IMPLEMENT__
 #include "base_entity.h"
@@ -18,6 +18,9 @@ namespace npc_actions {
     vector<entity&> findSurroundingEntities(point at, int range) {}
     void storeWep(entity& weilder, entity& what) {}
     void takeOutWep(entity& weilder, entity& what) {}
+    void updateStat(entity& npc, string what, float new) {}
+    float getStat(entity& npc, string what) {}
+    void kill(entity& npc, entity& inflictor) {}
 }
 namespace eng_actions {
     bool waitMs(int milliseconds) {}
