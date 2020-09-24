@@ -66,9 +66,10 @@ NPC_action weaponSwap(bool isInventory, bool dropCurrent, bool reloadFirst, NPC_
 }
 struct NPC_config {
 	//Full config for NPCs; with stats, absolutely critical for behavior algorithms. Most of these are constant (ones that arent have a NC)
-	bool factionless, betrayable, NCagile, cautiousRelations, blankEmoteOnly, noMove, heavyDuty, NCtactical, ambusher;
+	bool factionless, betrayable, NCagile, cautiousRelations, blankEmoteOnly, noMove, heavyDuty, NCtactical, ambusher, NCignoreCurios, NCoblivious;
 	//tactical NPCs aim 15% worse, but, they help coordinate squadmates and/or make plans for themselves for ambush or escape
-	bool NChasWeapon, distractable, observant, skiddish, inaccurateFirstAtks, forceSquads, NCpeaceful, NCalone, constSquadMode;
+	//oblivious NPCs pay no attention to hazards in the world around them (fire, enemies, etc.)
+	bool NChasWeapon, distractable, observant, skiddish, inaccurateFirstAtks, forceSquads, NCpeaceful, NCalone, constSquadMode, noDescalateCombat;
 	int NCfactionID, angleAimMax, NCdefensiveness, msSpotTime, storableWeapons, maxQueueSize;
 	emoteTypes emotion;
 	weapon& equippedWeapon; //Put to some random thing if (hasWeapon == false)
@@ -106,6 +107,12 @@ public:
 		}
 	}
 };
+enum NPC_relations {hate, dislike, neutral, like, love};
+struct NPC_relationship {
+	NPC_relations level;
+	NPC_class& from, to;
+	bool reciprocal, fearrelation, actLikeSquadmates;
+};
 class NPC {
 	vector<NPC_action> actionQueue;
 	advancedstats personal_stats;
@@ -119,6 +126,7 @@ protected:
 	NPC_config config;
 	terrain_slice terrainPos;
 	point truePos;
+	vector<NPC_relationship> relations;
 public:
 	bool queueAction(NPC_action new) {
 		if (this.actionQueue.size() > this.config.maxQueueSize) {
