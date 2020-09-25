@@ -74,6 +74,41 @@ struct NPC_config {
 	emoteTypes emotion;
 	weapon& equippedWeapon; //Put to some random thing if (hasWeapon == false)
 };
+//Has the 'unarmed' and "blank" animations separate, and then a vector of special ones
+struct NPC_anim_array {
+	NPC_animation idleUn, walkUn, runUn, hideUn, useUn, talkUn, observeUn, deathUn, turnWUn, turnSUn, getHitUn, fleeUn;
+	vector<NPC_animation> other_anim;
+	int indexFormsOf(emoteType emotion, animTypes type, squadMode squad, weapon_class& wep, bool noWep, bool noSquad, bool wepPointDown) {
+		//Finds how many animations meet that specification (not including the unarmed, blank ones)
+		int temp = 0;
+		for (int i = 0; i < other_anim.size() - 1; i++) {
+			NPC_animation& ju = &(other_anim.at(i));
+			bool weap, squad, applicable = ju->forWeapon, ju->squadApplicable, false;
+			if ((ju->whileWeilding == wep) and (noWep != weap) and (wepPointDown == ju->weaponPntDown)) {
+				applicable = true;
+			} else {
+				applicable = false;
+			}
+			if ((ju->sType == type) and (noSquad != squad)) {
+				applicable = true;
+			} else {
+				applicable = false;
+			}
+			if (ju->aType == type) {
+				applicable = true;
+			} else {
+				applicable = false;
+			}
+			if (ju->eType == emotion) {
+				applicable = true;
+			} else {
+				applicable = false;
+			}
+			if (applicable) {temp++;}
+		}
+		return temp;
+	}
+};
 class NPC_class { 
 protected:
 	entBase& sister; //The entBase class has a field to link to the address of this NPC_class
@@ -82,7 +117,7 @@ protected:
 	advancedstats default_stats; //Typically, only the basicstats are needed, but use it anyway (useAdvanced below switches what to use)
 	bool useAdvanced;
 	NPC_config defaultData;
-	vector<NPC_animation> availableAnims;
+	NPC_anim_array availableAnims;
 public:
 	NPC_class(entBase& _s, string name, string desc, string pref, vector<NPC_hitchunk> hitarea, vector<NPC_animation> anims, NPC_config config, advancedstats stats) {
 		for (int i = 0; i < hitarea.size() - 1; i++) {
@@ -115,13 +150,13 @@ struct NPC_relationship {
 };
 class NPC {
 	vector<NPC_action> actionQueue;
-	advancedstats personal_stats;
 	int panicLevel, timesHit, timesAttacked, timesFled, timesDefended, timesHelped;
 	vector<entity&> squad, nearbyGood, nearbyEnemy, nearbyOther;
 	vector<weapon&> weaponInventory;
 protected:
 	entity& sister;
 	NPC_class& parent;
+	advancedstats stats;
 	entBase& stepparent;
 	NPC_config config;
 	terrain_slice terrainPos;
