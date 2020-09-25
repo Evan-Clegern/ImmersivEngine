@@ -2,17 +2,14 @@
 FILENAME: base_npc.h
 TITLE: Base NPC class provider
 PURPOSE: To give the fully-fledged and ready-to-behave class for an NPC.
-REVISION: 8
+REVISION: 13
 NOTE: I apologize for the complexity of the data for NPCs, but, it's for the immersive-ness (is that a word?)
 */
 #include "base_entity.h"
 #include "base_stats.h"
 #include "base_weapon.h"
-#include "implements.h"
 using namespace std;
 using namespace entbase; //from 'base_entity.h'
-using namespace npc_actions; //from 'implements.h'
-using eng_actions::waitMs; //from 'implements.h'
 using namespace statSys; //from 'base_stats.h'
 using namespace weaponry; //from 'base_weapon.h'
 namespace NPC_BASE {
