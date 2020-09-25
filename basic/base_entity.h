@@ -75,11 +75,12 @@ namespace entbase {
 	};
 	class entity {
 	protected:
+		bool smellable;
 		entBase& base;
 		std::vector<linked_point> occupied_space;
 		point& position, effRotation;
 		std::string name;
-		int baseID, engineID, linkedNPC; //Set linkedNPC to -1 if not applicable, set to &(npc) if applicable!
+		int baseID, engineID, linkedNPC, smellStrength; //Set linkedNPC to -1 if not applicable, set to &(npc) if applicable!
 	public:
 		std::vector<std::string> data_list; //The 'curValue' for each of the base's required items
 		int registerSelf() {
