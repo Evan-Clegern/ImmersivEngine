@@ -78,10 +78,10 @@ struct NPC_config {
 struct NPC_anim_array {
 	NPC_animation idleUn, walkUn, runUn, hideUn, useUn, talkUn, observeUn, deathUn, turnWUn, turnSUn, getHitUn, fleeUn;
 	vector<NPC_animation> other_anim;
-	int indexFormsOf(emoteType emotion, animTypes type, squadMode squad, weapon_class& wep, bool noWep, bool noSquad, bool wepPointDown) {
+	vector<NPC_animation&> indexFormsOf(emoteType emotion, animTypes type, squadMode squad, weapon_class& wep, bool noWep, bool noSquad, bool wepPointDown) {
 		//Finds how many animations meet that specification (not including the unarmed, blank ones)
-		int temp = 0;
-		for (int i = 0; i < other_anim.size() - 1; i++) {
+		vector<NPC_animation&> temp;
+		for (int i = 0; i < other_anwim.size() - 1; i++) {
 			NPC_animation& ju = &(other_anim.at(i));
 			bool weap, squad, applicable = ju->forWeapon, ju->squadApplicable, false;
 			if ((ju->whileWeilding == wep) and (noWep != weap) and (wepPointDown == ju->weaponPntDown)) {
@@ -104,7 +104,7 @@ struct NPC_anim_array {
 			} else {
 				applicable = false;
 			}
-			if (applicable) {temp++;}
+			if (applicable) {temp.push_back(ju);}
 		}
 		return temp;
 	}
