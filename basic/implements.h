@@ -14,7 +14,7 @@ namespace npc_actions {
     void rotate(entity& obj, point rot) {}
     point getRotation(entity& obj) {}
     void setAnimation(entity& obj, string what) {}
-    terrain_chunk getSurroundingTerrain(point at) {}
+    terrain_chunk getSurroundingTerrain(point at, int rangeInChunks) {}
     vector<entity&> findSurroundingEntities(point at, int range) {}
     void storeWep(entity& weilder, entity& what) {}
     void takeOutWep(entity& weilder, entity& what) {}
