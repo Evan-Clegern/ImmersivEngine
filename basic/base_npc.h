@@ -36,18 +36,25 @@ struct NPC_animation { //Backend for 'setAnimation(entity& obj, string what)'
 	//Set to some random one and 'forWeapon' to false if it's an unarmed animation
 	weapon_class& whileWeilding;
 };
+struct NPC_vocal { //Face-only animation for an Idle. Much simpler!
+	string voicelinePath, voicelineAnim;
+	emoteTypeps eType;
+	float lengthSec;
+};
 //NPCs are disallowed to weild multiple weapons; limit how many weapons they can store!
 struct NPC_action { //Queueable actions for an NPC - reaction to getting hit, shooting, being scared, etc.
 	NPC_animation& anim;
+	NPC_vocal& voiceline;
 	entity& newTarget; //The NPC will play their animation (like 'attack') and fire @/hit this entity
 	weapon& newWeapon;
 	squadMode newMode;
 	emoteTypes newEmote;
 	//swapWeapon, weaponIsStored = get 'newWeapon' from NPC's inventory. WILL CAUSE AN ERROR IF IT DOESNT EXIST.
-	bool noAnim, reloadWeapon, swapWeapon, dropWeapon, noAttack, noChangeRole, noChangeEmote, weaponIsStored;
+	bool noAnim, reloadWeapon, swapWeapon, dropWeapon, noAttack, noChangeRole, noChangeEmote;
+	bool targisMedical, targisAmmo, weaponIsStored, targIsGoal, noVoiceline, voiceBefore;
 	int msToWaitBf, msToWaitAft;
 };
-NPC_action weaponSwap(bool isInventory, bool dropCurrent, bool reloadFirst, NPC_animation& switchAnim, weapon& switchTo) {
+NPC_action weaponSwap(bool isInventory, bool dropCurrent, bool reloadFirst, NPC_animation& switchAnim, weapon& switchTo, NPC_vocal& voice, bool noVoice) {
 	NPC_action d;
 	d.anim = switchAnim;
 	d.newTarget = switchTo->sisterEnt;
@@ -59,9 +66,15 @@ NPC_action weaponSwap(bool isInventory, bool dropCurrent, bool reloadFirst, NPC_
 	d.swapWeapon = true;
 	d.dropWeapon = dropCurrent;
 	d.noAttack = true;
+	d.noVoiceline = noVoice;
+	d.targisMedical = false;
+	d.targisAmmo = false;
+	d.voiceline = voice;
+	d.voiceBefore = true;
 	d.noChangeRole = true;
 	d.noChangeEmote = true;
 	d.weaponIsStored = isInventory;
+	d.targIsGoal = false;
 	return d;
 }
 struct NPC_config {
@@ -69,7 +82,7 @@ struct NPC_config {
 	bool factionless, betrayable, NCagile, cautiousRelations, blankEmoteOnly, noMove, heavyDuty, NCtactical, ambusher, NCignoreCurios, NCoblivious;
 	//tactical NPCs aim 15% worse, but, they help coordinate squadmates and/or make plans for themselves for ambush or escape
 	//oblivious NPCs pay no attention to hazards in the world around them (fire, enemies, etc.)
-	bool NChasWeapon, distractable, observant, skiddish, inaccurateFirstAtks, forceSquads, NCpeaceful, NCalone, constSquadMode, noDescalateCombat;
+	bool NChasWeapon, distractable, observant, skiddish, inaccurateFirstAtks, forceSquads, NCpeaceful, NCalone, constSquadMode, giveChase, aggressiveChasing;
 	int NCfactionID, angleAimMax, NCdefensiveness, msSpotTime, storableWeapons, maxQueueSize;
 	emoteTypes emotion;
 	weapon& equippedWeapon; //Put to some random thing if (hasWeapon == false)
@@ -148,33 +161,29 @@ struct NPC_relationship {
 	NPC_class& from, to;
 	bool reciprocal, fearrelation, actLikeSquadmates;
 };
-class NPC {
-	vector<NPC_action> actionQueue;
-	int panicLevel, timesHit, timesAttacked, timesFled, timesDefended, timesHelped;
-	vector<entity&> squad, nearbyGood, nearbyEnemy, nearbyOther;
-	vector<weapon&> weaponInventory;
-protected:
-	entity& sister;
-	NPC_class& parent;
-	advancedstats stats;
-	entBase& stepparent;
-	NPC_config config;
-	terrain_slice terrainPos;
-	point truePos;
-	vector<NPC_relationship> relations;
-public:
-	bool queueAction(NPC_action new) {
-		if (this.actionQueue.size() > this.config.maxQueueSize) {
-			return false;
-		}
-		try {
-			this.actionQueue.push_back(new);
-		} catch {
-			return false;
-		}
-		return true;
-	}
-	bool moveTo(point to_true, terrain_slice to_terrain, bool run) {
-		
-	}
+struct NPC_routine {
+	/*NPC Routine.
+	FORMAT:
+	 Start with an action and wait
+	 Play a system of actions
+	 Change NPC configurations and play a voiceline (if waned)
+	 Replace a NPC relationship
+	 Play a final action
+	*/
+	NPC_action start
+	int waitMs;
+	vector<NPC_action> middleActions;
+	//Toggles or newEmotions happen after the middleActions
+	bool rtDistracts, rtAngers, rtScares, rtMoves, rtChases, rtBetrays, rtAttacks, rtHelps, rtUses, rtAmbushes, rtNoVoiceline;
+	//^^ are for helping say "what does this routine do?"
+	NPC_vocal laterVoiceline; //To ay as options change
+	int newSquad, newDefensiveness, newFactionID;
+	emoteType emotionNew;
+	squadMode modeNew;
+	NPC_relationship& old, replaceWith;
+	bool togAgile, togTactical, togCurioIgnore, togOblivious, togPeaceful;
+	NPC_action final; //What happens after the options change.
+};
+struct NPC_behavior_tree {
+	
 };
