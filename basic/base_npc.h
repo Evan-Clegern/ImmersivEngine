@@ -7,11 +7,14 @@ NOTE: I apologize for the complexity of the data for NPCs, but, it's for the imm
 */
 #include "base_entity.h"
 #include "base_stats.h"
+#include "implements.h"
 #include "base_weapon.h"
 using namespace std;
 using namespace entbase; //from 'base_entity.h'
 using namespace statSys; //from 'base_stats.h'
 using namespace weaponry; //from 'base_weapon.h'
+using namespace npc_actions;
+using namespace eng_actionsl //both from 'implements.h'
 namespace NPC_BASE {
 	struct NPC_hitchunk {
 		linked_point center;
@@ -159,14 +162,33 @@ namespace NPC_BASE {
 		NPC_class& from, to;
 		bool reciprocal, fearrelation, actLikeSquadmates;
 	};
+	struct NPC_miniroutine { 
+		/*NPC Mini-routine
+		FORMAT:
+		 Start with an action
+		 Observe using one or more methods
+		 Play a final action + return observed data		
+		*/
+		NPC_action start, final;
+		bool see, smell; //hearingRange is more of a triggered thing.
+		vector<entity&> runObserve(NPC_config& data, point pnt) { //This is a tedious function, but one which is CRITICAL!
+			//It gets the obscuration per slice of terrain. If the entity is in an obscured area, they won't be seen.
+			vector<entity&> data;
+			vector<terrain_chunk> terrainNearby = getSurroundingTerrain(pnt, data->sightRange);
+			if (see) {
+				data = findSurroundingEntities(pnt, data->sightRange);
+			}
+		}
+	};
 	struct NPC_routine {
 		/*NPC Routine.
 		FORMAT:
 		 Start with an action and wait
-		 Play a system of actions
-		 Change NPC configurations and play a voiceline (if waned)
+		 Observe using one or more methods
+		 Play a sequence of in-between actions
+		 Change NPC configurations and play a voiceline (if wanted)
 		 Replace a NPC relationship
-		 Play a final action
+		 Play a final action + return observed data
 		*/
 		NPC_action start
 		int waitMs;
@@ -182,7 +204,7 @@ namespace NPC_BASE {
 		bool togAgile, togTactical, togCurioIgnore, togOblivious, togPeaceful;
 		NPC_action final; //What happens after the options change.
 	};
-	struct NPC_behavior_tree {
+	struct NPC_behavior_minitree {
 
 	};
 }
