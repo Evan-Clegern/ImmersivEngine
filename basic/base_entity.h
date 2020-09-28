@@ -2,7 +2,7 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 9
+VERSION: 14
 */
 #define __IECAI_BASE_ENTITY__
 #include <vector>
@@ -87,6 +87,7 @@ namespace entbase {
 		entBase& base;
 		std::vector<linked_point> occupied_space;
 		point& position, effRotation;
+		terrain_slice& relative_pos;
 		std::string name;
 		int baseID, engineID, linkedNPC, smellStrength; //Set linkedNPC to -1 if not applicable, set to &(npc) if applicable!
 	public:
