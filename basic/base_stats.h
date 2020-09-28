@@ -2,7 +2,7 @@
 FILE: base_stats.h
 TITLE: Base NPC Stat System Provider
 PURPOSE: Provide bases for health and other statistics involved in NPC actions
-REVISION: 4
+REVISION: 5
 */
 //Note: all distance-like stats are in POINTS.
 namespace statSys {
@@ -40,6 +40,7 @@ namespace statSys {
 				dResist=1 - (data.victim->typeResist[data.type] / 225); //Resistance is effectively MUCH lower
 				dmg*=1.1; //10% stronger atop reduced resistance
 			}
+			logAIonly("Entity " + to_string((int)data.inflictor) + " dealt " + to_string(amount) + " damage to " + to_string((int)data.victim));
 			data.victim->health-=(dmg * dResist);
 		}
 		void inflictDmg(dmg damage, basicstats& victim, basicstats& inflictor) {
