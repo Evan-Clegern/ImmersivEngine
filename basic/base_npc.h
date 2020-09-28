@@ -173,10 +173,36 @@ namespace NPC_BASE {
 		bool see, smell; //hearingRange is more of a triggered thing.
 		vector<entity&> runObserve(NPC_config& data, point pnt) { //This is a tedious function, but one which is CRITICAL!
 			//It gets the obscuration per slice of terrain. If the entity is in an obscured area, they won't be seen.
-			vector<entity&> data;
+			vector<entity&> _data;
 			vector<terrain_chunk> terrainNearby = getSurroundingTerrain(pnt, data->sightRange);
 			if (see) {
-				data = findSurroundingEntities(pnt, data->sightRange);
+				vector<entity&> soup;
+				soup = findSurroundingEntities(pnt, data->sightRange);
+				float d = data->sightRange;
+				for (int i = 0; i < soup.size() -1; i++) {
+					//TODO: Implement viewing
+					//This includes utilizing entities' height and the obscuration of the area.
+				}
+			}
+			if (smell) {
+				vector<entity&> smells;
+				smells = findSurroundingEntities(pnt, data->smellRange);
+				for (int i = 0; i < smells.size() - 1; i++) {
+					entity& b = smells.at(i);
+					if (b->smellable) {
+						int str = b->smellStrength;
+						//Use linear distance of our smell range
+						int range = data->smellRange;
+						float distance = b->position >> pnt;
+						if (not (distance > range)) {
+							float d = 100 - (range / distance);
+							if (str >= d) {
+								//NPC can smell the object
+								_data.push_back(b);
+							}
+						}
+					}
+				}
 			}
 		}
 	};
