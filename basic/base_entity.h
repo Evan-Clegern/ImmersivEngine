@@ -7,6 +7,7 @@ VERSION: 9
 #define __IECAI_BASE_ENTITY__
 #include <vector>
 #include <string>
+#include <cmath>
 enum axi {x,y,z};
 struct point {
 	float posX,posY,posZ;
@@ -15,6 +16,13 @@ struct point {
 		float pX,pY,pZ = a.posX + b.posX,a.posY+b.posY,a.posZ+b.posZ;
 		point temp(pX,pY,pZ);
 		return temp;
+	}
+	inline float operator>>(point a, point b) {
+		//get distance
+		float xDist = pow(b.x - a.x, 2);
+		float yDist = pow(b.y - a.y, 2);
+		float zDist = pow(b.z - a.z, 2);
+		return sqrt(xDist + yDist + zDist);
 	}
 };
 point p(float x, float y, float z) {
