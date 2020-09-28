@@ -2,7 +2,7 @@
 FILE: implements.h
 TITLE: Base Engine-IECAI Implentations
 PURPOSE: Provide 'hollow functions' to interface with target game engine.
-REVISION: 5
+REVISION: 6
 */
 #define __IECAI_ENGINE_IMPLEMENT__
 #include "base_entity.h"
@@ -29,6 +29,7 @@ namespace eng_actions {
     string getEngineOValue(entity& obj, string where) {}
     void triggerEvent(string what, string data) {}
     void log(string text) {}
+    void logAIonly(string text) {}
     void hide(entity& obj) {}
     void show(entity& obj) {}
 }
