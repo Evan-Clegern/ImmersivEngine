@@ -89,6 +89,7 @@ namespace entbase {
 		point& position, effRotation;
 		terrain_slice& relative_pos;
 		std::string name;
+		float height;
 		int baseID, engineID, linkedNPC, smellStrength; //Set linkedNPC to -1 if not applicable, set to &(npc) if applicable!
 	public:
 		std::vector<std::string> data_list; //The 'curValue' for each of the base's required items
