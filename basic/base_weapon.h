@@ -2,7 +2,7 @@
 FILENAME: base_weapon.h
 TITLE: Base NPC-side Weapons handler
 PURPOSE: Provide the IECAI-side support for engine weapons.
-REVISION: 1
+REVISION: 3
 */
 #include <string>
 #include "base_stats.h"
@@ -17,7 +17,7 @@ namespace weaponry {
 		dmg toInflict;
 		point& offsetDistance;
 		//projectile really means the bullets/arrows/etc to spawn, at a velocity, when fired.
-		int clipSize, maxAmmo, projectilePerShot, maxRange; //maxRange must be low for a melee.
+		int clipSize, maxAmmo, projectilePerShot, maxRange, weight; //maxRange must be low for a melee.
 		float velocity, reloadTime, projectileDeviationMax, projectileDeviationMin, zKickOnShot;
 		bool noFalloff, noGravity, silentToNPC;
 	};
