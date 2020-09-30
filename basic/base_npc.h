@@ -204,6 +204,8 @@ namespace NPC_BASE {
 				} else {
 					xXneg = false; xYneg = true;
 				}
+				min = (min * 3.14159) / 180; //functions are in radians
+				max = (max * 3.14159) / 180;
 				//150* arc of vision, with a distance at any point being NPC's sightRange
 				float MINY = sin(min) * d; //Multiply (o/h) by h, get o - our Y
 				float MINX = cos(min) * d;
