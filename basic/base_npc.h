@@ -84,7 +84,7 @@ namespace NPC_BASE {
 		//tactical NPCs aim 15% worse, but, they help coordinate squadmates and/or make plans for themselves for ambush or escape
 		//oblivious NPCs pay no attention to hazards in the world around them (fire, enemies, etc.)
 		bool NChasWeapon, distractable, observant, skiddish, inaccurateFirstAtks, forceSquads, NCpeaceful, NCalone, constSquadMode, giveChase, aggressiveChasing;
-		int NCfactionID, angleAimMax, NCdefensiveness, msSpotTime, storableWeapons, maxQueueSize;
+		int NCfactionID, angleAimMax, NCdefensiveness, msSpotTime, storableWeapons, maxQueueSize, height;
 		emoteTypes emotion;
 		weapon& equippedWeapon; //Put to some random thing if (hasWeapon == false)
 	};
@@ -184,7 +184,11 @@ namespace NPC_BASE {
 					//TODO: Implement viewing
 					//This includes utilizing entities' height and the obscuration of the area.
 					//Will need the 'getSurroundingTerrainSquare(point pnt, int range)
-					//As well as obscuration calculations
+					//As well as obscuration calculations.
+					//Viewing is dependent on the angle of the NPC; smelling is not
+					//Sight range is 150 degrees.
+					point myEyes = pnt ++ data->height;
+					point objectEyes = soup.at(i)->position ++ soup.at(i)->height;
 				}
 			}
 			waitMs(observeMs * 2);
