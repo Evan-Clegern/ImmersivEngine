@@ -17,6 +17,11 @@ struct point {
 		point temp(pX,pY,pZ);
 		return temp;
 	}
+	inline point operator++(point a, float hgt) {
+		float pX,pY,pZ = a.posX, a.posY, a.posZ + hgt;
+		point temp(pX, pY, pZ);
+		return temp;
+	}
 	inline float operator>>(point a, point b) {
 		//get distance
 		float xDist = pow(b.x - a.x, 2);
