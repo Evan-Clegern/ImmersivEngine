@@ -9,6 +9,7 @@ NOTE: I apologize for the complexity of the data for NPCs, but, it's for the imm
 #include "base_stats.h"
 #include "implements.h"
 #include "base_weapon.h"
+#include <cmath>
 using namespace std;
 using namespace entbase; //from 'base_entity.h'
 using namespace statSys; //from 'base_stats.h'
@@ -171,33 +172,73 @@ namespace NPC_BASE {
 		*/
 		NPC_action start, final;
 		bool see, smell; //hearingRange is more of a triggered thing.
-		vector<entity&> runObserve(NPC_config& data, point pnt, int observeMs) { //This is a tedious function, but one which is CRITICAL!
+		vector<entity&> runObserve(NPC_config& data, point pnt, float rotZ, int observeMs) { //This is a tedious function, but one which is CRITICAL!
 			//It gets the obscuration per slice of terrain. If the entity is in an obscured area, they won't be seen.
 			vector<entity&> _data;
 			vector<terrain_chunk> terrainNearby = getSurroundingTerrain(pnt, data->sightRange);
 			if (see) {
+				float min = (75 - rotZ);
+				float max = (75 + rotZ);
+				bool xXneg, xYneg, nXneg, nYneg;
+				//These are all done within a circle.
+				//Sets which things to put as negative after sine/cosine calculations
+				if (min > 0) {
+					nXneg = false; nYneg = false;
+				} else if (min > -90) {
+					nXneg = false; nYneg = true; min+=90;
+				} else if (min > -180) {
+					nXneg = true; nYneg = true; min+=180;
+				} else if (min > -270) {
+					nXneg = true; nYneg = false; min+=270;
+				} else if (min > -360) {
+					nXneg = false; nYneg = false; min+=360;
+				}
+				if (max > 360) {
+					xXneg = false; xYneg = false; max-=360;
+				} else if (max > 270) {
+					xXneg = true; xYneg = false; max-=270;
+				} else if (max > 180) {
+					xXneg = true; xYneg = true; max-=180;
+				} else if (max > 90) {
+					xXneg = false; xYneg = true; max-=90;
+				} else {
+					xXneg = false; xYneg = true;
+				}
+				//150* arc of vision, with a distance at any point being NPC's sightRange
+				float MINY = sin(min) * d; //Multiply (o/h) by h, get o - our Y
+				float MINX = cos(min) * d;
+				float MAXY = sin(max) * d;
+				float MAXX = cos(max) * d;
+				if (xXneg) {MAXX * -1;}
+				if (xYneg) {MAXY * -1;}
+				if (nXneg) {MINX * -1;}
+				if (nYneg) {MINY * -1;}
 				vector<entity&> soup;
+				waitMs(observeMs);
 				soup = findSurroundingEntities(pnt, data->sightRange);
 				float d = data->sightRange;
 				for (int i = 0; i < soup.size() -1; i++) {
-					waitMs(observeMs);
-					//TODO: Implement viewing
-					//This includes utilizing entities' height and the obscuration of the area.
-					//Will need the 'getSurroundingTerrainSquare(point pnt, int range)
-					//As well as obscuration calculations.
+					waitMs(ceil(observeMs/2));
 					//Viewing is dependent on the angle of the NPC; smelling is not
 					//Sight range is 150 degrees.
 					point myEyes = pnt ++ data->height;
 					point objectEyes = soup.at(i)->position ++ soup.at(i)->height;
+					if ((objectEyes.x > MINX) and (objectEyes.x < MAXX) and (objectEyes.y > MINY) and (objectEyes.y < MAXY)) {
+						//Their X,Y of their 'height' is in our view range.
+						//TODO: GET OBSCURATION EN-ROUTE AND THE HEIGHT OF TERRAIN!
+						//FAIL IF:
+						//if average obscuration along the way > maxObscuration
+						//if obscuration of target slice > maxObscuration
+						//if height of object < height of any terrain along the way
+					}
 				}
 			}
-			waitMs(observeMs * 2);
+			waitMs(observeMs);
 			if (smell) {
 				vector<entity&> smells;
 				smells = findSurroundingEntities(pnt, data->smellRange);
 				for (int i = 0; i < smells.size() - 1; i++) {
 					entity& b = smells.at(i);
-					waitMs(observeMs);
 					if (b->smellable) {
 						int str = b->smellStrength;
 						//Use linear distance of our smell range
