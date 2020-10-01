@@ -10,16 +10,16 @@ REVISION: 3
 using namespace std;
 using namespace statSys::damage;
 namespace weaponry {
-	enum wepType {LAUNCHER, MELEE, THROWABLE, GUN};
+	enum wepType {LAUNCHER, MELEE, THROWABLE, GUN, CONTINUOUS};
 	struct weapon_class {
 		string title, description, firingSound, reloadSound;
 		wepType classif;
-		dmg toInflict;
+		dmg toInflictA, toInflictB;
 		point& offsetDistance;
 		//projectile really means the bullets/arrows/etc to spawn, at a velocity, when fired.
-		int clipSize, maxAmmo, projectilePerShot, maxRange, weight; //maxRange must be low for a melee.
+		int clipSize, maxAmmo, projectilePerShot, maxRange, weight, leaveAroundMS; //maxRange must be low for a melee.
 		float velocity, reloadTime, projectileDeviationMax, projectileDeviationMin, zKickOnShot;
-		bool noFalloff, noGravity, silentToNPC;
+		bool noFalloff, noGravity, silentToNPC, leaveInfBAround00; //Like, a small heat damage zone for 2s
 	};
 	class weapon {
 	protected:
