@@ -2,7 +2,7 @@
 FILENAME: base_npc.h
 TITLE: Base NPC class provider
 PURPOSE: To give the fully-fledged and ready-to-behave class for an NPC.
-REVISION: 13
+REVISION: 14
 NOTE: I apologize for the complexity of the data for NPCs, but, it's for the immersive-ness (is that a word?)
 */
 #include "base_entity.h"
@@ -163,22 +163,21 @@ namespace NPC_BASE {
 		NPC_class& from, to;
 		bool reciprocal, fearrelation, actLikeSquadmates;
 	};
-	struct NPC_miniroutine { 
-		/*NPC Mini-routine
-		FORMAT:
-		 Start with an action
-		 Observe using one or more methods
-		 Play a final action + return observed data		
-		*/
-		NPC_action start, final;
-		bool see, smell; //hearingRange is more of a triggered thing.
-		vector<entity&> runObserve(NPC_config& data, point pnt, float rotZ, int observeMs) { //This is a tedious function, but one which is CRITICAL!
+	vector<entity&> runObserve(NPC_config& data, point pnt, float rotZ, int observeMs) { //This is a tedious function, but one which is CRITICAL!
 			//It gets the obscuration per slice of terrain. If the entity is in an obscured area, they won't be seen.
 			vector<entity&> _data;
 			vector<terrain_chunk> terrainNearby = getSurroundingTerrain(pnt, data->sightRange);
 			if (see) {
-				float min = (75 - rotZ);
-				float max = (75 + rotZ);
+				int ofst = 75;
+				if (data->observant) {
+					ofst+=8;
+				} else if (data->NCoblivious) {
+					ofst-=15;
+				} ellse if (data->tactical) {
+					ofst+=6;
+				}
+				float min = (ofst - rotZ);
+				float max = (ofst + rotZ);
 				bool xXneg, xYneg, nXneg, nYneg;
 				//These are all done within a circle.
 				//Sets which things to put as negative after sine/cosine calculations
@@ -218,20 +217,36 @@ namespace NPC_BASE {
 				vector<entity&> soup;
 				waitMs(observeMs);
 				soup = findSurroundingEntities(pnt, data->sightRange);
+				point myEyes = pnt ++ data->height;
 				float d = data->sightRange;
 				for (int i = 0; i < soup.size() -1; i++) {
 					waitMs(ceil(observeMs/2));
 					//Viewing is dependent on the angle of the NPC; smelling is not
 					//Sight range is 150 degrees.
-					point myEyes = pnt ++ data->height;
 					point objectEyes = soup.at(i)->position ++ soup.at(i)->height;
 					if ((objectEyes.x > MINX) and (objectEyes.x < MAXX) and (objectEyes.y > MINY) and (objectEyes.y < MAXY)) {
+						logAIonly("Object " + to_string((int)soup.at(i)) + " is in sightRange, also in view arc");
+						float dist = myEyes >> objectEyes;
 						//Their X,Y of their 'height' is in our view range.
 						//TODO: GET OBSCURATION EN-ROUTE AND THE HEIGHT OF TERRAIN!
 						//FAIL IF:
 						//if average obscuration along the way > maxObscuration
 						//if obscuration of target slice > maxObscuration
 						//if height of object < height of any terrain along the way
+						float obscur = 50.00;
+						if (data->observant) {
+							obscur+=20.50;
+						} else if (data->NCoblivious) {
+							obscur-=25.75;
+						} else if (data->tactical) {
+							obscur+=8.35;
+						}
+						obscur-=(dist / 75); //the obscuration 'max' needs to be weighted w/ distance
+						float slopeTL = (MAXY - objectEyes.y) / (MAXX - objectEyes.x);
+						//slopeTL is for a line on the Terrain to determine which terrainChunks to use.
+						
+					} else {
+						logAIonly("Object " + to_string((int)soup.at(i)) + " is in sightRange, not in view arc");	
 					}
 				}
 			}
@@ -257,6 +272,15 @@ namespace NPC_BASE {
 				}
 			}
 		}
+	struct NPC_miniroutine { 
+		/*NPC Mini-routine
+		FORMAT:
+		 Start with an action
+		 Observe using one or more methods
+		 Play a final action + return observed data		
+		*/
+		NPC_action start, final;
+		bool see, smell; //hearingRange is more of a triggered thing.
 	};
 	struct NPC_routine {
 		/*NPC Routine.
