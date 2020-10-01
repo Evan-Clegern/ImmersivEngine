@@ -85,7 +85,7 @@ namespace NPC_BASE {
 		//tactical NPCs aim 15% worse, but, they help coordinate squadmates and/or make plans for themselves for ambush or escape
 		//oblivious NPCs pay no attention to hazards in the world around them (fire, enemies, etc.)
 		bool NChasWeapon, distractable, observant, skiddish, inaccurateFirstAtks, forceSquads, NCpeaceful, NCalone, constSquadMode, giveChase, aggressiveChasing;
-		int NCfactionID, angleAimMax, NCdefensiveness, msSpotTime, storableWeapons, maxQueueSize, height;
+		int NCfactionID, angleAimMax, NCdefensiveness, msSpotTime, storableWeapons, maxQueueSize, height, smellRange;
 		emoteTypes emotion;
 		weapon& equippedWeapon; //Put to some random thing if (hasWeapon == false)
 	};
@@ -163,16 +163,19 @@ namespace NPC_BASE {
 		NPC_class& from, to;
 		bool reciprocal, fearrelation, actLikeSquadmates;
 	};
-	vector<entity&> runObserve(NPC_config& data, point pnt, float rotZ, int observeMs) { //This is a tedious function, but one which is CRITICAL!
+	vector<entity&> runObserve(NPC_config& data, point pnt, float rotZ, int observeMs, float sightRange) { //This is a tedious function, but one which is CRITICAL!
 			//It gets the obscuration per slice of terrain. If the entity is in an obscured area, they won't be seen.
 			vector<entity&> _data;
 			vector<terrain_chunk> terrainNearby = getSurroundingTerrain(pnt, data->sightRange);
 			if (see) {
 				int ofst = 75;
+				float d = sightRange
 				if (data->observant) {
 					ofst+=8;
+					d+=10;
 				} else if (data->NCoblivious) {
 					ofst-=15;
+					d-=5;
 				} ellse if (data->tactical) {
 					ofst+=6;
 				}
@@ -218,7 +221,6 @@ namespace NPC_BASE {
 				waitMs(observeMs);
 				soup = findSurroundingEntities(pnt, data->sightRange);
 				point myEyes = pnt ++ data->height;
-				float d = data->sightRange;
 				for (int i = 0; i < soup.size() -1; i++) {
 					waitMs(ceil(observeMs/2));
 					//Viewing is dependent on the angle of the NPC; smelling is not
