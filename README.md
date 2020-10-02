@@ -15,8 +15,8 @@ AI is built with multiple factors including: Risk, Self-Preservation, Route Plan
 ### Operation: _AI Systems_
 The IECAI NPCs have multiple systems in the _NPC Class_ or _NPC Object_ to control the NPC in an 'IEC' method:
   - **Event** (a single function grouping that is essentially a direct connection to the game engine)
-  - **Routines** (cycled sets of events, like _play "idle animation"_ or _look around_)
-  - **Behaviors** (flexible routines for responding to specified "stimuli IDs")
+  - **Routines** (cycled sets of events, like _play "idle animation"_ while performing an observation of the area)
+  - **Behaviors** (flexible routines for responding to specified "stimuli IDs" - in a behavioral [decision tree format](https://en.wikipedia.org/wiki/Decision_tree))
   - **Routes** (set systems of points which serve as a suggested route of travel)
   - **Squads** (flexible groups of other NPCs which have some extra routines and behaviors)
   - **Relations** (flexible modifiers between classess or objects that define extra behaviors)
