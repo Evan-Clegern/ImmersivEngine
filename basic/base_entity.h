@@ -88,7 +88,7 @@ namespace entbase {
 	};
 	class entity {
 	protected:
-		bool smellable;
+		bool smellable, isCrouched;
 		entBase& base;
 		std::vector<linked_point> occupied_space;
 		point& position, effRotation;
