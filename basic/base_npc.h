@@ -84,8 +84,10 @@ namespace NPC_BASE {
 		bool factionless, betrayable, NCagile, cautiousRelations, blankEmoteOnly, noMove, heavyDuty, NCtactical, ambusher, NCignoreCurios, NCoblivious;
 		//tactical NPCs aim 15% worse, but, they help coordinate squadmates and/or make plans for themselves for ambush or escape
 		//oblivious NPCs pay no attention to hazards in the world around them (fire, enemies, etc.)
-		bool NChasWeapon, distractable, observant, skiddish, inaccurateFirstAtks, forceSquads, NCpeaceful, NCalone, constSquadMode, giveChase, aggressiveChasing;
-		int NCfactionID, angleAimMax, NCdefensiveness, msSpotTime, storableWeapons, maxQueueSize, height, smellRange;
+		bool NChasWeapon, distractable, observant, skiddish, inaccurateFirstAtks, forceSquads, NCpeaceful, NCalone, constSquadMode, giveChase;
+		bool aggressiveChasing, crouchLowVis; 
+		//crouchLowVis is for anything with the 'crouching' flag in its sight range. Reduces visibility of obj by 50%. Lets the player cheat subtly if true.
+		int NCfactionID, angleAimMax, NCdefensiveness, msSpotTime, storableWeapons, maxQueueSize, height;
 		emoteTypes emotion;
 		weapon& equippedWeapon; //Put to some random thing if (hasWeapon == false)
 	};
@@ -163,117 +165,120 @@ namespace NPC_BASE {
 		NPC_class& from, to;
 		bool reciprocal, fearrelation, actLikeSquadmates;
 	};
-	vector<entity&> runObserve(NPC_config& data, point pnt, float rotZ, int observeMs, float sightRange) { //This is a tedious function, but one which is CRITICAL!
-			//It gets the obscuration per slice of terrain. If the entity is in an obscured area, they won't be seen.
-			vector<entity&> _data;
-			vector<terrain_chunk> terrainNearby = getSurroundingTerrain(pnt, data->sightRange);
-			if (see) {
-				int ofst = 75;
-				float d = sightRange
-				if (data->observant) {
-					ofst+=8;
-					d+=10;
-				} else if (data->NCoblivious) {
-					ofst-=15;
-					d-=5;
-				} ellse if (data->tactical) {
-					ofst+=6;
-				}
-				float min = (ofst - rotZ);
-				float max = (ofst + rotZ);
-				bool xXneg, xYneg, nXneg, nYneg;
-				//These are all done within a circle.
-				//Sets which things to put as negative after sine/cosine calculations
-				if (min > 0) {
-					nXneg = false; nYneg = false;
-				} else if (min > -90) {
-					nXneg = false; nYneg = true; min+=90;
-				} else if (min > -180) {
-					nXneg = true; nYneg = true; min+=180;
-				} else if (min > -270) {
-					nXneg = true; nYneg = false; min+=270;
-				} else if (min > -360) {
-					nXneg = false; nYneg = false; min+=360;
-				}
-				if (max > 360) {
-					xXneg = false; xYneg = false; max-=360;
-				} else if (max > 270) {
-					xXneg = true; xYneg = false; max-=270;
-				} else if (max > 180) {
-					xXneg = true; xYneg = true; max-=180;
-				} else if (max > 90) {
-					xXneg = false; xYneg = true; max-=90;
-				} else {
-					xXneg = false; xYneg = true;
-				}
-				min = (min * 3.14159) / 180; //functions are in radians
-				max = (max * 3.14159) / 180;
-				//150* arc of vision, with a distance at any point being NPC's sightRange
-				float MINY = sin(min) * d; //Multiply (o/h) by h, get o - our Y
-				float MINX = cos(min) * d;
-				float MAXY = sin(max) * d;
-				float MAXX = cos(max) * d;
-				if (xXneg) {MAXX * -1;}
-				if (xYneg) {MAXY * -1;}
-				if (nXneg) {MINX * -1;}
-				if (nYneg) {MINY * -1;}
-				vector<entity&> soup;
-				waitMs(observeMs);
-				soup = findSurroundingEntities(pnt, data->sightRange);
-				point myEyes = pnt ++ data->height;
-				for (int i = 0; i < soup.size() -1; i++) {
-					waitMs(ceil(observeMs/2));
-					//Viewing is dependent on the angle of the NPC; smelling is not
-					//Sight range is 150 degrees.
-					point objectEyes = soup.at(i)->position ++ soup.at(i)->height;
-					if ((objectEyes.x > MINX) and (objectEyes.x < MAXX) and (objectEyes.y > MINY) and (objectEyes.y < MAXY)) {
-						logAIonly("Object " + to_string((int)soup.at(i)) + " is in sightRange, also in view arc");
-						float dist = myEyes >> objectEyes;
-						//Their X,Y of their 'height' is in our view range.
-						//TODO: GET OBSCURATION EN-ROUTE AND THE HEIGHT OF TERRAIN!
-						//FAIL IF:
-						//if average obscuration along the way > maxObscuration
-						//if obscuration of target slice > maxObscuration
-						//if height of object < height of any terrain along the way
-						float obscur = 50.00;
-						if (data->observant) {
-							obscur+=20.50;
-						} else if (data->NCoblivious) {
-							obscur-=25.75;
-						} else if (data->tactical) {
-							obscur+=8.35;
-						}
-						obscur-=(dist / 75); //the obscuration 'max' needs to be weighted w/ distance
-						float slopeTL = (MAXY - objectEyes.y) / (MAXX - objectEyes.x);
-						//slopeTL is for a line on the Terrain to determine which terrainChunks to use.
-						
-					} else {
-						logAIonly("Object " + to_string((int)soup.at(i)) + " is in sightRange, not in view arc");	
+	vector<entity&> runObserve(NPC_config& data, point pnt, float rotZ, int observeMs, float sightRange, float smellRange) {
+		//This is a tedious function, but one which is CRITICAL!
+		//It gets the obscuration per slice of terrain. If the entity is in an obscured area, they won't be seen.
+		vector<entity&> _data;
+		vector<terrain_chunk> terrainNearby = getSurroundingTerrain(pnt, data->sightRange);
+		if (see) {
+			int ofst = 75;
+			float d = sightRange
+			if (data->observant) {
+				ofst+=8;
+				d+=10;
+			} else if (data->NCoblivious) {
+				ofst-=15;
+				d-=5;
+			} ellse if (data->tactical) {
+				ofst+=6;
+			}
+			float min = (ofst - rotZ);
+			float max = (ofst + rotZ);
+			bool xXneg, xYneg, nXneg, nYneg;
+			//These are all done within a circle.
+			//Sets which things to put as negative after sine/cosine calculations
+			if (min > 0) {
+				nXneg = false; nYneg = false;
+			} else if (min > -90) {
+				nXneg = false; nYneg = true; min+=90;
+			} else if (min > -180) {
+				nXneg = true; nYneg = true; min+=180;
+			} else if (min > -270) {
+				nXneg = true; nYneg = false; min+=270;
+			} else if (min > -360) {
+				nXneg = false; nYneg = false; min+=360;
+			}
+			if (max > 360) {
+				xXneg = false; xYneg = false; max-=360;
+			} else if (max > 270) {
+				xXneg = true; xYneg = false; max-=270;
+			} else if (max > 180) {
+				xXneg = true; xYneg = true; max-=180;
+			} else if (max > 90) {
+				xXneg = false; xYneg = true; max-=90;
+			} else {
+				xXneg = false; xYneg = true;
+			}
+			min = (min * 3.14159) / 180; //functions are in radians
+			max = (max * 3.14159) / 180;
+			//150* arc of vision, with a distance at any point being NPC's sightRange
+			float MINY = sin(min) * d; //Multiply (o/h) by h, get o - our Y
+			float MINX = cos(min) * d;
+			float MAXY = sin(max) * d;
+			float MAXX = cos(max) * d;
+			if (xXneg) {MAXX * -1;}
+			if (xYneg) {MAXY * -1;}
+			if (nXneg) {MINX * -1;}
+			if (nYneg) {MINY * -1;}
+			vector<entity&> soup;
+			waitMs(observeMs);
+			soup = findSurroundingEntities(pnt, data->sightRange);
+			point myEyes = pnt ++ data->height;
+			for (int i = 0; i < soup.size() -1; i++) {
+				waitMs(ceil(observeMs/2));
+				//Viewing is dependent on the angle of the NPC; smelling is not
+				//Sight range is 150 degrees.
+				point objectEyes = soup.at(i)->position ++ soup.at(i)->height;
+				if ((objectEyes.x > MINX) and (objectEyes.x < MAXX) and (objectEyes.y > MINY) and (objectEyes.y < MAXY)) {
+					logAIonly("Object " + to_string((int)soup.at(i)) + " is in sightRange, also in view arc");
+					float dist = myEyes >> objectEyes;
+					//Their X,Y of their 'height' is in our view range.
+					//TODO: GET OBSCURATION EN-ROUTE AND THE HEIGHT OF TERRAIN!
+					//FAIL IF:
+					//if average obscuration along the way > maxObscuration
+					//if obscuration of target slice > maxObscuration
+					//if height of object < height of any terrain along the way
+					float obscur = 50.00;
+					if (data->observant) {
+						obscur+=20.50;
+					} else if (data->NCoblivious) {
+						obscur-=25.75;
+					} else if (data->tactical) {
+						obscur+=8.35;
 					}
+					obscur-=(dist / 75); //the obscuration 'max' needs to be weighted w/ distance
+					float slopeTL = (MAXY - objectEyes.y) / (MAXX - objectEyes.x);
+					//slopeTL is for a line on the Terrain to determine which terrainChunks to use.
+					bool lowCrouch = data->crouchLowVis;
+					bool isCrouched = soup.at(i)->isCrouched;
+					
+				} else {
+					logAIonly("Object " + to_string((int)soup.at(i)) + " is in sightRange, not in view arc");	
 				}
 			}
-			waitMs(observeMs);
-			if (smell) {
-				vector<entity&> smells;
-				smells = findSurroundingEntities(pnt, data->smellRange);
-				for (int i = 0; i < smells.size() - 1; i++) {
-					entity& b = smells.at(i);
-					if (b->smellable) {
-						int str = b->smellStrength;
-						//Use linear distance of our smell range
-						int range = data->smellRange;
-						float distance = b->position >> pnt;
-						if (not (distance > range)) {
-							float d = 100 - (range / distance);
-							if (str >= d) {
-								//NPC can smell the object
-								_data.push_back(b);
-							}
+		}
+		waitMs(observeMs);
+		if (smell) {
+			vector<entity&> smells;
+			smells = findSurroundingEntities(pnt, smellRange);
+			for (int i = 0; i < smells.size() - 1; i++) {
+				entity& b = smells.at(i);
+				if (b->smellable) {
+					int str = b->smellStrength;
+					//Use linear distance of our smell range
+					int range = data->smellRange;
+					float distance = b->position >> pnt;
+					if (not (distance > range)) {
+						float d = 100 - (range / distance);
+						if (str >= d) {
+							//NPC can smell the object
+							_data.push_back(b);
 						}
 					}
 				}
 			}
 		}
+	}
 	struct NPC_miniroutine { 
 		/*NPC Mini-routine
 		FORMAT:
