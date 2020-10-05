@@ -1,8 +1,8 @@
 /*
 FILENAME: base_npc.h
 TITLE: Base NPC class provider
-PURPOSE: To give the fully-fledged and ready-to-behave class for an NPC.
-REVISION: 16
+PURPOSE: Providing memory- and filesystem-side NPC class definitions, as well as related file operations.
+REVISION: 17
 NOTE: I apologize for the complexity of the data for NPCs, but, it's for the immersive-ness (is that a word?)
 */
 #include "base_entity.h"
@@ -10,13 +10,24 @@ NOTE: I apologize for the complexity of the data for NPCs, but, it's for the imm
 #include "implements.h"
 #include "base_weapon.h"
 #include <cmath>
+#include <fstream>
 using namespace std;
 using namespace entbase; //from 'base_entity.h'
 using namespace statSys; //from 'base_stats.h'
 using namespace weaponry; //from 'base_weapon.h'
 using namespace npc_actions;
-using namespace eng_actionsl //both from 'implements.h'
-namespace NPC_BASE {
+using namespace eng_actions; //both from 'implements.h'
+/*
+Temporary files will be generated for each NPC during runtime as well (reduce memory consumption)
+
+*.iecai-acts is for multiple NPC_vocal s/NPC_action s  - ACTION FILE
+*.iecai-anm is for NPC_anim_array (which has direct storages for NPC_animation s)  - ANIMATION FILE
+*.iecai-cls is for NPC_Class; NPC_Config; NPC_Relationship  - CLASS FILE
+*.iecai-bhv is for NPC_miniroutine; NPC_routine; NPC_behavior_minitree  - BEHAVIOR FILE
+
+*.iecai-npc is for the actual NPC (defined beyond /basic/)
+*/
+namespace NPC_BASE_T1D {
 	struct NPC_hitchunk {
 		linked_point center;
 		vector<linked_point> frame;
@@ -126,7 +137,12 @@ namespace NPC_BASE {
 			return temp;
 		}
 	};
-	class NPC_class { 
+}
+namespace NPC_BASE_T1F { 
+	//File functions for NPC_BASE_T1D(ata)
+}
+namespace NPC_BASE_T2D {
+class NPC_class { 
 	protected:
 		entBase& sister; //The entBase class has a field to link to the address of this NPC_class
 		string classname, description, namePrefix; //namePrefix is what comes before an NPC's NPC_class child ID
