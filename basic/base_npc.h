@@ -2,7 +2,7 @@
 FILENAME: base_npc.h
 TITLE: Base NPC class provider
 PURPOSE: To give the fully-fledged and ready-to-behave class for an NPC.
-REVISION: 14
+REVISION: 16
 NOTE: I apologize for the complexity of the data for NPCs, but, it's for the immersive-ness (is that a word?)
 */
 #include "base_entity.h"
@@ -169,18 +169,19 @@ namespace NPC_BASE {
 		//This is a tedious function, but one which is CRITICAL!
 		//It gets the obscuration per slice of terrain. If the entity is in an obscured area, they won't be seen.
 		vector<entity&> _data;
-		vector<terrain_chunk> terrainNearby = getSurroundingTerrain(pnt, data->sightRange);
+		vector<terrain_chunk> terrainNearby = getSurroundingTerrainSquare(pnt, data->sightRange);
 		if (see) {
-			int ofst = 75;
+			//Sight range is 96 degrees (human peripheral vision)
+			int ofst = 48;
 			float d = sightRange
 			if (data->observant) {
-				ofst+=8;
-				d+=10;
+				ofst+=7;
+				d+=20;
 			} else if (data->NCoblivious) {
-				ofst-=15;
+				ofst-=10;
 				d-=5;
 			} ellse if (data->tactical) {
-				ofst+=6;
+				ofst+=5;
 			}
 			float min = (ofst - rotZ);
 			float max = (ofst + rotZ);
@@ -227,7 +228,6 @@ namespace NPC_BASE {
 			for (int i = 0; i < soup.size() -1; i++) {
 				waitMs(ceil(observeMs/2));
 				//Viewing is dependent on the angle of the NPC; smelling is not
-				//Sight range is 150 degrees.
 				point objectEyes = soup.at(i)->position ++ soup.at(i)->height;
 				if ((objectEyes.x > MINX) and (objectEyes.x < MAXX) and (objectEyes.y > MINY) and (objectEyes.y < MAXY)) {
 					logAIonly("Object " + to_string((int)soup.at(i)) + " is in sightRange, also in view arc");
@@ -238,7 +238,7 @@ namespace NPC_BASE {
 					//if average obscuration along the way > maxObscuration
 					//if obscuration of target slice > maxObscuration
 					//if height of object < height of any terrain along the way
-					float obscur = 50.00;
+					float obscur = 50.00; //Our max obscuration
 					if (data->observant) {
 						obscur+=20.50;
 					} else if (data->NCoblivious) {
@@ -246,12 +246,19 @@ namespace NPC_BASE {
 					} else if (data->tactical) {
 						obscur+=8.35;
 					}
-					obscur-=(dist / 75); //the obscuration 'max' needs to be weighted w/ distance
-					float slopeTL = (MAXY - objectEyes.y) / (MAXX - objectEyes.x);
+					float slopeTL = (objectEyes.y - myEyes.y) / (objectEyes.x - myEyes.x);
 					//slopeTL is for a line on the Terrain to determine which terrainChunks to use.
 					bool lowCrouch = data->crouchLowVis;
 					bool isCrouched = soup.at(i)->isCrouched;
-					
+					//surroundingTerrain (in vector terrainNearby) is in a square
+					bool allowed = true;
+					for (int _id = 0; _id < terrainNearby.size() - 1; _id++) {
+						//chunks are 75x75 of points; 15x15 of slices
+						//allowed = false; break; for this, if obscuration level too high
+					}
+					if (not allowed) {
+						continue;
+					}
 				} else {
 					logAIonly("Object " + to_string((int)soup.at(i)) + " is in sightRange, not in view arc");	
 				}
