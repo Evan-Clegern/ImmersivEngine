@@ -1,15 +1,15 @@
 /*
 FILE: implements.h
 TITLE: Base Engine-IECAI Implentations
-PURPOSE: Provide 'hollow functions' to interface with target game engine.
+PURPOSE: Provide 'hollow functions' to interface with target game engine 
 REVISION: 6
 */
 #define __IECAI_ENGINE_IMPLEMENT__
 #include "base_entity.h"
-using namespace entbase;
+using namespace entbaseD;
 using namespace std;
 //I would recommend using custom properties with each item to provide for the 'entity&' data point.
-namespace npc_actions {
+namespace npc_actions { //WILL BE "OBSOLETED" IN FAVOR OF FILESIDE OPERATIONS.
     void updateMidpoint(entity& obj) {}
     void rotate(entity& obj, point rot) {}
     point getRotation(entity& obj) {}
@@ -27,14 +27,14 @@ namespace npc_actions {
     float getStat(entity& npc, string what) {}
     void kill(entity& npc, entity& inflictor) {}
 }
-namespace eng_actions {
+namespace eng_actions { //Will continue to exist here.
     bool waitMs(int milliseconds) {}
     //Engines have timing; we need this to return 'true' once the time has elapsed. Simple.
     void setEngineOValue(entity& obj, string where, string value) {}
     string getEngineOValue(entity& obj, string where) {}
     void triggerEvent(string what, string data) {}
     void log(string text) {}
-    void logAIonly(string text) {}
+    void logAIonly(string text) {} //*may* be moved
     void destroy(entity& obj) {}
     void hide(entity& obj) {}
     void show(entity& obj) {}
