@@ -1,7 +1,7 @@
 # IECAI-project
-PROTECTED UNDER A-GPL LICENSE.
+PROTECTED UNDER GNU AFFERO PUBLIC LICENSE.
 ## Introduction
-Immersive Environment-Centric Artificial Intelligence (IECAI) is a prototype project for games, written in C++, which aims to make NPC "AI" more Immersive and Realistic (even though it really isn't _AI_). The project began in August 2020, the repo in September and the first release likely in January 2021.
+Immersive Environment-Centric Artificial Intelligence (IECAI) is a prototype project for games, written in C++, which aims to make NPC "AI" more Immersive and Realistic (even though it really isn't _AI_). The project began in August 2020, the repo in September and the first release likely in January 2021. 
 
 ### Introduction: _Target_
 > IECAI aims to make AI more intelligent, immersive, realistic and smooth. No more horses swimming mid-air.
@@ -21,7 +21,7 @@ The IECAI NPCs have multiple systems in the _NPC Class_ or _NPC Object_ to contr
   - **Hints** (point that modifies the behavior and emotion of any NPCs that have it within their look range)
 
 ### Operation: _File-side_
-IECAI definitions are stored on the filesystem of the computer, while runtime is split between that and memory - all expected, anyway. Multiple file extensions are to be used when operating with IECAI NPCs, data stored somewhat-similarly to [JSON](https://en.wikipedia.org/wiki/JSON) and [Python](https://en.wikipedia.org/wiki/Python_(programming_language)). The file extensions are:
+IECAI definitions are stored on the filesystem of the computer, while runtime is split between that and memory - all expected, anyway. Multiple file extensions are to be used when operating with IECAI NPCs, data stored somewhat-similarly to [JSON](https://en.wikipedia.org/wiki/JSON) and [Python](https://en.wikipedia.org/wiki/Python_(programming_language)), the reason being that there is a lot of data to be stored and a lot of that connects cross-module, even if one module is a child of another. IECAI Project file extensions are:
   - **ENTITIES FILE**, storing basic information for every entity that is in the world space - .iecai-ent
   - **ACTIONS FILE**, storing data for NPC act-events (NPC_action and NPC_vocal) - .iecai-act
   - **ANIMATIONS FILE**, storing the hitbox-related data for the animations related to actions - .iecai-anm
