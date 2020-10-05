@@ -2,13 +2,14 @@
 FILENAME: base_weapon.h
 TITLE: Base NPC-side Weapons handler
 PURPOSE: Provide the IECAI-side support for engine weapons.
-REVISION: 3
+REVISION: 4
 */
 #include <string>
 #include "base_stats.h"
 #include "base_entity.h"
 using namespace std;
 using namespace statSys::damage;
+using namespace entbaseD;
 namespace weaponry {
 	enum wepType {LAUNCHER, MELEE, THROWABLE, GUN, CONTINUOUS};
 	struct weapon_class {
