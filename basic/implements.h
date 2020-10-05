@@ -14,7 +14,12 @@ namespace npc_actions {
     void rotate(entity& obj, point rot) {}
     point getRotation(entity& obj) {}
     void setAnimation(entity& obj, string what) {}
-    vector<terrain_chunk&< getSurroundingTerrainSquare(point at, int rangeInChunks) {}
+    //NOTE: For below - Start at the terrain at (at), and then work it out to the maximum 'X' chunk before "curling" around
+    //Like this (A to I)
+    // E D C 
+    // F A B
+    // G H I
+    vector<terrain_chunk&> getSurroundingTerrainSquare(point at, int rangeInChunks) {}
     vector<entity&> findSurroundingEntities(point at, int range) {}
     void storeWep(entity& weilder, entity& what) {}
     void takeOutWep(entity& weilder, entity& what) {}
