@@ -2,12 +2,13 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 14
+VERSION: 16
 */
 #define __IECAI_BASE_ENTITY__
 #include <vector>
 #include <string>
 #include <cmath>
+#include <fstream>
 enum axi {x,y,z};
 struct point {
 	float posX,posY,posZ;
@@ -34,7 +35,7 @@ point p(float x, float y, float z) {
 	point bob(x, y, x);
 	return bob;
 }
-namespace entbase {
+namespace entbaseD {
 	struct linked_point { 
 		//More or less enables us to have multi-dimensional and defined connections
 		point& base;
@@ -128,4 +129,7 @@ namespace entbase {
 			this.effRotation = rot;
 		}
 	};
+}
+namespace entbaseF {
+	
 }
