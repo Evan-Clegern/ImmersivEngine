@@ -23,8 +23,17 @@ The IECAI NPCs have multiple systems in the _NPC Class_ or _NPC Object_ to contr
   - **Emotions** (pseudoroutines which convey extra facial movements and which modify behaviors)
   - **Hints** (point that modifies the behavior and emotion of any NPCs that have it within their look range)
 
+### Operation: _File-side_
+IECAI definitions are stored on the filesystem of the computer, while runtime is split between that and memory - all expected, anyway. Multiple file extensions are to be used when operating with IECAI NPCs, data stored somewhat-similarly to [JSON](https://en.wikipedia.org/wiki/JSON) and [Python](https://en.wikipedia.org/wiki/Python_(programming_language)). The file extensions are:
+  - **ENTITIES FILE**, storing basic information for every entity that is in the world space - .iecai-ent
+  - **ACTIONS FILE**, storing data for NPC act-events (NPC_action and NPC_vocal) - .iecai-act
+  - **ANIMATIONS FILE**, storing the hitbox-related data for the animations related to actions - .iecai-anm
+  - **CLASS FILE**, storing data for NPC Classes and default configuration - .iecai-cls
+  - **BEHAVIOR FILE**, storing structured behaviors and routines - .iecai-bhv
+  - **CHARACTER FILE**, storing temporary data and positioning for an NPC - .iecai-npc
+
 ## Contact Us!
-You can email me at evanclegern.work@gmail.com, or join the Slack channel at iecai.slack.com
+You can email me at evanclegern.work@gmail.com, or join the [Slack](https://iecai.slack.com) channel.
 
 ## Using IECAI in a game project
 As described by the GNU Affero Public License, we need: License and Copyright Notice, a statement of any changes, source disclosure and the license being present. Other than that, use it freely with your game project. Basically, just give us credit, say what you did and don't mark it as your own.
