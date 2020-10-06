@@ -130,8 +130,36 @@ namespace entbaseD {
 		}
 	};
 }
+/*
+DIRECTLY FROM THE .iecai-ent GENERIC FILE:
+; IECAI Entities File Template
+; Follow the following notation rules:
+; # DEFINES FILE INFORMATION (TITLE, DESCRIPTION, VERSION, VERSION INGAME, AUTHOR, TOTAL OBJECTS, TOTAL CLASSES)
+; $ DEFINES HEADER SPACES.
+;  $ is a top-level header; requires: 't'itle, 'c'lasstypes, 'p'id  'r'ange, 'l'ength
+;  $$ is an object-level header; requires: 'n'ame, 'i'd, 'ch'ildren, 'l'ength
+;  top-level: no indent; obj-level: 2 indent, object: 3 indent (spaces)
+; % DEFINES AN OPTION (I.E. 'SOLID' OR 'VOLUME'). %(type) (name) (value)
+; [types: 'b'ool, 'i'nt, 'f'loat, 's'tring, 'p'oint, 'r'eference, 'l'inked 'p'oint, 'en'tity option]
+; ; DEFINES A COMMENT.
+; \ DEFINES A CONSTANT. PLACE BEFORE OTHER SYMBOL.
+; #[ ] DEFINES LIST STRUCTURE (1sp indent when expanded; needs length number)
+; ( ) DEFINES A REFERENCE
+; " " DEFINES A NAME
+; ^(i,i,i) DEFINES A POINT
+; {^(i,i,i):#[..]} DEFINES A LINKED POINT
+; {"","",/,/} DEFINES AN ENTITY OPTION (TITLE, DEFAULTVALUE, NUMERIC, BOOLEAN)
+; // DEFINES A LOCAL OPTION (NOT PART OF THE PARENT OBJECT)
+*/
 namespace entbaseF {
 	//These assume 'path' is valid!
+	enum chartype {header, info, option, comment, list, ref, name, point, linkpnt, entopt, locopt};
+	struct confLine {
+		chartype type;
+		string line;
+		int lineNo;
+		bool constant;
+	};
 	entBase fetchFromFile(std::string path, int classID) {
 		std::fstream stree;
 		stree.open(path, std::fstream::in);
