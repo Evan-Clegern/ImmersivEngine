@@ -134,7 +134,8 @@ namespace entbaseF {
 	//These assume 'path' is valid!
 	entBase fetchFromFile(std::string path, int classID) {
 		std::fstream stree;
-		stree.open(path);
+		stree.open(path, std::fstream::in);
+		//TODO: Begin sorting through file with the described symbolic notation
 	}
 	bool writeToFile(std::string path, entBase ent) {
 		
