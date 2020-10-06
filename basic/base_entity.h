@@ -131,5 +131,12 @@ namespace entbaseD {
 	};
 }
 namespace entbaseF {
-	
+	//These assume 'path' is valid!
+	entBase fetchFromFile(std::string path, int classID) {
+		std::fstream stree;
+		stree.open(path);
+	}
+	bool writeToFile(std::string path, entBase ent) {
+		
+	}
 }
