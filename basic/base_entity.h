@@ -2,7 +2,7 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 16
+VERSION: 17
 */
 #define __IECAI_BASE_ENTITY__
 #include <vector>
@@ -183,7 +183,11 @@ namespace entbaseF {
 				line.line = temp;
 				line.lineNo = i;
 				curPos+=temp.length() - 1; //I don't know if this is necessary; nothing in documentation saying it isn't
-				
+				for (int _p = 0; _p < temp.length() - 1; _p++) {
+					char c = temp[_p];
+					bool cmnt, cons, opt, headA, headB, loc, pnt, list, ref, name, lPnt, headS = 0,0,0,0,0,0,0,0,0,0,0,0;
+					int idnlvl = 0;
+				}
 			}
 		}	
 	}
