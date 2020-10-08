@@ -1,3 +1,4 @@
+#len 51
 #title "Generic Entity File"
 #descr "Provides handling for generic entities."
 #versn 1  ; Updates when a constant is changed (file rebuilt)
