@@ -163,7 +163,29 @@ namespace entbaseF {
 	entBase fetchFromFile(std::string path, int classID) {
 		std::fstream stree;
 		stree.open(path, std::fstream::in);
-		//TODO: Begin sorting through file with the described symbolic notation
+		if (stree) { //Check to ensure it's valid
+			stree.seekg(stree.beg + 5);
+			int numsize = stree.get() - 48;
+			//48 == 0; 57 == 9  (In ASCII)
+			stree.seekg(stree.beg + 7);
+			char[8] d;
+			stree.get(d, numsize);
+			int lines = 0;
+			for (int i=0;i<numsize;i++){lines+=(((int)d[i]) - 48);}
+			//lines is now set to the length of the file.
+			int curPos = 7 + numsize + 1;
+			for (int i = 1; i < lines; i++) {
+				stree.sync();
+				std::string temp;
+				//I would fear whatever abomination would take more than 128 characters in a line; especially in my format.
+				std::getline(stree, temp, '\n'); //overloaded string-type getline
+				confLine line;
+				line.line = temp;
+				line.lineNo = i;
+				curPos+=temp.length() - 1; //I don't know if this is necessary; nothing in documentation saying it isn't
+				
+			}
+		}	
 	}
 	bool writeToFile(std::string path, entBase ent) {
 		
