@@ -2,7 +2,7 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 17
+VERSION: 18
 */
 #define __IECAI_BASE_ENTITY__
 #include <vector>
@@ -130,6 +130,38 @@ namespace entbaseD {
 		}
 	};
 }
+namespace entbaseF {
+	//These assume 'path' is valid!
+	enum chartype {header, info, option, comment, list, ref, name, point, linkpnt, entopt, locopt};
+	struct confLine {
+		chartype type;
+		string line;
+		int lineNo;
+		bool constant;
+	};
+	entBase fetchFromFile(std::string path, int classID) {
+		std::fstream stree;
+		stree.open(path, std::fstream::in);
+		if (stree) { //Check to ensure it's valid
+			stree.seekg(stree.beg + 5); //get 1 to 9 digit size of line_counter
+			int numsize = stree.get() - 48;
+			//48 == 0; 57 == 9  (In ASCII Ints)
+			stree.seekg(stree.beg + 7);
+			char[8] d;
+			stree.get(d, numsize);
+			int lines = 0;
+			for (int i=0;i<numsize;i++){lines+=(((int)d[i]) - 48);}
+			//lines is now set to the length of the file.
+			int curPos = 7 + numsize + 1;
+			for (int i = 1; i < lines; i++) {
+				stree.sync();
+				std::string temp;
+				//I would fear whatever abomination would take more than 128 characters in a line; especially in my format.
+				std::getline(stree, temp, '\n'); //overloaded string-type getline
+				confLine line;
+				line.line = temp;
+				line.lineNo = i;
+				curPos+=temp.length(); //I don't know if this is necessary; nothing in documentation saying it isn't. No -1 because of 'start on new line'
 /*
 DIRECTLY FROM THE .iecai-ent GENERIC FILE:
 ; IECAI Entities File Template
@@ -151,42 +183,11 @@ DIRECTLY FROM THE .iecai-ent GENERIC FILE:
 ; {"","",/,/} DEFINES AN ENTITY OPTION (TITLE, DEFAULTVALUE, NUMERIC, BOOLEAN)
 ; // DEFINES A LOCAL OPTION (NOT PART OF THE PARENT OBJECT)
 */
-namespace entbaseF {
-	//These assume 'path' is valid!
-	enum chartype {header, info, option, comment, list, ref, name, point, linkpnt, entopt, locopt};
-	struct confLine {
-		chartype type;
-		string line;
-		int lineNo;
-		bool constant;
-	};
-	entBase fetchFromFile(std::string path, int classID) {
-		std::fstream stree;
-		stree.open(path, std::fstream::in);
-		if (stree) { //Check to ensure it's valid
-			stree.seekg(stree.beg + 5);
-			int numsize = stree.get() - 48;
-			//48 == 0; 57 == 9  (In ASCII)
-			stree.seekg(stree.beg + 7);
-			char[8] d;
-			stree.get(d, numsize);
-			int lines = 0;
-			for (int i=0;i<numsize;i++){lines+=(((int)d[i]) - 48);}
-			//lines is now set to the length of the file.
-			int curPos = 7 + numsize + 1;
-			for (int i = 1; i < lines; i++) {
-				stree.sync();
-				std::string temp;
-				//I would fear whatever abomination would take more than 128 characters in a line; especially in my format.
-				std::getline(stree, temp, '\n'); //overloaded string-type getline
-				confLine line;
-				line.line = temp;
-				line.lineNo = i;
-				curPos+=temp.length() - 1; //I don't know if this is necessary; nothing in documentation saying it isn't
 				for (int _p = 0; _p < temp.length() - 1; _p++) {
 					char c = temp[_p];
 					bool cmnt, cons, opt, headA, headB, loc, pnt, list, ref, name, lPnt, headS = 0,0,0,0,0,0,0,0,0,0,0,0;
 					int idnlvl = 0;
+					
 				}
 			}
 		}	
