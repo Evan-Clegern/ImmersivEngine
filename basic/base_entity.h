@@ -156,7 +156,6 @@ namespace entbaseF {
 			for (int i = 1; i < lines; i++) {
 				stree.sync();
 				std::string temp;
-				//I would fear whatever abomination would take more than 128 characters in a line; especially in my format.
 				std::getline(stree, temp, '\n'); //overloaded string-type getline
 				confLine line;
 				line.line = temp;
@@ -183,11 +182,15 @@ DIRECTLY FROM THE .iecai-ent GENERIC FILE:
 ; {"","",/,/} DEFINES AN ENTITY OPTION (TITLE, DEFAULTVALUE, NUMERIC, BOOLEAN)
 ; // DEFINES A LOCAL OPTION (NOT PART OF THE PARENT OBJECT)
 */
+				bool cmnt, cons, opt, headA, headB, loc, pnt, list, ref, name, lPnt, headS = 0,0,0,0,0,0,0,0,0,0,0,0;
+				int idnlvl = 0;
 				for (int _p = 0; _p < temp.length() - 1; _p++) {
-					char c = temp[_p];
-					bool cmnt, cons, opt, headA, headB, loc, pnt, list, ref, name, lPnt, headS = 0,0,0,0,0,0,0,0,0,0,0,0;
-					int idnlvl = 0;
-					
+					char c = temp[_p]; //Character level!
+					if (c == '#') {
+						if ((not name)) {
+							headS = 1;
+						}
+					}
 				}
 			}
 		}	
