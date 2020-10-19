@@ -182,14 +182,48 @@ DIRECTLY FROM THE .iecai-ent GENERIC FILE:
 ; {"","",/,/} DEFINES AN ENTITY OPTION (TITLE, DEFAULTVALUE, NUMERIC, BOOLEAN)
 ; // DEFINES A LOCAL OPTION (NOT PART OF THE PARENT OBJECT)
 */
-				bool cmnt, cons, opt, headA, headB, loc, pnt, list, ref, name, lPnt, headS = 0,0,0,0,0,0,0,0,0,0,0,0;
+				bool couldlpnt = 0;
+				bool cmnt, cons, opt, headA, headB, loc, pnt, list, ref, name, lPnt, headS, eopt = 0,0,0,0,0,0,0,0,0,0,0,0,0;
 				int idnlvl = 0;
 				for (int _p = 0; _p < temp.length() - 1; _p++) {
 					char c = temp[_p]; //Character level!
-					if (c == '#') {
-						if ((not name)) {
-							headS = 1;
-						}
+					if ((c == '#') and not name) {
+						headS = 1;
+					}
+					if (c == '\n') {
+						cmnt = 0;
+						cons=0;
+						opt=0;
+						headA=0;
+						headB=0;
+						loc=0;
+						pnt=0;
+						list=0;
+						ref=0;
+						name=0;
+						lPnt=0;
+						headS=0;
+						eopt=0;
+					}
+					if ((c == '"') and (not name) and (not couldlpnt)) {
+						name = 1;
+					} else if ((c == '"') and name) {
+						name = 0;
+					} else if ((c == '"') and (not name) and couldlpnt) {
+						eopt = 1;
+					}
+					if ((c == '^') and not name) {
+						pnt = 1;
+						if (couldlpnt) {lPnt = 1;}
+					}
+					if ((c == '{') and not name) {
+						couldlpnt = 1;
+					}
+					if ((c == '(') and not name) {
+						if (pnt) {continue;} else {ref=1;}						
+					}
+					if ((c == '%') and not name) {
+						opt=1;
 					}
 				}
 			}
