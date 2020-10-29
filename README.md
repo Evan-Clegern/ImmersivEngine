@@ -21,13 +21,14 @@ The IECAI NPCs have multiple systems in the _NPC Class_ or _NPC Object_ to contr
   - **Hints** (point that modifies the behavior and emotion of any NPCs that have it within their look range)
 
 ### Operation: _File-side_
-IECAI definitions are stored on the filesystem of the computer, while runtime is split between that and memory - all expected, anyway. Multiple file extensions are to be used when operating with IECAI NPCs, data stored in [JSON](https://en.wikipedia.org/wiki/JSON) through [jsoncpp](https://github.com/open-source-parsers/jsoncpp), the reason being that there is a lot of data to be stored and a lot of that connects cross-module, even if one module is a child of another. IECAI Project file extensions are:
+IECAI definitions are stored on the filesystem of the computer, while runtime is split between that and memory - all expected, anyway. Multiple file extensions are to be used when operating with IECAI NPCs, data stored in [JSON](https://en.wikipedia.org/wiki/JSON) through [jsoncpp](https://github.com/open-source-parsers/jsoncpp), the reason being that there is a lot of data to be stored and a lot of that connects cross-module, even if one module is a child of another. IECAI Project filenames:
   - **ENTITIES FILE**, storing basic information for every entity that is in the world space - iecENTS-???.json
   - **ACTIONS FILE**, storing data for NPC act-events (NPC_action and NPC_vocal) - iecACTS-???.json
   - **ANIMATIONS FILE**, storing the hitbox-related data for the animations related to actions - iecANIM-???.json
   - **CLASS FILE**, storing data for NPC Classes and default configuration - iecCLAS-???.json
   - **BEHAVIOR FILE**, storing structured behaviors and routines - iecBHVR-???.json
   - **CHARACTER FILE**, storing temporary data and positioning for NPCs - iecANPC-???.json
+#### Example
 An example would be *iecANPC-save00.json* or *iecENTS-level4.json*
 
 ## Contact Us!
