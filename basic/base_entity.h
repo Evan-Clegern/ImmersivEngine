@@ -9,6 +9,7 @@ VERSION: 18
 #include <string>
 #include <cmath>
 #include <fstream>
+#include <json/json.h>
 enum axi {x,y,z};
 struct point {
 	float posX,posY,posZ;
@@ -131,105 +132,6 @@ namespace entbaseD {
 	};
 }
 namespace entbaseF {
-	//These assume 'path' is valid!
-	enum chartype {header, info, option, comment, list, ref, name, point, linkpnt, entopt, locopt};
-	struct confLine {
-		chartype type;
-		string line;
-		int lineNo;
-		bool constant;
-	};
-	entBase fetchFromFile(std::string path, int classID) {
-		std::fstream stree;
-		stree.open(path, std::fstream::in);
-		if (stree) { //Check to ensure it's valid
-			stree.seekg(stree.beg + 5); //get 1 to 9 digit size of line_counter
-			int numsize = stree.get() - 48;
-			//48 == 0; 57 == 9  (In ASCII Ints)
-			stree.seekg(stree.beg + 7);
-			char[8] d;
-			stree.get(d, numsize);
-			int lines = 0;
-			for (int i=0;i<numsize;i++){lines+=(((int)d[i]) - 48);}
-			//lines is now set to the length of the file.
-			int curPos = 7 + numsize + 1;
-			for (int i = 1; i < lines; i++) {
-				stree.sync();
-				std::string temp;
-				std::getline(stree, temp, '\n'); //overloaded string-type getline
-				confLine line;
-				line.line = temp;
-				line.lineNo = i;
-				curPos+=temp.length(); //I don't know if this is necessary; nothing in documentation saying it isn't. No -1 because of 'start on new line'
-/*
-DIRECTLY FROM THE .iecai-ent GENERIC FILE:
-; IECAI Entities File Template
-; Follow the following notation rules:
-; # DEFINES FILE INFORMATION (TITLE, DESCRIPTION, VERSION, VERSION INGAME, AUTHOR, TOTAL OBJECTS, TOTAL CLASSES)
-; $ DEFINES HEADER SPACES.
-;  $ is a top-level header; requires: 't'itle, 'c'lasstypes, 'p'id  'r'ange, 'l'ength
-;  $$ is an object-level header; requires: 'n'ame, 'i'd, 'ch'ildren, 'l'ength
-;  top-level: no indent; obj-level: 2 indent, object: 3 indent (spaces)
-; % DEFINES AN OPTION (I.E. 'SOLID' OR 'VOLUME'). %(type) (name) (value)
-; [types: 'b'ool, 'i'nt, 'f'loat, 's'tring, 'p'oint, 'r'eference, 'l'inked 'p'oint, 'en'tity option]
-; ; DEFINES A COMMENT.
-; \ DEFINES A CONSTANT. PLACE BEFORE OTHER SYMBOL.
-; #[ ] DEFINES LIST STRUCTURE (1sp indent when expanded; needs length number)
-; ( ) DEFINES A REFERENCE
-; " " DEFINES A NAME
-; ^(i,i,i) DEFINES A POINT
-; {^(i,i,i):#[..]} DEFINES A LINKED POINT
-; {"","",/,/} DEFINES AN ENTITY OPTION (TITLE, DEFAULTVALUE, NUMERIC, BOOLEAN)
-; // DEFINES A LOCAL OPTION (NOT PART OF THE PARENT OBJECT)
-*/
-				bool couldlpnt = 0;
-				bool cmnt, cons, opt, headA, headB, loc, pnt, list, ref, name, lPnt, headS, eopt = 0,0,0,0,0,0,0,0,0,0,0,0,0;
-				int idnlvl = 0;
-				for (int _p = 0; _p < temp.length() - 1; _p++) {
-					char c = temp[_p]; //Character level!
-					if ((c == '#') and not name) {
-						headS = 1;
-					}
-					if (c == '\n') {
-						cmnt = 0;
-						cons=0;
-						opt=0;
-						headA=0;
-						headB=0;
-						loc=0;
-						pnt=0;
-						list=0;
-						ref=0;
-						name=0;
-						lPnt=0;
-						headS=0;
-						eopt=0;
-					}
-					if ((c == '"') and (not name) and (not couldlpnt)) {
-						name = 1;
-					} else if ((c == '"') and name) {
-						name = 0;
-					} else if ((c == '"') and (not name) and couldlpnt) {
-						eopt = 1;
-					}
-					if ((c == '^') and not name) {
-						pnt = 1;
-						if (couldlpnt) {lPnt = 1;}
-					}
-					if ((c == '{') and not name) {
-						couldlpnt = 1;
-					}
-					if ((c == '(') and not name) {
-						if (pnt) {continue;} else {ref=1;}						
-					}
-					if ((c == '%') and not name) {
-						opt=1;
-					}
-				}
-			}
-		}	
-	}
-	bool writeToFile(std::string path, entBase ent) {
-		
-	}
+	//Fileside for entbase will be using JavaScript Object Notation due to ease-of-access
+	//See the 'iecENTS-generic.json' for the layout this reads through!
 }
