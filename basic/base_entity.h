@@ -2,7 +2,7 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 18
+VERSION: 19
 */
 #define __IECAI_BASE_ENTITY__
 #include <vector>
@@ -134,4 +134,7 @@ namespace entbaseD {
 namespace entbaseF {
 	//Fileside for entbase will be using JavaScript Object Notation due to ease-of-access
 	//See the 'iecENTS-generic.json' for the layout this reads through!
+	//jsoncpp uses a 'Json::Value root' and then input is given by an ifstream 'config_doc("whatevah")'
+	//then config_doc >> root to load it, so we can then use 'root.get(value)' to read that itemvalue!
+	Json::
 }
