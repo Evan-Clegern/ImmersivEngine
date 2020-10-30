@@ -153,6 +153,12 @@ namespace entbaseF {
 		int i_fetchnested(Json::Value input, std::string parent, std::string name) {
 			return input.get(input[parent].get(name, 0)).asInt();
 		}
+		float f_fetchsingle(Json::Value input, std::string name) {
+			return input.get(name, 0.00).asFloat();
+		}
+		float f_fetchnested(Json::Value input, std::string parent, std::string name) {
+			return input.get(input[parent].get(name, 0.00)).asFloat();
+		}
 		Json::Value loadstream(std::string file) {
 			std::ifstream rate(file, std::ifstream::binary);
 			Json::Value robert;
@@ -175,6 +181,7 @@ namespace entbaseF {
 			}
 			return data;
 		}
+		
 	}
 	namespace oper_type {
 		bool testmeta(Json::Value fileoper, std::string purpose) {
@@ -192,5 +199,9 @@ namespace entbaseF {
 		}
 		//NOTE: For 'entvalues', 0 = string, 1 = boolean and 2 = number (for the lists!)
 		//We're also going to need a way to make large batch jobs for linked points - they are god awful
+		//And, also, for "point entities," keep the volume to 0.00, and then we'll just ignore the empty list of "points"
+		bool testPnt(Json::Value fileoper) {
+			simple::
+		}
 	}
 }
