@@ -190,5 +190,7 @@ namespace entbaseF {
 				return false;
 			}
 		}
+		//NOTE: For 'entvalues', 0 = string, 1 = boolean and 2 = number (for the lists!)
+		//We're also going to need a way to make large batch jobs for linked points - they are god awful
 	}
 }
