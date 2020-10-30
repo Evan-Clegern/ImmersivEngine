@@ -1,0 +1,17 @@
+{
+	"metadata" : {
+		"iecai-vers" : 1,
+		"file-vers" : 1,
+		"author" : "Evan Clegern",
+		"dynamic" : 0,
+		"iecai-purpose" : "entity",
+		"comment" : "Provides generic entity classes."
+	},
+	"ToC-lines" : {
+		"entity_generic" :
+		
+		
+	},
+	
+	
+}
