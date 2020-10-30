@@ -8,10 +8,15 @@
 		"comment" : "Provides generic entity classes."
 	},
 	"ToC-lines" : {
-		"entity_generic" :
-		
-		
+		"entity_generic" : 13		
 	},
-	
-	
+	"entity_generic" : {
+		"options" : [0, 0, 0, 0, 0, 0],
+		"npc_class" : -1,
+		"spacelocal" : [],
+		"volume" : 0.00,
+		"values" : {"Name":0,"Description":0,"Boolean":1},
+		"children" : []
+	},
+	"comment-developer":"Linked points will be - {'main':[0,0,0],'links':[ [0,0,1],[0,1,0],[1,0,0] ]}"
 }
