@@ -27,9 +27,9 @@ A majority of IECAI operation requires persistent data modes, to save memory usa
   - **ANIMATIONS FILE**, storing the hitbox-related data for the animations related to actions - iecANIM-???.json
   - **CLASS FILE**, storing data for NPC Classes and default configuration - iecCLAS-???.json
   - **BEHAVIOR FILE**, storing structured behaviors and routines - iecBHVR-???.json
-  - **CHARACTER FILE**, storing temporary data and positioning for NPCs - iecANPC-???.json
+  - **REAL-TIME FILE**, which combines all of the above as well as NPC activity for in-game use - iecGAME-???.json
 #### Example Nomenclature
-An example would be *iecANPC-save00.json* or *iecENTS-level4.json*
+An example would be *iecGAME-save00.json* or *iecENTS-level4.json*
 
 ## Contact
 You can email me at evanclegern.work@gmail.com, or join the [Slack](https://iecai.slack.com) channel.
