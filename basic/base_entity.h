@@ -201,7 +201,7 @@ namespace entbaseF {
 		}
 	}
 	namespace f_tests {
-		bool testmeta(Json::Value fileoper, std::string purpose) {
+		bool validmeta(Json::Value fileoper, std::string purpose) {
 			int d = simple::i_fetchnested(input, "metadata", "iecai-vers");
 			if ((d == __IECAI_VERSION) or (__IECAI_THROWBACK == d)) {
 				std::string b = simple::s_fetchnested(fileoper, "metadata","iecai-purpose");
@@ -216,7 +216,7 @@ namespace entbaseF {
 		}
 		//NOTE: For 'entvalues', 0 = string, 1 = boolean and 2 = number (for the lists!)
 		//We're also going to need a way to make large batch jobs for linked points - they are god awful
-		bool test_pointent(Json::Value fileoper, std::string name) {
+		bool ispointent(Json::Value fileoper, std::string name) {
 			float t = simple::f_fetchnested(fileoper, name, "volume");
 			if (t == 0.00) {return true;} else {return false};
 		}
