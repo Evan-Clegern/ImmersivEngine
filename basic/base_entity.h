@@ -134,7 +134,44 @@ namespace entbaseD {
 namespace entbaseF {
 	//Fileside for entbase will be using JavaScript Object Notation due to ease-of-access
 	//See the 'iecENTS-generic.json' for the layout this reads through!
-	//jsoncpp uses a 'Json::Value root' and then input is given by an ifstream 'config_doc("whatevah")'
-	//then config_doc >> root to load it, so we can then use 'root.get(value)' to read that itemvalue!
-	Json::
+	namespace simple {
+		//jsoncpp uses a 'Json::Value root' and then input is given by an ifstream 'config_doc("whatevah")'
+		//then config_doc >> root to load it, so we can then use 'root.get(value)' to read that itemvalue!
+		std::string s_fetchsingle(Json::Value input, std::string name) {
+			return input.get(name,"no").asString();
+		}
+		std::string s_fetchnested(Json::Value input, std::string parent, std::string name) {
+			return input.get(input[parent].get(name, "no")).asString();
+		}
+		int i_fetchsingle(Json::Value input, std::string name) {
+			return input.get(name, 0).asInt();
+		}
+		int i_fetchnested(Json::Value input, std::string parent, std::string name) {
+			return input.get(input[parent].get(name, 0)).asInt();
+		}
+		Json::Value loadstream(std::string file) {
+			std::ifstream rate(file, std::ifstream::binary);
+			Json::Value robert;
+			rate >> robert;
+			return robert;
+		}
+		std::vector<std::string> s_fetchlist(Json::Value input, std::string cname) {
+			const Json::Value moine = input[cname];
+			std::vector<std::string> data;
+			for (int index = 0; index < moine.size(); index++) {
+				data.push_back(moine[index].asString());
+			}
+			return data;
+		}
+		std::vector<int> i_fetchlist(Json::Value input, std::string cname) {
+			const Json::Value moine = input[cname];
+			std::vector<int> data;
+			for (int i = 0; i < moine.size(); i++) {
+				data.push_back(moine[i].asInt());
+			}
+			return data;
+		}
+	}
+	
+	
 }
