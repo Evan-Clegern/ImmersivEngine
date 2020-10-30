@@ -4,6 +4,8 @@ TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
 VERSION: 19
 */
+#define __IECAI_VERSION 1
+#define __IECAI_THROWBACK 1 //For metadata in files!
 #define __IECAI_BASE_ENTITY__
 #include <vector>
 #include <string>
@@ -134,6 +136,8 @@ namespace entbaseD {
 namespace entbaseF {
 	//Fileside for entbase will be using JavaScript Object Notation due to ease-of-access
 	//See the 'iecENTS-generic.json' for the layout this reads through!
+	//According to the documentation from open-source-parsers/jsoncpp, this is all 100% correct.
+	//WILL NEED TESTING!
 	namespace simple {
 		//jsoncpp uses a 'Json::Value root' and then input is given by an ifstream 'config_doc("whatevah")'
 		//then config_doc >> root to load it, so we can then use 'root.get(value)' to read that itemvalue!
@@ -172,6 +176,19 @@ namespace entbaseF {
 			return data;
 		}
 	}
-	
-	
+	namespace oper_type {
+		bool testmeta(Json::Value fileoper, std::string purpose) {
+			int d = simple::i_fetchnested(input, "metadata", "iecai-vers");
+			if ((d == __IECAI_VERSION) or (__IECAI_THROWBACK == d)) {
+				std::string b = simple::s_fetchnested(fileoper, "metadata","iecai-purpose");
+				if (b == purpose) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+	}
 }
