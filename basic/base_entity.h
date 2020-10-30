@@ -151,13 +151,13 @@ namespace entbaseF {
 			return input.get(name, 0).asInt();
 		}
 		int i_fetchnested(Json::Value input, std::string parent, std::string name) {
-			return input.get(input[parent].get(name, 0)).asInt();
+			return (input[parent].get(name, 0)).asInt();
 		}
 		float f_fetchsingle(Json::Value input, std::string name) {
 			return input.get(name, 0.00).asFloat();
 		}
 		float f_fetchnested(Json::Value input, std::string parent, std::string name) {
-			return input.get(input[parent].get(name, 0.00)).asFloat();
+			return (input[parent].get(name, 0.00)).asFloat();
 		}
 		Json::Value loadstream(std::string file) {
 			std::ifstream rate(file, std::ifstream::binary);
@@ -181,9 +181,26 @@ namespace entbaseF {
 			}
 			return data;
 		}
-		
+		std::string s_doublenested(Json::Value input, std::string parA, std::string parB, std::string vName) {
+			return (input[parA][parB].get(name, "no")).asString();
+		}
+		int i_doublenested(Json::Value input, std::string parA, std::string parB, std::string vName) {
+			return (input[parA][parB].get(name, 0)).asInt();
+		}
+		float f_doublenested(Json::Value input, std::string parA, std::string parB, std::string vName) {
+			return (input[parA][parB].get(name, 0)).asFloat();
+		}
+		std::string s_listobj(Json::Value input, std::string lname, unsigned short int index) {
+			return (input[lname][index]).asString();
+		}
+		int i_listobj(Json::Value input, std::string lname, unsigned short int index) {
+			return (input[lname][index]).asInt();
+		}
+		float f_listobj(Json::Value input, std::string lname, unsigned short int index) {
+			return (input[lname][index]).asFloat();
+		}
 	}
-	namespace oper_type {
+	namespace f_tests {
 		bool testmeta(Json::Value fileoper, std::string purpose) {
 			int d = simple::i_fetchnested(input, "metadata", "iecai-vers");
 			if ((d == __IECAI_VERSION) or (__IECAI_THROWBACK == d)) {
@@ -199,9 +216,9 @@ namespace entbaseF {
 		}
 		//NOTE: For 'entvalues', 0 = string, 1 = boolean and 2 = number (for the lists!)
 		//We're also going to need a way to make large batch jobs for linked points - they are god awful
-		//And, also, for "point entities," keep the volume to 0.00, and then we'll just ignore the empty list of "points"
-		bool testPnt(Json::Value fileoper) {
-			simple::
+		bool test_pointent(Json::Value fileoper, std::string name) {
+			float t = simple::f_fetchnested(fileoper, name, "volume");
+			if (t == 0.00) {return true;} else {return false};
 		}
 	}
 }
