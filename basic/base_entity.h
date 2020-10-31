@@ -2,7 +2,7 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 19
+VERSION: 20
 */
 #define __IECAI_VERSION 1
 #define __IECAI_THROWBACK 1 //For metadata in files!
@@ -199,7 +199,11 @@ namespace entbaseF {
 		float f_listobj(Json::Value input, std::string lname, unsigned short int index) {
 			return (input[lname][index]).asFloat();
 		}
+		std::vector<entbaseD::linked_point> fetch_convert_pnts(Json::Value opers, std::string name) {
+
+		}
 	}
+	enum entval_t {text, toggle, number};
 	namespace f_tests {
 		bool validmeta(Json::Value fileoper, std::string purpose) {
 			int d = simple::i_fetchnested(input, "metadata", "iecai-vers");
@@ -219,6 +223,30 @@ namespace entbaseF {
 		bool ispointent(Json::Value fileoper, std::string name) {
 			float t = simple::f_fetchnested(fileoper, name, "volume");
 			if (t == 0.00) {return true;} else {return false};
+		}
+	}
+	entbaseD::entBase generateClass(std::string file, std::string objName) {
+		Json::Value d = simple::loadstream(file);
+		if (not f_tests::validmeta(d, "entity")) {
+			throw "Invalid file.";
+		}
+		const Json::Value operations = d[objName];
+		bool _s, _h, _ai, _m, _c, _ot;
+		_s = simple::i_listobj(operations, "values", 0);
+		_h = simple::i_listobj(operations, "values", 1);
+		_ai = simple::i_listobj(operations, "values", 2);
+		_m = simple::i_listobj(operations, "values", 3);
+		_c = simple::i_listobj(operations, "values", 4);
+		_ot = simple::i_listobj(operations, "values", 5);
+		int classe = simple::i_fetchsingle(operations, "npc_class");
+		std::vector<entbaseD::linked_point> space = simple::fetch_convert_pnts(operations, "spacelocal");
+		std::vector<int> childfids= simple::i_fetchlist(operations, "children");
+		float vol = f_fetchsingle(operations, "volume");
+		std::vector<entbaseD::entityValue> vals;
+		const Json::Value valses = operations["values"];
+		//TODO: Add value sequencing for the pseudo-list!!
+		for (int i = 0; i < valses.size(); i++) {
+			int dedede = 
 		}
 	}
 }
