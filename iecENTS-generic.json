@@ -15,7 +15,7 @@
 		"npc_class" : -1,
 		"spacelocal" : [],
 		"volume" : 0.00,
-		"values" : {"Name":[0,"object"],"Description":[0,"A generic object"],"Boolean":[1,true],"Number":[2,0.00]},
+		"values" : {"Name":[0,"object"],"Description":[0,"A generic object"],"Boolean":[1,"Yes"],"Number":[2,"0.00"]},
 		"children" : []
 	},
 	"comment-developer":"Linked points will be - {'main':[0,0,0],'size':3,'links':[ [0,0,1],[0,1,0],[1,0,0] ]}"
