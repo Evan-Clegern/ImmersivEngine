@@ -2,7 +2,7 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 20
+VERSION: 21
 */
 #define __IECAI_VERSION 1
 #define __IECAI_THROWBACK 1 //For metadata in files!
@@ -13,7 +13,8 @@ VERSION: 20
 #include <fstream>
 #include <json/json.h>
 enum axi {x,y,z};
-struct point {
+class point {
+public:
 	float posX,posY,posZ;
 	point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
 	inline point operator+(point a, point b) {
@@ -41,8 +42,8 @@ point p(float x, float y, float z) {
 namespace entbaseD {
 	struct linked_point { 
 		//More or less enables us to have multi-dimensional and defined connections
-		point& base;
-		std::vector<point&> linkedTo;
+		point base;
+		std::vector<point> linkedTo;
 	};
 	//Very simple groups; put here so they aren't cluttering other header files
 	struct terrain_slice {
@@ -74,9 +75,10 @@ namespace entbaseD {
 		//These are the +/- from the midpoint of the functional entity.
 	public:
 		std::vector<int&> addressChildren;
-		entBase(bool _s, bool _h, bool _ai, bool _m, bool _c, bool _oth, std::string _entname, std::vector<linked_point> pnt, std::vector<entityValue> neededVals) {
+		entBase(bool _s, bool _h, bool _ai, bool _m, bool _c, bool _oth, std::string _entname, std::vector<linked_point> pnt, std::vector<entityValue> neededVals, float _vol) {
 			solid = _s;
 			hint = _h;
+			volume = _vol;
 			ai = _ai;
 			model = _m;
 			control = _c;
@@ -199,8 +201,62 @@ namespace entbaseF {
 		float f_listobj(Json::Value input, std::string lname, unsigned short int index) {
 			return (input[lname][index]).asFloat();
 		}
-		std::vector<entbaseD::linked_point> fetch_convert_pnts(Json::Value opers, std::string name) {
-
+		entbaseD::linked_point fetch_linkedPoint(Json::Value oper_const) {
+			//Point layout in JSON - {"main":[0,0,0],"size":3,"links":[ [0,0,1],[0,1,0],[1,0,0] ]}
+			float x_main = oper_const["main"][0].asFloat();
+			float y_main = oper_const["main"][1].asFloat();
+			float z_main = oper_const["main"][2].asFloat();
+			const point bruh = p(x_main, y_main, z_main);
+			int size = oper_const.get(size, 3).asInt() - 1;
+			std::vector<point> pointes;
+			for (int i=0;i<size;i++) {
+				float x= oper_const["links"][i][0];
+				float y= oper_const["links"][i][1];
+				float z= oper_const["links"][i][2];
+				point t = p(x, y, z);
+				pointes.push_back(t);
+			}
+			entbaseD::linked_point the_pnt;
+			the_pnt.base = bruh;
+			the_pnt.linkedTo = pointes;
+			return the_pnt;
+		}
+		std::vector<entbaseD::linked_point> fetch_alllinks(Json::Value obj, std::string spacelocal_name) {
+			std::vector<entbaseD::linked_point> bruh;
+			for (int i = 0; i < list_const.size(); i++) { //i love you jsoncpp
+				const Json::Value list = obj[spacelocal_name][i];
+				const entbaseD::linked_point yuh = fetch_linkedPoint(list);
+				bruh.push_back(yuh);
+			}
+			return bruh;
+		}
+		entbaseD::entityValue get_entvalue(Json::Value obj, std::string name) {
+			//NOTE: For 'entvalues', 0 = string, 1 = boolean and 2 = number (for the lists!)
+			const Json::Value nuw = obj[name];
+			entbaseD::entityValue bro;
+			if (nuw[0].asInt() == 0) {
+				bro.numeric = false;
+				bro.boolean = false;
+			} else if (nuw[0].asInt() == 1) {
+				bro.numeric = false;
+				bro.boolean = true;
+			} else {
+				bro.numeric = true;
+				bro.boolean = false;
+			}
+			bro.defaultValue = obj[1];
+			bro.title = name;
+			return bro;
+		}
+		std::vector<entbaseD::entityValue> load_values(Json::Value entit) {
+			const Json::Value listA = entit["valuenames"];
+			int total = listA.size();
+			const Json::Value listB = entit["valuedata"];
+			std::vector<entbaseD::entityValue> burh;
+			for (int i = 0; i < total; i++) {
+				burh.push_back( get_entvalue(listB, listA[i]) );
+			}
+			return burh;
 		}
 	}
 	enum entval_t {text, toggle, number};
@@ -218,7 +274,6 @@ namespace entbaseF {
 				return false;
 			}
 		}
-		//NOTE: For 'entvalues', 0 = string, 1 = boolean and 2 = number (for the lists!)
 		//We're also going to need a way to make large batch jobs for linked points - they are god awful
 		bool ispointent(Json::Value fileoper, std::string name) {
 			float t = simple::f_fetchnested(fileoper, name, "volume");
@@ -232,21 +287,19 @@ namespace entbaseF {
 		}
 		const Json::Value operations = d[objName];
 		bool _s, _h, _ai, _m, _c, _ot;
-		_s = simple::i_listobj(operations, "values", 0);
-		_h = simple::i_listobj(operations, "values", 1);
-		_ai = simple::i_listobj(operations, "values", 2);
-		_m = simple::i_listobj(operations, "values", 3);
-		_c = simple::i_listobj(operations, "values", 4);
-		_ot = simple::i_listobj(operations, "values", 5);
+		_s = simple::i_listobj(operations, "options", 0);
+		_h = simple::i_listobj(operations, "options", 1);
+		_ai = simple::i_listobj(operations, "options", 2);
+		_m = simple::i_listobj(operations, "options", 3);
+		_c = simple::i_listobj(operations, "options", 4);
+		_ot = simple::i_listobj(operations, "options", 5);
 		int classe = simple::i_fetchsingle(operations, "npc_class");
-		std::vector<entbaseD::linked_point> space = simple::fetch_convert_pnts(operations, "spacelocal");
+		std::vector<entbaseD::linked_point> space = simple::fetch_alllinks(operations, "spacelocal");
 		std::vector<int> childfids= simple::i_fetchlist(operations, "children");
 		float vol = f_fetchsingle(operations, "volume");
-		std::vector<entbaseD::entityValue> vals;
-		const Json::Value valses = operations["values"];
-		//TODO: Add value sequencing for the pseudo-list!!
-		for (int i = 0; i < valses.size(); i++) {
-			int dedede = 
-		}
+		std::vector<entbaseD::entityValue> vals = simple::load_values(operations);
+		
+		entbaseD::entBase djungelskog(_s, _h, _ai, _m, _c, _ot, objName, space, vals, vol);
+		return djungelskog;
 	}
 }
