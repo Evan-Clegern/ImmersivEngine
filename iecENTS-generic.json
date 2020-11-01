@@ -18,5 +18,5 @@
 		"values" : {"Name":0,"Description":0,"Boolean":1},
 		"children" : []
 	},
-	"comment-developer":"Linked points will be - {'main':[0,0,0],'links':[ [0,0,1],[0,1,0],[1,0,0] ]}"
+	"comment-developer":"Linked points will be - {'main':[0,0,0],'size':3,'links':[ [0,0,1],[0,1,0],[1,0,0] ]}"
 }
