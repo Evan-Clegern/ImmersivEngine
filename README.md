@@ -13,7 +13,7 @@ AI is built with multiple factors including: Risk, Self-Preservation, Route Plan
 IECAI NPCs utilize (or will utilize) a hierarchy-like system for handling behavior, a majority of them building on one another.
   - **Event** (a single function grouping that is essentially a direct connection to the game engine)
   - **Routines** (cycled sets of events, like _play "idle animation"_ while performing an observation of the area)
-  - **Behaviors** (flexible routines for responding to specified "stimuli IDs" - in a behavioral [decision tree format](https://en.wikipedia.org/wiki/Decision_tree))
+  - **Behaviors** (flexible routines for responding to specified "stimuli IDs" - in a behavioral [decision tree format](en.wikipedia.org/wiki/Decision_tree "Wikipedia Page"))
   - **Routes** (set systems of points which serve as a suggested route of travel)
   - **Squads** (flexible groups of other NPCs which have some extra routines and behaviors)
   - **Relations** (flexible modifiers between classess or objects that define extra behaviors)
