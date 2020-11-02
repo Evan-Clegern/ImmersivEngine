@@ -2,10 +2,9 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 21
+VERSION: 22
 */
-#define __IECAI_VERSION 1
-#define __IECAI_THROWBACK 1 //For metadata in files!
+#define __IECAI_FVERSION 1.2
 #define __IECAI_BASE_ENTITY__
 #include <vector>
 #include <string>
@@ -14,8 +13,9 @@ VERSION: 21
 #include <json/json.h>
 enum axi {x,y,z};
 class point {
-public:
+protected:
 	float posX,posY,posZ;
+public:
 	point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
 	inline point operator+(point a, point b) {
 		float pX,pY,pZ = a.posX + b.posX,a.posY+b.posY,a.posZ+b.posZ;
@@ -135,7 +135,7 @@ namespace entbaseD {
 		}
 	};
 }
-namespace entbaseF {
+namespace entbaseFIN {
 	//Fileside for entbase will be using JavaScript Object Notation due to ease-of-access
 	//See the 'iecENTS-generic.json' for the layout this reads through!
 	//According to the documentation from open-source-parsers/jsoncpp, this is all 100% correct.
@@ -260,10 +260,12 @@ namespace entbaseF {
 		}
 	}
 	enum entval_t {text, toggle, number};
+	const float good_throwbacks[1.15];
+	const int throwback_cnt 1;
 	namespace f_tests {
 		bool validmeta(Json::Value fileoper, std::string purpose) {
-			int d = simple::i_fetchnested(input, "metadata", "iecai-vers");
-			if ((d == __IECAI_VERSION) or (__IECAI_THROWBACK == d)) {
+			float d = simple::f_fetchnested(input, "metadata", "iecai-vers");
+			if (d == __IECAI_VERSION) {
 				std::string b = simple::s_fetchnested(fileoper, "metadata","iecai-purpose");
 				if (b == purpose) {
 					return true;
@@ -271,7 +273,26 @@ namespace entbaseF {
 					return false;
 				}
 			} else {
-				return false;
+				bool t = false;
+				if (d == good_throwbacks[0]) {
+					t = true;
+				}
+				for (int i=1;i<throwback_cnt - 1;i++) {
+					if (d == good_throwbacks[i]) {
+						t = true;
+					}
+				}
+				if (t) {
+					std::string b = simple::s_fetchnested(fileoper, "metadata","iecai-purpose");
+					if (b == purpose) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+				
 			}
 		}
 		//We're also going to need a way to make large batch jobs for linked points - they are god awful
@@ -283,7 +304,7 @@ namespace entbaseF {
 	entbaseD::entBase generateClass(std::string file, std::string objName) {
 		Json::Value d = simple::loadstream(file);
 		if (not f_tests::validmeta(d, "entity")) {
-			throw "Invalid file.";
+			throw "Invalid file version or type.";
 		}
 		const Json::Value operations = d[objName];
 		bool _s, _h, _ai, _m, _c, _ot;
@@ -298,8 +319,14 @@ namespace entbaseF {
 		std::vector<int> childfids= simple::i_fetchlist(operations, "children");
 		float vol = f_fetchsingle(operations, "volume");
 		std::vector<entbaseD::entityValue> vals = simple::load_values(operations);
-		
 		entbaseD::entBase djungelskog(_s, _h, _ai, _m, _c, _ot, objName, space, vals, vol);
-		return djungelskog;
+		return djungelskog; //https://www.ikea.com/gb/en/cat/djungelskog-collection-40892/
 	}
+}
+namespace entbaseFOUT {
+	bool updateGenerated(std::string file, entbaseD::entBase& base) {
+		Json::Value strea = entbaseFIN::loadstream(file);
+		//TODO: FInd Writing things
+	}
+	
 }
