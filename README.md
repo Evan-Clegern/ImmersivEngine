@@ -22,7 +22,7 @@ IECAI NPCs utilize (or will utilize) a hierarchy-like system for handling behavi
 
 ### Operation: _File-side_
 A majority of IECAI operation requires persistent data modes, to save memory usage and to enable easy system restoration. Multiple naming standards are to be used when operating with IECAI NPCs, with data stored in [JSON](https://en.wikipedia.org/wiki/JSON) through [jsoncpp](https://github.com/open-source-parsers/jsoncpp). The nomenclature for files is as follows:
-  - **ENTITIES FILE**, storing basic information for every entity that is in the world space - iecENTS-???.json
+  - **ENTITIES FILE**, storing class configurations - iecENTS-???.json
   - **ACTIONS FILE**, storing data for NPC act-events (NPC_action and NPC_vocal) - iecACTS-???.json
   - **ANIMATIONS FILE**, storing the hitbox-related data for the animations related to actions - iecANIM-???.json
   - **CLASS FILE**, storing data for NPC Classes and default configuration - iecCLAS-???.json
