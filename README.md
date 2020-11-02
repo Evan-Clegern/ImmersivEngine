@@ -22,12 +22,12 @@ IECAI NPCs utilize (or will utilize) a hierarchy-like system for handling behavi
 
 ### Operation: _File-side_
 A majority of IECAI operation requires persistent data modes, to save memory usage and to enable easy system restoration. Multiple naming standards are to be used when operating with IECAI NPCs, with data stored in [JSON](https://en.wikipedia.org/wiki/JSON) through [jsoncpp](https://github.com/open-source-parsers/jsoncpp). The nomenclature for files is as follows:
-  - **ENTITIES FILE**, storing class configurations - iecENTS-???.json
-  - **ACTIONS FILE**, storing data for NPC act-events (NPC_action and NPC_vocal) - iecACTS-???.json
-  - **ANIMATIONS FILE**, storing the hitbox-related data for the animations related to actions - iecANIM-???.json
-  - **CLASS FILE**, storing data for NPC Classes and default configuration - iecCLAS-???.json
-  - **BEHAVIOR FILE**, storing structured behaviors and routines - iecBHVR-???.json
-  - **REAL-TIME FILE**, storing real-time Entities and NPCs dynamically - iecGAME-???.json
+  - **ENTITIES FILE**, storing static entity class configurations - iecENTS-???.json
+  - **ACTIONS FILE**, storing static data for NPC act-events (NPC_action and NPC_vocal) - iecACTS-???.json
+  - **ANIMATIONS FILE**, storing the static hitbox-related data for all NPC animations - iecANIM-???.json
+  - **NPC CLASS FILE**, storing static NPC Classes and default configuration - iecNCLS-???.json
+  - **BEHAVIOR FILE**, storing static structured behaviors and routines - iecBHVR-???.json
+  - **REAL-TIME FILE**, storing dynamic real-time data for Entities and NPCs - iecGAME-???.json
 #### Example Nomenclature
 An example would be *iecGAME-save00.json* or *iecENTS-level4.json*
 
