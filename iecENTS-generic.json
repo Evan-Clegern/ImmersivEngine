@@ -1,6 +1,6 @@
 {
 	"metadata" : {
-		"iecai-vers" : 1.2,
+		"iecai-vers" : 1.25,
 		"file-vers" : 2,
 		"ent-count" : 1,
 		"author" : "Evan Clegern",
@@ -10,6 +10,7 @@
 	"entity_generic" : {
 		"options" : [0, 0, 0, 0, 0, 0],
 		"npc_class" : -1,
+		"spacelocal_s" : 0,
 		"spacelocal" : [],
 		"volume" : 0.00,
 		"valuenames": ["Name","Description","Boolean","Number"],
