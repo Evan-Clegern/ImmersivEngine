@@ -2,6 +2,7 @@
 	"metadata" : {
 		"iecai-vers" : 1.2,
 		"file-vers" : 2,
+		"ent-count" : 1,
 		"author" : "Evan Clegern",
 		"dynamic" : 0,
 		"iecai-purpose" : "entity",
