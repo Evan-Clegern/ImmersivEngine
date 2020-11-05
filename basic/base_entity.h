@@ -11,6 +11,7 @@ VERSION: 22
 #include <cmath>
 #include <fstream>
 #include <json/json.h>
+#include <json/writer.h>
 enum axi {x,y,z};
 class point {
 protected:
@@ -326,6 +327,11 @@ namespace entbaseFIN {
 namespace entbaseFOUT {
 	bool updateGenerated(std::string file, entbaseD::entBase& base) {
 		Json::Value strea = entbaseFIN::loadstream(file);
+		Json::StreamWriterBuilder build;
+		build["indentation"] = '\t';
+		build["commentStyle"] = "None";
+		std::unique_ptr<Json::StreamWriter> writer(build.newStreamWriter());
+		writer->write(/*Json::Value what, &std::fstream*/);
 		//TODO: FInd Writing things
 	}
 	
