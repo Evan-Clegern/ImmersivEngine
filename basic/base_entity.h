@@ -325,14 +325,23 @@ namespace entbaseFIN {
 	}
 }
 namespace entbaseFOUT {
-	bool updateGenerated(std::string file, entbaseD::entBase& base) {
-		Json::Value strea = entbaseFIN::loadstream(file);
-		Json::StreamWriterBuilder build;
-		build["indentation"] = '\t';
-		build["commentStyle"] = "None";
-		std::unique_ptr<Json::StreamWriter> writer(build.newStreamWriter());
-		writer->write(/*Json::Value what, &std::fstream*/);
-		//TODO: FInd Writing things
+	bool update_existingF(std::string file, entbaseD::entBase& base) {
+		//Can you do root["metadata"]["ent-count"] = 2
+		// and then do [{fstream}] << root  ?
+		//JSONCPP example says you can... okay then
+		Json::Value oldstream = entbaseFIN::loadstream(file);
+		if (not entbaseFIN::f_tests::validmeta(oldstream, "entity")) {return false;}
+		Json::Value newstream;
+		std::fstream streame(file, std::fstream::in | std::fstream::out | std::fstream::binary);
+		newstream["metadata"]["iecai-vers"] = __IECAI_FVERSION;
+		newstream["metadata"]["file-vers"] = (oldstream["metadata"].get("file-vers",0).asInt() + 1);
+		//Once we determine if it's replacing or not, change this accordingly.
+		unsigned short int t = oldstream["metadata"].get("ent-count",0).asInt();
+		if (oldstream.get(base->base_name, "") == NULL) {
+			newstream["metadata"]["ent-count"] = t + 1;
+		} else {
+			newstream["metadata"]["ent-count"] = t; //Object exists in previous file
+		}
 	}
 	
 }
