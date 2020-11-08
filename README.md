@@ -22,3 +22,7 @@ fatal error: json/json.h: No such file or directory
 #include <json/json.h>
 ```
 :bangbang: Working to fix as of 12:35 MST
+##### To-Do List for November 2020 branch, part 1:
+- [ ] Produce commands to include `jsoncpp` in compiler
+- [ ] Run tests on `error-finding.cpp` and log results
+- [ ] Produce basic compile script
