@@ -1,4 +1,4 @@
-# IECAI Testing Branch 1
+# IECAI Testing Branch - November 2020
 ### November 2020 Application
 
 |  Target System  | Status |
@@ -8,22 +8,22 @@
 
 
 
-#### :warning: 8 November 2020 @ 12:14 MST
+#### :warning: 8 November 2020, Ubuntu 20
 |     Build item      |  Current status  |
 |---------------------|---------------|
 |`meson wrap install jsoncpp`|  Operation successful :heavy_check_mark: |
 | `cmake` and `make`  jsoncpp 1.8.4   |   Compile Passed  :heavy_check_mark:  |
 |`gcc` inclusion jsoncpp| 1100+ lines of errors :x: :bangbang:  |
-|`gcc error-finding.cpp`| ONE MORE ERROR IN `base_entity.h` :warning:|
+|`gcc error-finding.cpp`| 1 err in `base_entity.h` :warning:|
 
 ###### :memo:  13:27 MST - found potential workaround
-Ran `amalgamate.py` after compilation and copied 'dist' folder. Testing soon.
+Ran `amalgamate.py` after compilation and copied `dist` folder. Testing soon.
 ###### :memo: 14:24 MST - fixing non-jsoncpp errors
 Currently on compile-run four. Comments being added for :ledger: running log.
 ###### :memo: :bangbang: 15:22 MST - fixed all but one non-jsoncpp error
-All other issues resolved, but final is not making much sense - see issue A2 (line 162). 
+All other issues resolved, but final is not making much sense - see issue A2 (line 162). Compile-run 7.
 
-### Compile commands:
+#### Compile commands:
 ```
 meson wrap install jsoncpp
 meson subprojects update
@@ -42,3 +42,6 @@ cp -r ./dist ./{Location}
 - [x] Produce commands to include `jsoncpp` in compiler
 - [x] Run tests on `error-finding.cpp` and log results
 - [x] Produce basic compile script
+
+##### Suspected JsonCPP issues:
+I think it's with the jsoncpp.cpp file; not sure yet.
