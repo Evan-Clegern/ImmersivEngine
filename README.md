@@ -7,14 +7,13 @@
 | :computer: Windows 10 | :x: :no_entry: |
 
 
-JsonCPP is installed via Meson Build System Wrap.
 
 #### :x: 8 November 2020 @ 12:14 MST
-|     Build item      |  Test status  |
+|     Build item      |  Current status  |
 |---------------------|---------------|
 |`meson wrap install jsoncpp`|  Operation successful :heavy_check_mark: |
-|   jsoncpp :construction: 1.8.4   |   Compile Passed  :heavy_check_mark:  |
-|`gcc` inclusion jsoncpp| Failed to locate jsoncpp :x:  |
+| `cmake` and `make`  jsoncpp 1.8.4   |   Compile Passed  :heavy_check_mark:  |
+|`gcc` inclusion jsoncpp| Unknown :interrobang:  |
 |`gcc error-finding.cpp`| Can't use jsoncpp :x:|
 
 ##### Test file information
