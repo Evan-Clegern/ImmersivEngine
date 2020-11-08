@@ -172,7 +172,6 @@ namespace entbaseD {
 				//Resolved Issue A5: no match for operator+
 				//It's because d.at(i) is a .. linked_point
 				//Maybe make a function for a linked_point to fix?
-				//Issue is no longer resolved, may be fixed by the removal of inheritance
 				occupied_space.push_back(addlinked(d.at(i), location));
 				//Round 7 Fix: applied 'addlinked' remake function
 			}
@@ -210,9 +209,7 @@ namespace entbaseFIN {
 		//jsoncpp uses a 'Json::Value root' and then input is given by an ifstream 'config_doc("whatevah")'
 		//then config_doc >> root to load it, so we can then use 'root.get(value)' to read that itemvalue!
 		std::string s_fetchsingle(Json::Value input, std::string name) {
-			//Issue A7: no matching function call to 'Json::Value::get(Json::Value)' ?
-			//Unknown reason; this follows jsoncpp's example code..
-			//A7 is not showing up in the error; but it doesn't *seem* resolved...
+			//Resolved Issue A7: no matching function call to 'Json::Value::get(Json::Value)'
 			return input.get(name,"no").asString();
 		}
 		std::string s_fetchnested(Json::Value input, std::string parent, std::string name) {
@@ -324,8 +321,8 @@ namespace entbaseFIN {
 				bro.boolean = false;
 			}
 			bro.defaultValue = obj[1].asString();
-			//Issue A10: no match for 'operator=' (std::string and Json::Value)
-			//Round 4 Potential Fix: added 'asString()'
+			//Resolved Issue A10: no match for 'operator=' (std::string and Json::Value)
+			//Round 4 Fix: added 'asString()'
 			bro.title = name;
 			return bro;
 		}
@@ -336,8 +333,8 @@ namespace entbaseFIN {
 			std::vector<entbaseD::entityValue> burh;
 			for (int i = 0; i < total - 1; i++) { //jsoncpp example says it may treat "size" with respect to index... I doubt it.
 				burh.push_back( get_entvalue(listB, listA[i].asString()) );
-				//Issue A11: could not convert from 'const Json::Value' to 'std::string'
-				//Round 4 Potential Fix: added .asString() to index call
+				//Resolved Issue A11: could not convert from 'const Json::Value' to 'std::string'
+				//Round 4 Fix: added .asString() to index call
 			}
 			return burh;
 		}
