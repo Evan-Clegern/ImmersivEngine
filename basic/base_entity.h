@@ -19,19 +19,20 @@ class point {
 public:
 	float posX,posY,posZ;
 	point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
-	inline void operator+=(point b) const {
+	inline point operator+=(point b) const {
 		//Round 2 Fix: += does not allow for 2 args
-		//So treated 'this' argument like an address-of (as specified in error code)
-		this->posX +=b.posX;
-		this->posY +=b.posY;
-		this->posZ +=b.posZ;
+		float x = this->posX + b.posX;
+		float y = this->posY + b.posY;
+		float z = this->posZ + b.posZ;
+		//Round 3 Fixes: 'this' is treated as readonly
+		return obje(x,y,z);
 	}
 };
 point p(float x, float y, float z) { //Round 2 Fix: Moved up
 	point bob(x, y, z);
 	return bob;
 }
-//"throwback" functions
+//"throwback" function
 point operator+(point a, point b) {
 	float x = a.posX + b.posX;
 	float y = a.posY + b.posY;
@@ -46,10 +47,21 @@ float operator>>(point a, point b) {
 	return sqrt(xDist + yDist + zDist);
 }
 namespace entbaseD {
-	struct linked_point { 
+	class linked_point { 
+	public: //Round 3 Fix/Addition: Made this a class; added 'operator+'
 		//More or less enables us to have multi-dimensional and defined connections
 		point base;
 		std::vector<point> linkedTo;
+		inline linked_point operator+(point in) {
+			linked_point t;
+			t.base = this->base + in;
+			for (int ind = 0; ind < linkedTo.size() -1; ind++) {
+				point yuh = this->linkedTo.at(ind);
+				yuh += in;
+				t.linkedTo.push_back(yuh);
+			}
+			return t;
+		}
 	};
 	//Very simple groups; put here so they aren't cluttering other header files
 	struct terrain_slice {
@@ -95,8 +107,8 @@ namespace entbaseD {
 				//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
 				occupiedSpaceLocal.push_back(pnt.at(i));
 			}
-			for (int i = 0; i < neededVals.length() - 1; i++) {
-				//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
+			for (int i = 0; i < neededVals.size() - 1; i++) {
+				//Round 3 Fix: forgot that vector doesn't have 'length' but 'size'
 				values.push_back(neededVals.at(i));
 			}
 		}
@@ -114,22 +126,30 @@ namespace entbaseD {
 		int baseID, engineID, linkedNPC, smellStrength, realtimeID;
 		//Set linkedNPC to -1 if not applicable, set to the JSON ID if applicable!
 		//No more *pretend protected*
-		std::vector<std::string> data_list; //The 'curValue' for each of the base's required items
+		std::vector<std::string> data_list; //The 'curValue' for each of the base's required item
 		int registerSelf(int file_id) {
 			this->realtimeID = file_id;
 			//Round 2 Fix(es): (const entity*)this  fix (-> versus .)
-			this->base->addressChildren.push_back(realtimeID);
+			this->base.addressChildren.push_back(realtimeID);
 			//Round 2 Fix: Naming issue, and -> versus .
-			return this->base->addressChildren.length() - 1;
+			//Round 3 Fix: 'base' no longer a pointer when called by this->base
+			return this->base.addressChildren.length() - 1;
 		}
-		entity(entBase& parent, point location, std::string title, std::vector<std::string> list) : name(title) {
+		entity(entBase& parent, point location, terrain_slice& ter_location, std::string title, std::vector<std::string> list, int realID) : base(parent), relative_pos(ter_location) {
 			//Round 2 Fix: Replaced 'point& location' to 'point location'
-			//Issue: uninitialized reference member to 'class entbaseD::entBase&'
-			//Issue: no matching function for call to 'point::point()'
-			//Issue: uninitialized reference member to 'struct entbaseD::terrain_slice&'
+			//Round 3 Fix: Replaced position of title set
+			name = title;
+			//Issue A1: uninitialized reference member to 'class entbaseD::entBase&'
+			//Issue A2: no matching function for call to 'point::point()'
+			//Issue A3: uninitialized reference member to 'struct entbaseD::terrain_slice&'
+			//Round 3 Potential Fix (A1 & A3): Included before-function declarations
+			//Issue A4: base operand of '->' has non-pointer type 'entbaseD::entbase'
 			std::vector<linked_point> d = parent->occupiedSpaceLocal;
 			//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
 			for (int i = 0; i < d.size() - 1; i++) {
+				//Issue A5: no match for operator+
+				//It's because d.at(i) is a .. linked_point
+				//Maybe make a function for a linked_point to fix?
 				occupied_space.push_back(d.at(i) + location);
 			}
 			//Round 2 Fix: fixed rename mismatch (position  renamed to  true_pos)
@@ -137,7 +157,9 @@ namespace entbaseD {
 			//Round 2 Fix: fixed rename mismatch (effRotation  renamed to  rotation)
 			rotation = p(0.0,0.0,0.0);
 			base = parent;
-			registerSelf();
+			registerSelf(realID);
+			//Issue A6: no matchng function for call to 'entbaseD::entity::registerSelf()'
+			//Round 3 Potential Fix (A6): added 'realID' to the constructor for this function
 			//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
 			for (int i = 0; i < list.size() - 1; i++) {
 				data_list.push_back(list.at(i));
@@ -148,15 +170,9 @@ namespace entbaseD {
 			this->occupied_space.erase(this->occupied_space.begin(), this->occupied_space.end());
 			this->base->addressChildren.erase(this->base->addressChildren.begin() + this->baseID);
 			delete &(this->occupied_space); //Round 2 Fixes: implemented pointers
-			base=NULL;
-			delete &(this->baseID);
+			//Round 3 Fix: Purged un-needed base clear and baseId clear
 		}
-		void updatePosition(point pos, point rot) {
-			//Round 2 Fixes: replaced the bad 'this.' with 'this->'
-			this->position = pos;
-			this->effRotation = rot;
-			//TODO: Terrain Slice (relative positioning)
-		}
+		//Round 3 Fixes: Removed unneeded function (updatePosition)
 	};
 }
 namespace entbaseFIN {
@@ -168,6 +184,8 @@ namespace entbaseFIN {
 		//jsoncpp uses a 'Json::Value root' and then input is given by an ifstream 'config_doc("whatevah")'
 		//then config_doc >> root to load it, so we can then use 'root.get(value)' to read that itemvalue!
 		std::string s_fetchsingle(Json::Value input, std::string name) {
+			//Issue A7: no matching function call to 'Json::Value::get(Json::Value)' ?
+			//Unknown reason; this follows jsoncpp's example code..
 			return input.get(name,"no").asString();
 		}
 		std::string s_fetchnested(Json::Value input, std::string parent, std::string name) {
