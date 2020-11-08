@@ -14,11 +14,10 @@ VERSION: 23
 #include "dist/json/json.h"
 #include "dist/json/json-forwards.h"
 #include "dist/jsoncpp.cpp"
-enum axi {x,y,z};
 class point {
 public:
 	float posX,posY,posZ;
-	point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
+	point(const float x , const float y , const float z) : posX(x), posY(y), posZ(z) {}
 	inline point operator+=(point b) const {
 		//Round 2 Fix: += does not allow for 2 args
 		float x = this->posX + b.posX;
@@ -141,6 +140,7 @@ namespace entbaseD {
 		int baseID, engineID, linkedNPC, smellStrength, realtimeID;
 		//Set linkedNPC to -1 if not applicable, set to the JSON ID if applicable!
 		//No more *pretend protected*
+		
 		std::vector<std::string> data_list; //The 'curValue' for each of the base's required item
 		int registerSelf(int file_id) {
 			//Round 4 Fixes: replaced 'addressChildren' with new name 'realtime_children'
@@ -152,14 +152,15 @@ namespace entbaseD {
 			//Round 5 Fix: again, forgot vectors had 'size' not 'length'
 			return this->base.realtime_children.size() - 1;
 		}
-		entity(entBase& parent, const point location, terrain_slice& ter_location, std::string title, std::vector<std::string> list, int realID) : base(parent), relative_pos(ter_location) {
+		//Issue A2 still persists- "no matching function for call to 'point::point()'"
+		//Despite the fact that I tried to work around needing point calls for this
+		entity(entBase& parent, const point rot_, const point location_, terrain_slice& ter_location, std::string title, std::vector<std::string> list, int realID) : base(parent), relative_pos(ter_location), rotation(rot_), true_pos(location_)  {
 			//Round 2 Fix: Replaced 'point& location' to 'point location'
 			//Round 3 Fix: Replaced position of title set
 			name = title;
-			true_pos = location; //Round 7 failed Fix. what is wrong here?????
 			/*
 			Resolved Issue A1: uninitialized reference member to 'class entbaseD::entBase&'
-			Once-Resolved Issue A2: no matching function for call to 'point::point()'
+			Now-Re-Resolved Issue A2: no matching function for call to 'point::point()'
 			Round 4 Potential Fix: Made location a pointer; moved to before-function declare
 			Resolved Issue A3: uninitialized reference member to 'struct entbaseD::terrain_slice&'
 			Round 3 Fix (A1 & A3): Included before-function declarations
@@ -172,13 +173,9 @@ namespace entbaseD {
 				//Resolved Issue A5: no match for operator+
 				//It's because d.at(i) is a .. linked_point
 				//Maybe make a function for a linked_point to fix?
-				occupied_space.push_back(addlinked(d.at(i), location));
+				occupied_space.push_back(addlinked(d.at(i), location_));
 				//Round 7 Fix: applied 'addlinked' remake function
 			}
-			//Round 2 Fix: fixed rename mismatch (position  renamed to  true_pos)
-			true_pos = location;
-			//Round 2 Fix: fixed rename mismatch (effRotation  renamed to  rotation)
-			rotation = p(0.0,0.0,0.0);
 			base = parent;
 			registerSelf(realID);
 			//Resolved Issue A6: no matching function for call to 'entbaseD::entity::registerSelf()'
