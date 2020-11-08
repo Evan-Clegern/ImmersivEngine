@@ -18,6 +18,8 @@ JsonCPP is installed via Meson Build System Wrap.
 |`gcc error-finding.cpp`| Can't use jsoncpp :x:|
 
 ##### Test file information
-`fatal error: json/json.h: No such file or directory`
-`#include <json/json.h>`
-Working to fix as of 12:35 MST
+```
+fatal error: json/json.h: No such file or directory
+#include <json/json.h>
+```
+:bangbang: Working to fix as of 12:35 MST
