@@ -13,8 +13,8 @@
 |---------------------|---------------|
 |`meson wrap install jsoncpp`|  Operation successful :heavy_check_mark: |
 | `cmake` and `make`  jsoncpp 1.8.4   |   Compile Passed  :heavy_check_mark:  |
-|`gcc` inclusion jsoncpp| 1100+ lines of errors :x: :bangbang:  |
-|`gcc error-finding.cpp`| 1 err in `base_entity.h` :warning:|
+|inclusion of jsoncpp| 1100+ lines of errors :x: :bangbang:  |
+|`gcc error-finding.cpp`| Passing :heavy_check_mark: |
 
 ###### :memo:  13:27 MST - found potential workaround
 Ran `amalgamate.py` after compilation and copied `dist` folder. Testing soon.
@@ -22,7 +22,8 @@ Ran `amalgamate.py` after compilation and copied `dist` folder. Testing soon.
 Currently on compile-run four. Comments being added for :ledger: running log.
 ###### :memo: :bangbang: 15:22 MST - fixed all but one non-jsoncpp error
 All other issues resolved, but final is not making much sense - see issue A2 (line 162). Compile-run 7.
-
+###### :memo: :shipit: 16:23 MST - fixed all non-jsoncpp errors!
+The issue was, oddly, that the point class wanted to be set within the pre-function declaration area.
 #### Compile commands:
 ```
 meson wrap install jsoncpp
