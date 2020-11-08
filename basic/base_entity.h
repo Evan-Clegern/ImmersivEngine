@@ -1,4 +1,5 @@
 /*
+TESTING FILE
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
@@ -16,31 +17,28 @@ class point {
 public:
 	float posX,posY,posZ;
 	point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
-	inline void operator+=(point b) const {
-		this.posX +=b.posX;
-		this.posY +=b.posY;
-		this.posZ +=b.posZ;
-	}
-	inline void operator++(float hgt) const {
-		this.posZ += hgt;
+	inline void operator+=(point& a, point b) const {
+		a->posX +=b.posX;
+		a->posY +=b.posY;
+		a->posZ +=b.posZ;
 	}
 };
 //"throwback" function
 point operator+(point a, point b) {
-	float x = a.x + b.x;
-	float y = a.y + b.y;
-	float z = a.z + b.z;
+	float x = a.posX + b.posX;
+	float y = a.posY + b.posY;
+	float z = a.posZ + b.posZ;
 	return p(x,y,z);
 }
 float operator>>(point a, point b) {
 	//get distance between points
-	float xDist = pow(b.x - a.x, 2);
-	float yDist = pow(b.y - a.y, 2);
-	float zDist = pow(b.z - a.z, 2);
+	float xDist = pow(b.posX - a.posX, 2);
+	float yDist = pow(b.posY - a.posY, 2);
+	float zDist = pow(b.posZ - a.posZ, 2);
 	return sqrt(xDist + yDist + zDist);
 }
 point p(float x, float y, float z) {
-	point bob(x, y, x);
+	point bob(x, y, z);
 	return bob;
 }
 namespace entbaseD {
