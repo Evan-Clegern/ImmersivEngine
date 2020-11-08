@@ -55,21 +55,24 @@ namespace entbaseD {
 		//More or less enables us to have multi-dimensional and defined connections
 		point base;
 		std::vector<point> linkedTo;
-		linked_point(point _b, std::vector<point> _to) {
-			base = _b;
+		linked_point(point _b, std::vector<point> _to) : base(_b) {
+			//Round 7 Fix: there was an issue with 'point::point()' ??
+			//Fixed by using similar Issue A1 fix
 			linkedTo = _to;
 		}
 	};
 	//Round 4 Cleanup: moved target debug function out of the class definition
 	//Round 5 Fix: removed the bad inheritance item
-	inline linked_point operator+(point in) {
-		point baes = this->base + in;
+	//Round 7 Fix: changed the name
+	inline linked_point addlinked(linked_point basic, point in) {
+		point baes = basic.base + in;
 		std::vector<point> points;
 		//Resolved Issue A8: use of deleted function [constructor]
-		for (int ind = 0; ind < linkedTo.size() -1; ind++) {
-			point yuh = this->linkedTo.at(ind);
+		for (int ind = 0; ind < basic.linkedTo.size() -1; ind++) {
+			point yuh = basic.linkedTo.at(ind);
+			//Round 7 Fix: fixed with rename/re-add
 			yuh += in;
-			points.linkedTo.push_back(yuh);
+			points.push_back(yuh);
 		}
 		//Round 4 Fix: applied the linked_point constructor
 		linked_point t(baes, points);
@@ -149,13 +152,14 @@ namespace entbaseD {
 			//Round 5 Fix: again, forgot vectors had 'size' not 'length'
 			return this->base.realtime_children.size() - 1;
 		}
-		entity(entBase& parent, point& location, terrain_slice& ter_location, std::string title, std::vector<std::string> list, int realID) : base(parent), relative_pos(ter_location), true_pos(location) {
+		entity(entBase& parent, const point location, terrain_slice& ter_location, std::string title, std::vector<std::string> list, int realID) : base(parent), relative_pos(ter_location) {
 			//Round 2 Fix: Replaced 'point& location' to 'point location'
 			//Round 3 Fix: Replaced position of title set
 			name = title;
+			true_pos = location; //Round 7 failed Fix. what is wrong here?????
 			/*
 			Resolved Issue A1: uninitialized reference member to 'class entbaseD::entBase&'
-			Resolved Issue A2: no matching function for call to 'point::point()'
+			Once-Resolved Issue A2: no matching function for call to 'point::point()'
 			Round 4 Potential Fix: Made location a pointer; moved to before-function declare
 			Resolved Issue A3: uninitialized reference member to 'struct entbaseD::terrain_slice&'
 			Round 3 Fix (A1 & A3): Included before-function declarations
@@ -169,7 +173,8 @@ namespace entbaseD {
 				//It's because d.at(i) is a .. linked_point
 				//Maybe make a function for a linked_point to fix?
 				//Issue is no longer resolved, may be fixed by the removal of inheritance
-				occupied_space.push_back(d.at(i) + location);
+				occupied_space.push_back(addlinked(d.at(i), location));
+				//Round 7 Fix: applied 'addlinked' remake function
 			}
 			//Round 2 Fix: fixed rename mismatch (position  renamed to  true_pos)
 			true_pos = location;
@@ -211,9 +216,9 @@ namespace entbaseFIN {
 			return input.get(name,"no").asString();
 		}
 		std::string s_fetchnested(Json::Value input, std::string parent, std::string name) {
-			//Issue A12: Another unknown problem with Json::Value::get(Json::Value)
-			//even though we aren't.. doing that???
-			return input.get(input[parent].get(name, "no")).asString();
+			//Resolved Issue A12: Another unknown problem with Json::Value::get(Json::Value)
+			//Round 7 Fix: forgot that I added the second input.get
+			return input[parent].get(name, "no").asString();
 		}
 		int i_fetchsingle(Json::Value input, std::string name) {
 			return input.get(name, 0).asInt();
