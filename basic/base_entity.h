@@ -34,14 +34,15 @@ point p(float x, float y, float z) { //Round 2 Fix: Moved up
 	return bob;
 }
 //"throwback" function
-point point::operator+(point a, point b) {
+point operator+(point a, point b) {
 	float x = a.posX + b.posX;
 	float y = a.posY + b.posY;
 	float z = a.posZ + b.posZ;
 	return p(x,y,z);
 }
 //Round 4 Fixes/Cleanup: Put these operators as children of 'point' function.
-float point::operator>>(point a, point b) {
+//Round 5 Fix: undid previous changes (broke a lot of stuff, and caused errors)
+float operator>>(point a, point b) {
 	//get distance between points
 	float xDist = pow(b.posX - a.posX, 2);
 	float yDist = pow(b.posY - a.posY, 2);
@@ -60,7 +61,8 @@ namespace entbaseD {
 		}
 	};
 	//Round 4 Cleanup: moved target debug function out of the class definition
-	inline linked_point linked_point::operator+(point in) {
+	//Round 5 Fix: removed the bad inheritance item
+	inline linked_point operator+(point in) {
 		point baes = this->base + in;
 		std::vector<point> points;
 		//Resolved Issue A8: use of deleted function [constructor]
@@ -144,7 +146,8 @@ namespace entbaseD {
 			this->base.realtime_children.push_back(realtimeID);
 			//Round 2 Fix: Naming issue, and -> versus .
 			//Round 3 Fix: 'base' no longer a pointer when called by this->base
-			return this->base.realtime_children.length() - 1;
+			//Round 5 Fix: again, forgot vectors had 'size' not 'length'
+			return this->base.realtime_children.size() - 1;
 		}
 		entity(entBase& parent, point& location, terrain_slice& ter_location, std::string title, std::vector<std::string> list, int realID) : base(parent), relative_pos(ter_location), true_pos(location) {
 			//Round 2 Fix: Replaced 'point& location' to 'point location'
@@ -152,19 +155,20 @@ namespace entbaseD {
 			name = title;
 			/*
 			Resolved Issue A1: uninitialized reference member to 'class entbaseD::entBase&'
-			Issue A2: no matching function for call to 'point::point()'
+			Resolved Issue A2: no matching function for call to 'point::point()'
 			Round 4 Potential Fix: Made location a pointer; moved to before-function declare
-			Issue A2 does not make sense; we're not using the point constructor here???
 			Resolved Issue A3: uninitialized reference member to 'struct entbaseD::terrain_slice&'
 			Round 3 Fix (A1 & A3): Included before-function declarations
 			Resolved Issue A4: base operand of '->' has non-pointer type 'entbaseD::entbase'
+			Round 5 Fix: fixed error with name... reference member? '->' vs '.'
 			*/
-			std::vector<linked_point> d = parent->occupiedSpaceLocal;
+			std::vector<linked_point> d = parent.occupiedSpaceLocal;
 			//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
 			for (int i = 0; i < d.size() - 1; i++) {
 				//Resolved Issue A5: no match for operator+
 				//It's because d.at(i) is a .. linked_point
 				//Maybe make a function for a linked_point to fix?
+				//Issue is no longer resolved, may be fixed by the removal of inheritance
 				occupied_space.push_back(d.at(i) + location);
 			}
 			//Round 2 Fix: fixed rename mismatch (position  renamed to  true_pos)
@@ -207,6 +211,8 @@ namespace entbaseFIN {
 			return input.get(name,"no").asString();
 		}
 		std::string s_fetchnested(Json::Value input, std::string parent, std::string name) {
+			//Issue A12: Another unknown problem with Json::Value::get(Json::Value)
+			//even though we aren't.. doing that???
 			return input.get(input[parent].get(name, "no")).asString();
 		}
 		int i_fetchsingle(Json::Value input, std::string name) {
@@ -332,13 +338,15 @@ namespace entbaseFIN {
 		}
 	}
 	enum entval_t {text, toggle, number};
-	const float good_throwbacks[] = [1.15];
+	const float good_throwbacks[] = {1.15};
 	//Round 4 Fix: forgot to add the [] = [****] thing
-	const int throwback_cnt 1;
+	//Round 5 Fix: forgot, like the amazing programmer I am, that [] = {}, not [] = [].
+	const int throwback_cnt = 1;
 	namespace f_tests {
 		bool validmeta(Json::Value fileoper, std::string purpose) {
 			float d = simple::f_fetchnested(input, "metadata", "iecai-vers");
-			if (d == __IECAI_VERSION) {
+			if (d == __IECAI_FVERSION) {
+				//Round 5 Fix: renamed variable reference because i forgot it was FVERSION
 				std::string b = simple::s_fetchnested(fileoper, "metadata","iecai-purpose");
 				if (b == purpose) {
 					return true;
@@ -370,7 +378,8 @@ namespace entbaseFIN {
 		}
 		bool ispointent(Json::Value fileoper, std::string name) {
 			float t = simple::f_fetchnested(fileoper, name, "volume");
-			if (t == 0.00) {return true;} else {return false};
+			if (t == 0.00) {return true;} else {return false;}
+			//Round 5 Fix: moved improperly-placed colon
 		}
 	}
 	entbaseD::entBase generateClass(std::string file, std::string objName) {
@@ -389,7 +398,8 @@ namespace entbaseFIN {
 		int classe = simple::i_fetchsingle(operations, "npc_class");
 		std::vector<entbaseD::linked_point> space = simple::fetch_alllinks(operations);
 		std::vector<int> childfids= simple::i_fetchlist(operations, "children");
-		float vol = f_fetchsingle(operations, "volume");
+		float vol = simple::f_fetchsingle(operations, "volume");
+		//Round 5 Fix: forgot that we had simple:: inheritance
 		std::vector<entbaseD::entityValue> vals = simple::load_values(operations);
 		entbaseD::entBase djungelskog(_s, _h, _ai, _m, _c, _ot, objName, space, vals, vol);
 		return djungelskog; //https://www.ikea.com/gb/en/cat/djungelskog-collection-40892/
@@ -400,7 +410,8 @@ namespace entbaseFOUT {
 		//Can you do root["metadata"]["ent-count"] = 2
 		// and then do [{fstream}] << root  ?
 		//JSONCPP example says you can... okay then
-		Json::Value oldstream = entbaseFIN::loadstream(file);
+		Json::Value oldstream = entbaseFIN::simple::loadstream(file);
+		//Round 5 Fix: added 'simple::' inheritance (forgot it)
 		if (not entbaseFIN::f_tests::validmeta(oldstream, "entity")) {return false;}
 		Json::Value newstream = oldstream;
 		//We'll overwrite the entire file with this
@@ -471,7 +482,8 @@ namespace entbaseFOUT {
 		delete &oldstream;
 		try {
 			streame << newstream;	
-		} catch {
+		} catch(int e) {
+			//Round 5 Fix: forgot that you had to have (int e) in these
 			return false;	
 		}
 		return true;
