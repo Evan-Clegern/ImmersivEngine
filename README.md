@@ -14,7 +14,7 @@
 |`meson wrap install jsoncpp`|  Operation successful :heavy_check_mark: |
 | `cmake` and `make`  jsoncpp 1.8.4   |   Compile Passed  :heavy_check_mark:  |
 |`gcc` inclusion jsoncpp| 1100+ lines of errors :x: :bangbang:  |
-|`gcc error-finding.cpp`| Narrowing Down :warning:|
+|`gcc error-finding.cpp`| ONE MORE ERROR. :warning:|
 
 ###### :memo:  13:27 MST - found potential workaround
 Ran `amalgamate.py` after compilation and copied 'dist' folder. Testing soon.
@@ -22,5 +22,5 @@ Ran `amalgamate.py` after compilation and copied 'dist' folder. Testing soon.
 Currently on compile-run four. Comments being added for :ledger: running log.
 ##### To-Do List for November 2020 branch, part 1:
 - [x] Produce commands to include `jsoncpp` in compiler
-- [ ] Run tests on `error-finding.cpp` and log results
+- [x] Run tests on `error-finding.cpp` and log results
 - [ ] Produce basic compile script
