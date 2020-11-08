@@ -17,13 +17,19 @@ class point {
 public:
 	float posX,posY,posZ;
 	point(float x, float y, float z) : posX(x), posY(y), posZ(z) {}
-	inline void operator+=(point& a, point b) const {
-		a->posX +=b.posX;
-		a->posY +=b.posY;
-		a->posZ +=b.posZ;
+	inline void operator+=(point b) const {
+		//Round 2 Fix: += does not allow for 2 args
+		//So treated 'this' argument like an address-of (as specified in error code)
+		this->posX +=b.posX;
+		this->posY +=b.posY;
+		this->posZ +=b.posZ;
 	}
 };
-//"throwback" function
+point p(float x, float y, float z) { //Round 2 Fix: Moved up
+	point bob(x, y, z);
+	return bob;
+}
+//"throwback" functions
 point operator+(point a, point b) {
 	float x = a.posX + b.posX;
 	float y = a.posY + b.posY;
@@ -36,10 +42,6 @@ float operator>>(point a, point b) {
 	float yDist = pow(b.posY - a.posY, 2);
 	float zDist = pow(b.posZ - a.posZ, 2);
 	return sqrt(xDist + yDist + zDist);
-}
-point p(float x, float y, float z) {
-	point bob(x, y, z);
-	return bob;
 }
 namespace entbaseD {
 	struct linked_point { 
@@ -81,15 +83,18 @@ namespace entbaseD {
 			solid = _s;
 			hint = _h;
 			volume = _vol;
-			ai = _ai;
+			//Round 2 Fix: Variable Name Problem (ai  instead of  npc)
+			npc = _ai;
 			model = _m;
 			control = _c;
 			other = _oth;
 			base_name = _entname;
-			for (int i = 0; i < pnt.length() - 1; i++) {
+			for (int i = 0; i < pnt.size() - 1; i++) {
+				//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
 				occupiedSpaceLocal.push_back(pnt.at(i));
 			}
 			for (int i = 0; i < neededVals.length() - 1; i++) {
+				//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
 				values.push_back(neededVals.at(i));
 			}
 		}
@@ -109,33 +114,45 @@ namespace entbaseD {
 		//No more *pretend protected*
 		std::vector<std::string> data_list; //The 'curValue' for each of the base's required items
 		int registerSelf(int file_id) {
-			this.realtimeID = file_id;
-			this.base->addressChildren.push_back(realtimeID);
-			return entBase.addressChildren.length() - 1;
+			this->realtimeID = file_id;
+			//Round 2 Fix(es): (const entity*)this  fix (-> versus .)
+			this->base->addressChildren.push_back(realtimeID);
+			//Round 2 Fix: Naming issue, and -> versus .
+			return this->base->addressChildren.length() - 1;
 		}
-		entity(entBase& parent, point& location, std::string title, std::vector<std::string> list) : name(title) {
+		entity(entBase& parent, point location, std::string title, std::vector<std::string> list) : name(title) {
+			//Round 2 Fix: Replaced 'point& location' to 'point location'
+			//Issue: uninitialized reference member to 'class entbaseD::entBase&'
+			//Issue: no matching function for call to 'point::point()'
+			//Issue: uninitialized reference member to 'struct entbaseD::terrain_slice&'
 			std::vector<linked_point> d = parent->occupiedSpaceLocal;
-			for (int i = 0; i < d.length() - 1; i++) {
+			//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
+			for (int i = 0; i < d.size() - 1; i++) {
 				occupied_space.push_back(d.at(i) + location);
 			}
-			position = location;
-			effRotation = &(p(0.0,0.0,0.0));
+			//Round 2 Fix: fixed rename mismatch (position  renamed to  true_pos)
+			true_pos = location;
+			//Round 2 Fix: fixed rename mismatch (effRotation  renamed to  rotation)
+			rotation = p(0.0,0.0,0.0);
 			base = parent;
 			registerSelf();
-			for (int i = 0; i < list.length() - 1; i++) {
+			//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
+			for (int i = 0; i < list.size() - 1; i++) {
 				data_list.push_back(list.at(i));
 			}
 		}
 		~entity() {
-			this.occupied_space.erase(this.occupied_space.begin(), this.occupied_space.end());
-			this.base->addressChildren.erase(this.base->addressChildren.begin() + this.baseID);
-			delete occupied_space;
+			//Round 2 Fixes: replaced the bad 'this.' with 'this->'
+			this->occupied_space.erase(this->occupied_space.begin(), this->occupied_space.end());
+			this->base->addressChildren.erase(this->base->addressChildren.begin() + this->baseID);
+			delete &(this->occupied_space); //Round 2 Fixes: implemented pointers
 			base=NULL;
-			delete baseID;
+			delete &(this->baseID);
 		}
 		void updatePosition(point pos, point rot) {
-			this.position = pos;
-			this.effRotation = rot;
+			//Round 2 Fixes: replaced the bad 'this.' with 'this->'
+			this->position = pos;
+			this->effRotation = rot;
 			//TODO: Terrain Slice (relative positioning)
 		}
 	};
