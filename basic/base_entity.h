@@ -344,7 +344,8 @@ namespace entbaseFIN {
 	const int throwback_cnt = 1;
 	namespace f_tests {
 		bool validmeta(Json::Value fileoper, std::string purpose) {
-			float d = simple::f_fetchnested(input, "metadata", "iecai-vers");
+			//Round 6 Fix: naming issue (input  to  fileoper)
+			float d = simple::f_fetchnested(fileoper, "metadata", "iecai-vers");
 			if (d == __IECAI_FVERSION) {
 				//Round 5 Fix: renamed variable reference because i forgot it was FVERSION
 				std::string b = simple::s_fetchnested(fileoper, "metadata","iecai-purpose");
@@ -416,40 +417,45 @@ namespace entbaseFOUT {
 		Json::Value newstream = oldstream;
 		//We'll overwrite the entire file with this
 		//Why? We mirrored its contents in a Json::Value
-		std::fstream streame(file, std::fstream::in | std::fstream::out | std::fstream::binary | std::fstream::truncate);
+		std::fstream streame(file, std::fstream::in | std::fstream::out | std::fstream::binary | std::fstream::trunc);
+		//Round 6 Fix: naming problem with 'truncate', meant to be 'trunc'
+		//Round 6 Fixes: error 'base operand of '->' has non-pointer type' fix (using .)
 		newstream["metadata"]["iecai-vers"] = __IECAI_FVERSION;
 		newstream["metadata"]["file-vers"] = (oldstream["metadata"].get("file-vers",0).asInt() + 1);
 		//Once we determine if it's replacing or not, change this accordingly.
 		unsigned short int t = oldstream["metadata"].get("ent-count",0).asInt();
-		if (oldstream.get(base->base_name, "") == NULL) {
+		if (oldstream.get(base.base_name, "") == NULL) {
 			newstream["metadata"]["ent-count"] = t + 1;
 		} else {
 			newstream["metadata"]["ent-count"] = t; //Object exists in file
 		}
-		std::string name = base->base_name;
+		std::string name = base.base_name;
 		//Reverse Construct the entBase class.
-		newstream[name]["volume"] = base->volume;
-		newstream[name]["npc_class"] = base->npcclassID;
+		newstream[name]["volume"] = base.volume;
+		newstream[name]["npc_class"] = base.npcclassID;
 		//THE BATCH CONSTRUCTOR FOR LINKED POINTS!!!!!!!!!!!!!!!!!!!!!!
-		for (int A = 0; A < base->occupiedSpaceLocal.size() - 1; A++) {
-			linked_point pnt = base->occupiedSpaceLocal.at(A);
-			newstream[name]["spacelocal"][A]["main"][0] = pnt.base.x;
-			newstream[name]["spacelocal"][A]["main"][1] = pnt.base.y;
-			newstream[name]["spacelocal"][A]["main"][2] = pnt.base.z;
-			int index = pnt.linkedTo.size;
+		for (int A = 0; A < base.occupiedSpaceLocal.size() - 1; A++) {
+			entbaseD::linked_point pnt = base.occupiedSpaceLocal.at(A);
+			//Round 6 Fix: pos# vs # naming; entbaseD:: inheritance item
+			newstream[name]["spacelocal"][A]["main"][0] = pnt.base.posX;
+			newstream[name]["spacelocal"][A]["main"][1] = pnt.base.posY;
+			newstream[name]["spacelocal"][A]["main"][2] = pnt.base.posZ;
+			int index = pnt.linkedTo.size();
+			//Round 6 Fix: forgot to call size as a function
 			newstream[name]["spacelocal"][A]["size"] = index;
 			for (int i = 0; i < index - 1; i++) {
 				const point D = pnt.linkedTo.at(i);
 				//oh what fun. 5-level parenting...
-				newstream[name]["spacelocal"][A]["links"][i][0] = D.x;
-				newstream[name]["spacelocal"][A]["links"][i][1] = D.y;
-				newstream[name]["spacelocal"][A]["links"][i][2] = D.z;
+				//Round 6 Fixes: 'pos#' instead of '#' (new names)
+				newstream[name]["spacelocal"][A]["links"][i][0] = D.posX;
+				newstream[name]["spacelocal"][A]["links"][i][1] = D.posY;
+				newstream[name]["spacelocal"][A]["links"][i][2] = D.posZ;
 			}
 			newstream[name]["spacelocal_s"] = index;
 			delete &pnt;
 		}	
-		for (int i = 0; i < base->values.size() - 1; i++) {
-			entbaseD::entityValue d = base->values.at(i);
+		for (int i = 0; i < base.values.size() - 1; i++) {
+			entbaseD::entityValue d = base.values.at(i);
 			newstream[name]["valuenames"][i] = d.title;
 			int deed;
 			if (d.numeric) {
@@ -462,17 +468,18 @@ namespace entbaseFOUT {
 			newstream[name]["valuedata"][d.title][0] = deed; //0 = string, 1 = bool (Yes/No), 2 = number (Float)
 			newstream[name]["valuedata"][d.title][1] = d.defaultValue;
 		}
-		for (int i = 0; base->addressChildren.size() - 1; i++) {
-			newstream[name]["children"][i] = base->addressChildren.at(i);
+		for (int i = 0; base.realtime_children.size() - 1; i++) {
+			//Round 6 Fix: naming error (realtime_children, not addressChildren)
+			newstream[name]["children"][i] = base.realtime_children.at(i);
 		}
 		//Last thing: options
 		int o_a, o_b, o_c, o_d, o_e, o_f;
-		if (base->solid) {o_a = 1;} else {o_a = 0;}
-		if (base->hint) {o_b = 1;} else {o_b = 0;}
-		if (base->npc) {o_c = 1;} else {o_c = 0;}
-		if (base->model) {o_d = 1;} else {o_d = 0;}
-		if (base->control) {o_e = 1;} else {o_e = 0;}
-		if (base->other) {o_f = 1;} else {o_f = 0;}
+		if (base.solid) {o_a = 1;} else {o_a = 0;}
+		if (base.hint) {o_b = 1;} else {o_b = 0;}
+		if (base.npc) {o_c = 1;} else {o_c = 0;}
+		if (base.model) {o_d = 1;} else {o_d = 0;}
+		if (base.control) {o_e = 1;} else {o_e = 0;}
+		if (base.other) {o_f = 1;} else {o_f = 0;}
 		newstream[name]["options"][0] = o_a;
 		newstream[name]["options"][1] = o_b;
 		newstream[name]["options"][2] = o_c;
