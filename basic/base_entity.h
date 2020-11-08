@@ -11,7 +11,9 @@ VERSION: 23
 #include <string>
 #include <cmath>
 #include <fstream>
-#include <json/json.h>
+#include "dist/json/json.h"
+#include "dist/json/json-forwards.h"
+#include "dist/jsoncpp.cpp"
 enum axi {x,y,z};
 class point {
 public:
