@@ -2,7 +2,7 @@
 FILE: base_entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
-VERSION: 22
+VERSION: 23
 */
 #define __IECAI_FVERSION 1.25
 #define __IECAI_BASE_ENTITY__
@@ -11,7 +11,6 @@ VERSION: 22
 #include <cmath>
 #include <fstream>
 #include <json/json.h>
-#include <json/writer.h>
 enum axi {x,y,z};
 class point {
 public:
