@@ -13,8 +13,9 @@
 |---------------------|---------------|
 |`meson wrap install jsoncpp`|  Operation successful :heavy_check_mark: |
 | `cmake` and `make`  jsoncpp 1.8.4   |   Compile Passed  :heavy_check_mark:  |
-|inclusion of jsoncpp| 1100+ lines of errors :x: :bangbang:  |
-|`gcc error-finding.cpp`| Passing :heavy_check_mark: |
+| `dist/json/json.h` inclusion| Unknown, likely cause of errors  |
+| `base_entity.h` inclusion | Passing :heavy_check_mark: |
+| `gcc error-finding.cpp`  | Failed :x: |
 
 ###### :memo:  13:27 MST - found potential workaround
 Ran `amalgamate.py` after compilation and copied `dist` folder. Testing soon.
@@ -43,6 +44,4 @@ cp -r ./dist ./{Location}
 - [x] Produce commands to include `jsoncpp` in compiler
 - [x] Run tests on `error-finding.cpp` and log results
 - [x] Produce basic compile script
-
-##### Suspected JsonCPP issues:
-I think it's with the jsoncpp.cpp file; not sure yet.
+- [ ] Find why 2,000 `ld` errors come up
