@@ -22,7 +22,7 @@ void test_pnt() {
   float goop = d >> e;
   point added = d + e;
   point g = added;
-  added++ goop;
+  //removed the non-existent call.
 }
 
 int main() {
