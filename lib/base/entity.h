@@ -1,9 +1,9 @@
 /*
-FILE: base_entity.h
+FILE: entity.h
 TITLE: Basic Entity Layout Provider
 PURPOSE: Provides format bases for entities
 This File Has Been Debugged Fully (branch testing-nov2020)
-VERSION: 24
+VERSION: 25
 */
 #define __IECAI_FVERSION 1.25
 #define __IECAI_BASE_ENTITY__
