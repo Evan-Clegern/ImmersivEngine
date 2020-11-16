@@ -1,9 +1,9 @@
 /*
-FILE: entity.h
-TITLE: Basic Entity Layout Provider
+FILE: bsc_dat_ent.h
+TITLE: Basic Data and Entity Definitions
 PURPOSE: Provides format bases for entities
 This File Has Been Debugged Fully (branch testing-nov2020)
-VERSION: 25
+VERSION: 26
 */
 #define __IECAI_FVERSION 1.25
 #define __IECAI_BASE_ENTITY__
@@ -44,28 +44,35 @@ float operator>>(point a, point b) {
 	float zDist = pow(b.posZ - a.posZ, 2);
 	return sqrt(xDist + yDist + zDist);
 }
-namespace entbaseD {
-	class linked_point { 
-	public:
-		//More or less enables us to have multi-dimensional and defined connections
-		point base;
-		std::vector<point> linkedTo;
-		linked_point(point _b, std::vector<point> _to) : base(_b) {
-			linkedTo = _to;
-		}
-	};
-	inline linked_point addlinked(linked_point basic, point in) {
-		point baes = basic.base + in;
-		std::vector<point> points;
-		for (int ind = 0; ind < basic.linkedTo.size() -1; ind++) {
-			point yuh = basic.linkedTo.at(ind);
-			//Round 7 Fix: fixed with rename/re-add
-			yuh += in;
-			points.push_back(yuh);
-		}
-		linked_point t(baes, points);
-		return t;
+class linked_point { 
+public:
+	//More or less enables us to have multi-dimensional and defined connections
+	point base;
+	std::vector<point> linkedTo;
+	linked_point(point _b, std::vector<point> _to) : base(_b) {
+		linkedTo = _to;
 	}
+};
+inline linked_point addlinked(linked_point basic, point in) {
+	point baes = basic.base + in;
+	std::vector<point> points;
+	for (int ind = 0; ind < basic.linkedTo.size() -1; ind++) {
+		point yuh = basic.linkedTo.at(ind);
+		//Round 7 Fix: fixed with rename/re-add
+		yuh += in;
+		points.push_back(yuh);
+	}
+	linked_point t(baes, points);
+	return t;
+}
+//Brush should be for In-World objects opposed to entities.
+class brush {
+	std::vector<linked_point> point_list;
+public:
+	std::vector<point> bounds;
+	unsigned int ID;
+};
+namespace entbaseD {
 	//Very simple groups; put here so they aren't cluttering other header files
 	struct terrain_slice {
 		//This needs to be a 5x5 square, where Z has the variance.
@@ -221,7 +228,7 @@ namespace entbaseFIN {
 		float f_listobj(Json::Value input, std::string lname, unsigned short int index) {
 			return (input[lname][index]).asFloat();
 		}
-		entbaseD::linked_point fetch_linkedPoint(Json::Value oper_const) {
+		linked_point fetch_linkedPoint(Json::Value oper_const) {
 			//Point layout in JSON - {"main":[0,0,0],"size":3,"links":[ [0,0,1],[0,1,0],[1,0,0] ]}
 			float x_main = oper_const["main"][0].asFloat();
 			float y_main = oper_const["main"][1].asFloat();
@@ -237,10 +244,10 @@ namespace entbaseFIN {
 				point t = p(x, y, z);
 				pointes.push_back(t);
 			}
-			entbaseD::linked_point the_pnt(bruh, pointes);
+			linked_point the_pnt(bruh, pointes);
 			return the_pnt;
 		}
-		std::vector<entbaseD::linked_point> fetch_alllinks(Json::Value obj) {
+		std::vector<lnked_point> fetch_alllinks(Json::Value obj) {
 			std::vector<entbaseD::linked_point> bruh;
 			std::string n = "spacelocal_s";
 			if (obj.get(n,-5).asInt() == 0) {
@@ -248,7 +255,7 @@ namespace entbaseFIN {
 			}
 			for (int i = 0; i < obj.get(n, 1).asInt() - 1; i++) { //i love you jsoncpp
 				const Json::Value list = obj["spacelocal"][i];				
-				const entbaseD::linked_point yuh = fetch_linkedPoint(list);
+				const linked_point yuh = fetch_linkedPoint(list);
 				bruh.push_back(yuh);
 			}
 			return bruh;
@@ -337,7 +344,7 @@ namespace entbaseFIN {
 		_c = simple::i_listobj(operations, "options", 4);
 		_ot = simple::i_listobj(operations, "options", 5);
 		int classe = simple::i_fetchsingle(operations, "npc_class");
-		std::vector<entbaseD::linked_point> space = simple::fetch_alllinks(operations);
+		std::vector<linked_point> space = simple::fetch_alllinks(operations);
 		std::vector<int> childfids= simple::i_fetchlist(operations, "children");
 		float vol = simple::f_fetchsingle(operations, "volume");
 		std::vector<entbaseD::entityValue> vals = simple::load_values(operations);
@@ -371,7 +378,7 @@ namespace entbaseFOUT {
 		newstream[name]["npc_class"] = base.npcclassID;
 		//THE BATCH CONSTRUCTOR FOR LINKED POINTS!!!!!!!!!!!!!!!!!!!!!!
 		for (int A = 0; A < base.occupiedSpaceLocal.size() - 1; A++) {
-			entbaseD::linked_point pnt = base.occupiedSpaceLocal.at(A);
+			linked_point pnt = base.occupiedSpaceLocal.at(A);
 			newstream[name]["spacelocal"][A]["main"][0] = pnt.base.posX;
 			newstream[name]["spacelocal"][A]["main"][1] = pnt.base.posY;
 			newstream[name]["spacelocal"][A]["main"][2] = pnt.base.posZ;
