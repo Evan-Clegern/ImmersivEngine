@@ -5,7 +5,7 @@
 		"ent-count" : 1,
 		"author" : "Evan Clegern",
 		"iecai-purpose" : "entity",
-		"comment" : "Provides generic entity classes."
+		"comment" : "Provides generic entity classes. 'imecf' is 'ImmersivEngine Entity Class File'"
 	},
 	"entity_generic" : {
 		"options" : [0, 0, 0, 0, 0, 0],
