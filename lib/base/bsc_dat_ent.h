@@ -67,11 +67,18 @@ inline linked_point addlinked(linked_point basic, point in) {
 }
 //Brush should be for In-World objects opposed to entities.
 struct brush_face {
-	std::vector<linked_point> collection;
+	std::vector<point> assumedLinks;
+	point midpoint;
+	//These assume that each point connects to its two neighboring points.
 	unsigned int faceID, parentID;
+};
+struct brush_flink {
+	brush_face& a, b;
+	point A_connA, A_connB, B_connA, B_connB;
 };
 struct brush {
 	std::vector<brush_face> faces;
+	std::vector<brush_flink> facelinks;
 	std::vector<point> true_bounds;
 	unsigned int brushID;
 };
