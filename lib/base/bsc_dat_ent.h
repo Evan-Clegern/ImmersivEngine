@@ -66,11 +66,15 @@ inline linked_point addlinked(linked_point basic, point in) {
 	return t;
 }
 //Brush should be for In-World objects opposed to entities.
-class brush {
-	std::vector<linked_point> point_list;
-public:
-	std::vector<point> bounds;
-	unsigned int ID;
+struct brush_face {
+	std::vector<linked_point> collection;
+	unsigned int faceID, parentID;
+};
+struct brush {
+	std::vector<brush_face> faces;
+	std::vector<point> true_bounds;
+	std::vector<linked_point> combined_points;
+	unsigned int brushID;
 };
 namespace entbaseD {
 	//Very simple groups; put here so they aren't cluttering other header files
@@ -133,10 +137,8 @@ namespace entbaseD {
 		int baseID, engineID, linkedNPC, smellStrength, realtimeID;
 		//Set linkedNPC to -1 if not applicable, set to the JSON ID if applicable!
 		//No more *pretend protected*
-		
 		std::vector<std::string> data_list; //The 'curValue' for each of the base's required item
-		int registerSelf(int file_id) {
-			
+		int registerSelf(int file_id) {			
 			this->realtimeID = file_id;
 			this->base.realtime_children.push_back(realtimeID);
 			return this->base.realtime_children.size() - 1;
@@ -159,7 +161,6 @@ namespace entbaseD {
 			this->base.realtime_children.erase(this->base.realtime_children.begin() + this->baseID);
 			delete &(this->occupied_space);
 		}
-		//Round 3 Fixes: Removed unneeded function (updatePosition)
 	};
 }
 namespace entbaseFIN {
@@ -330,6 +331,9 @@ namespace entbaseFIN {
 			if (t == 0.00) {return true;} else {return false;}
 		}
 	}
+	brush_face makeFace(Json::Value fileoper, std::string facename) {
+		
+	}
 	entbaseD::entBase generateClass(std::string file, std::string objName) {
 		Json::Value d = simple::loadstream(file);
 		if (not f_tests::validmeta(d, "entity")) {
@@ -434,5 +438,4 @@ namespace entbaseFOUT {
 		}
 		return true;
 	}
-	
 }
