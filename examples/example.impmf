@@ -1,36 +1,56 @@
 {
-  "metadata" : {
-    "iecai-vers": 1.25,
-    "map-iecai-vers": 0.1,
-    "file-vers": 1,
-    "world-data": {
-      "title":"Fallback World",
-      "description":"Default World to Fallback to."
-    },
-    "author": "Evan Clegern",
-    "iecai-purpose": "map",
-    "comment": "Shows example of map layout, and brushes. 'impmf' is 'ImmersivEngine Plaintext Map File'"
-  },
-  "map":{
-    "geometry" : {
-		"brush_count":1,
-      "brushes":[
-      	{ //ID for these is their index!
-		"face_count":4,
-		"faces":[],
-		"bounds":[]
+	"metadata" : {
+		"iecai-vers": 1.25,
+		"map-iecai-vers": 0.1,
+		"file-vers": 1,
+		"world-data": {
+			"title":"Example Brushes",
+			"description":"",
+			"validated":false,
+			"runnable":false,
+		 },
+		"author": "Evan Clegern",
+		"iecai-purpose": "map",
+		"comment": "Shows example of map layout, and brushes. 'impmf' is 'ImmersivEngine Plaintext Map File'"
+	},
+	"map":{
+		"geometry" : {
+			"brush_count":1,
+			"brushes":[
+				{ //ID for these is their index!
+					"face_count":2,
+					"faces":[
+					{"points":3,"pointlist":[ [-1,0,0],[1,0,0],[0,0,1] ]},
+					{"points":3,"pointlist":[ [-1,0,0],[0,0,1],[-1,-1,0] ]}
+					],
+					"facelink_cnt":1,
+					"facelinks":[
+					{"face1":0,"face2":1,"sharedpnts":[ [-1,0,0],[0,0,1] ]}
+					],
+					"display_bounds":{
+						"x":[],
+						"y":[],
+						"z":[]
+					}
+				}
+			],
+			"ent_brushes":[],
+			"terrain":[]
+		},	
+		"ent_count":0,
+		"ent_include" : { //Beyond default files
+			"count":0,
+			"filenames":[]
+		},
+		"entities" : {
+			"point_ent":[],
+			"models":[],
+			"NPCs":[],
+			"logic":[],
+			"other":[]
 		}
-      ],
-      "ent_brushes":[],
-      "terrain":[]
-    },
-	"ent_count":0,
-    "entities" : {
-      "point_ent":[],
-      "models":[],
-      "NPCs":[],
-      "logic":[],
-      "other":[]
-    }
-  }
+	}, //end map data
+	"vis":{}, //Visibility Calculation Storage
+	"smoothing":{}, //Visibility Smoothing Storage
+	"lights":{} //Lighting Storage
 }
