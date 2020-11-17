@@ -79,7 +79,7 @@ struct brush_flink {
 struct brush {
 	std::vector<brush_face> faces;
 	std::vector<brush_flink> facelinks;
-	std::vector<point> true_bounds;
+	std::vector<std::vector<point>> nested_disp_bounds;	
 	unsigned int brushID;
 };
 namespace entbaseD {
