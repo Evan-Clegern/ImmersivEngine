@@ -73,7 +73,6 @@ struct brush_face {
 struct brush {
 	std::vector<brush_face> faces;
 	std::vector<point> true_bounds;
-	std::vector<linked_point> combined_points;
 	unsigned int brushID;
 };
 namespace entbaseD {
