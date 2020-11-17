@@ -74,7 +74,7 @@ struct brush_face {
 };
 struct brush_flink {
 	brush_face& a, b;
-	point A_connA, A_connB, B_connA, B_connB;
+	point sharedpntA, sharedpntB;
 };
 struct brush {
 	std::vector<brush_face> faces;
