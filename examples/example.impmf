@@ -1,0 +1,36 @@
+{
+  "metadata" : {
+    "iecai-vers": 1.25,
+    "map-iecai-vers": 0.1,
+    "file-vers": 1,
+    "world-data": {
+      "title":"Fallback World",
+      "description":"Default World to Fallback to."
+    },
+    "author": "Evan Clegern",
+    "iecai-purpose": "map",
+    "comment": "Shows example of map layout, and brushes. 'impmf' is 'ImmersivEngine Plaintext Map File'"
+  },
+  "map":{
+    "geometry" : {
+		"brush_count":1,
+      "brushes":[
+      	{ //ID for these is their index!
+		"face_count":4,
+		"faces":[],
+		"bounds":[]
+		}
+      ],
+      "ent_brushes":[],
+      "terrain":[]
+    },
+	"ent_count":0,
+    "entities" : {
+      "point_ent":[],
+      "models":[],
+      "NPCs":[],
+      "logic":[],
+      "other":[]
+    }
+  }
+}
