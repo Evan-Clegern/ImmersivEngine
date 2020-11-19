@@ -40,4 +40,22 @@ namespace geom_basic {
         brush_disp disp_bounds;
         unsigned int brushID;
     };
+	struct terrain_slice {
+		//This needs to be a 5x5 square, where Z has the variance.
+		linked_point* points[24];
+		unsigned short int chunkChildID, obscuration;
+		//Obscuration is 0-100; helps with visibilty calculations
+		float avgHgt, maxHgt, minHgt, variance;
+	};
+	struct terrain_chunk {
+		//15x15 of terrain_slices; therefore, 75x75 points (5,625 pnt)
+		terrain_slice* slices[224];
+		unsigned int chunkNum, biomeTypeNum;
+		float maxHgt, minHgt, avgHgt, varianceHgt, avgObscuration, normalTemperature;
+	};
+    struct full_terrain {
+        std::vector<terrain_chunk> chunks;
+		float width, length, height;
+		unsigned short int chunkPerRow, totalChunks, uniqueBiomes;
+    };
 }
