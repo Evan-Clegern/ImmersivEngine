@@ -14,21 +14,30 @@ VERSION: 1
 #include "dist/json/json-forwards.h"
 #include "dist/jsoncpp.cpp"
 namespace geom_basic {
+    struct point2d {
+        float A, B;
+    };
     //Brush should be for In-World objects opposed to entities.
     struct brush_face {
-      std::vector<point> assumedLinks;
-      point midpoint;
-      //These assume that each point connects to its two neighboring points.
-      unsigned int faceID, parentID;
+        std::vector<point> assumedLinks;
+        point midpoint;
+        //These assume that each point connects to its two neighboring points.
+        unsigned int faceID;
+        std::string fullpath; //B{brushID}:{faceID} -> B0:0
     };
     struct brush_flink {
-      brush_face& a, b;
-      point sharedpntA, sharedpntB;
+        brush_face& a, b;
+        point sharedpntA, sharedpntB;
+    };
+    struct brush_disp {
+        std::vector<point2d> x_bound;
+        std::vector<point2d> y_bound;
+        std::vector<point2d> z_bound;
     };
     struct brush {
-      std::vector<brush_face> faces;
-      std::vector<brush_flink> facelinks;
-      std::vector<std::vector<point>> nested_disp_bounds;	
-      unsigned int brushID;
+        std::vector<brush_face> faces;
+        std::vector<brush_flink> facelinks;
+        brush_disp disp_bounds;
+        unsigned int brushID;
     };
 }
