@@ -65,23 +65,6 @@ inline linked_point addlinked(linked_point basic, point in) {
 	linked_point t(baes, points);
 	return t;
 }
-//Brush should be for In-World objects opposed to entities.
-struct brush_face {
-	std::vector<point> assumedLinks;
-	point midpoint;
-	//These assume that each point connects to its two neighboring points.
-	unsigned int faceID, parentID;
-};
-struct brush_flink {
-	brush_face& a, b;
-	point sharedpntA, sharedpntB;
-};
-struct brush {
-	std::vector<brush_face> faces;
-	std::vector<brush_flink> facelinks;
-	std::vector<std::vector<point>> nested_disp_bounds;	
-	unsigned int brushID;
-};
 namespace entbaseD {
 	//Very simple groups; put here so they aren't cluttering other header files
 	struct terrain_slice {
@@ -336,9 +319,6 @@ namespace entbaseFIN {
 			float t = simple::f_fetchnested(fileoper, name, "volume");
 			if (t == 0.00) {return true;} else {return false;}
 		}
-	}
-	brush_face makeFace(Json::Value fileoper, std::string facename) {
-		
 	}
 	entbaseD::entBase generateClass(std::string file, std::string objName) {
 		Json::Value d = simple::loadstream(file);
