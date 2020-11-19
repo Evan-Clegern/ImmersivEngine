@@ -66,20 +66,6 @@ inline linked_point addlinked(linked_point basic, point in) {
 	return t;
 }
 namespace entbaseD {
-	//Very simple groups; put here so they aren't cluttering other header files
-	struct terrain_slice {
-		//This needs to be a 5x5 square, where Z has the variance.
-		linked_point points[24];
-		unsigned short int chunkChildID, obscuration;
-		//Obscuration is 0-100; helps with visibilty calculations
-		float avgHgt, maxHgt, minHgt, variance;
-	};
-	struct terrain_chunk {
-		//15x15 of terrain_slices; therefore, 75x75 points
-		terrain_slice slices[224];
-		unsigned int chunkNum, biomeTypeNum;
-		float maxHgt, minHgt, avgHgt, varianceHgt, avgObscuration, normalTemperature;
-	};
 	class entityValue {
 	public:
 		std::string title, defaultValue;
@@ -120,10 +106,9 @@ namespace entbaseD {
 		entBase& base;
 		std::vector<linked_point> occupied_space;
 		point true_pos, rotation;
-		terrain_slice& relative_pos;
 		std::string name;
 		float height;
-		int baseID, engineID, linkedNPC, smellStrength, realtimeID;
+		int baseID, engineID, linkedNPC, smellStrength, realtimeID, terrainSliceID;
 		//Set linkedNPC to -1 if not applicable, set to the JSON ID if applicable!
 		//No more *pretend protected*
 		std::vector<std::string> data_list; //The 'curValue' for each of the base's required item
@@ -132,8 +117,9 @@ namespace entbaseD {
 			this->base.realtime_children.push_back(realtimeID);
 			return this->base.realtime_children.size() - 1;
 		}
-		entity(entBase& parent, const point rot_, const point location_, terrain_slice& ter_location, std::string title, std::vector<std::string> list, int realID) : base(parent), relative_pos(ter_location), rotation(rot_), true_pos(location_)  {
+		entity(entBase& parent, const point rot_, const point location_, std::string title, std::vector<std::string> list, int realID, int trnID) : base(parent), relative_pos(ter_location), rotation(rot_), true_pos(location_)  {
 			name = title;
+			terrainSliceID = trnID;
 			std::vector<linked_point> d = parent.occupiedSpaceLocal;
 			//Round 2 Fix: forgot that vector doesn't have 'length' but 'size'
 			for (int i = 0; i < d.size() - 1; i++) {
