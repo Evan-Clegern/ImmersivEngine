@@ -17,31 +17,39 @@
 		"geometry" : {
 			"brush_count":1,
 			"brushes":[
+				//Start brush id 0
 				{ //ID for these is their index!
+				//Note: Referencing these is: B{brush}:{face ID} - like B0:1
 					"face_count":2,
 					"faces":[
-					{"points":3,"pointlist":[ [-1,0,0],[1,0,0],[0,0,1] ]},
+					{"points":3,"pointlist":[ [-1,0,0],[1,0,0],[0,0,1] ],},
 					{"points":3,"pointlist":[ [-1,0,0],[0,0,1],[-1,-1,0] ]}
 					],
 					"facelink_cnt":1,
 					"facelinks":[
 					{"face1":0,"face2":1,"sharedpnts":[ [-1,0,0],[0,0,1] ]}
-					],
-					"display_bounds":{
-						"x":[],
-						"y":[],
-						"z":[]
+					]
+					"brush_dispbound":{ //For Graphical Editor
+						//These are the planes (x plane= y*z,...)
+						"x":[ [-1,0],[0,1] ],
+						//x*z
+						"y":[ [-1,0],[1,0] ],
+						//x*y
+						"z":[ [-1,-1],[1,0] ]
 					}
 				}
+				//End brush id 0
 			],
+			"ent_brcount":0,
 			"ent_brushes":[],
+			"terrain_items":0,
 			"terrain":[]
 		},	
-		"ent_count":0,
 		"ent_include" : { //Beyond default files
 			"count":0,
 			"filenames":[]
 		},
+		"ent_count":0,
 		"entities" : {
 			"point_ent":[],
 			"models":[],
