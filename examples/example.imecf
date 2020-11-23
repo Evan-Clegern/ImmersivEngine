@@ -1,10 +1,10 @@
 {
 	"metadata" : {
-		"iecai-vers" : 1.25,
+		"imveng-vers" : 1.25,
 		"file-vers" : 2,
 		"ent-count" : 1,
 		"author" : "Evan Clegern",
-		"iecai-purpose" : "entity",
+		"imveng-purpose" : "entity",
 		"comment" : "Provides generic entity classes. 'imecf' is 'ImmersivEngine Entity Class File'"
 	},
 	"entity_generic" : {
