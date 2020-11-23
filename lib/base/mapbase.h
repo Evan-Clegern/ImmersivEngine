@@ -1,15 +1,14 @@
 /*
 FILE: mapbase.h
 TITLE: Map System Base Header
-PURPOSE: Provides brushes and a majority of I/O with map geometry.
-VERSION: 1
+PURPOSE: Provides basic map geometry and data
+VERSION: 2
 */
 #include "bsc_dat_ent.h"
-#include <iostream> //For consoles
+#include <iostream> //For console data
 #include <fstream>
 #include <string>
 #include <vector>
-#include <cmath>
 #include "dist/json/json.h"
 #include "dist/json/json-forwards.h"
 #include "dist/jsoncpp.cpp"
@@ -39,7 +38,7 @@ namespace geom_basic {
         std::vector<brush_flink> facelinks;
         brush_disp disp_bounds;
         unsigned int brushID;
-    };
+	};
 	struct terrain_slice {
 		//This needs to be a 5x5 square, where Z has the variance.
 		linked_point* points[24];
@@ -53,9 +52,28 @@ namespace geom_basic {
 		unsigned int chunkNum, biomeTypeNum;
 		float maxHgt, minHgt, avgHgt, varianceHgt, avgObscuration, normalTemperature;
 	};
-    struct full_terrain {
+    struct map_terrain {
         std::vector<terrain_chunk> chunks;
 		float width, length, height;
 		unsigned short int chunkPerRow, totalChunks, uniqueBiomes;
     };
 }
+struct map_header {
+	/*
+		"iecai-vers": 1.25,
+		"map-iecai-vers": 0.1,
+		"file-vers": 1,
+		"world-data": {
+			"title":"Example Brushes",
+			"description":"",
+			"validated":false,
+			"runnable":false,
+		 },
+		"author": "Evan Clegern",
+		"iecai-purpose": "map",
+		"comment": "Shows example of map layout, and brushes. 'impmf' is 'ImmersivEngine Plaintext Map File'"
+	*/
+	std::string wrTitle, wrDesc, author, comment;
+	int fileVers;
+	float mapEngVer, engVer;
+};
