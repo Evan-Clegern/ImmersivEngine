@@ -10,7 +10,7 @@
 			"runnable":false,
 		 },
 		"author": "Evan Clegern",
-		"iecai-purpose": "map",
+		"imveng-purpose": "map",
 		"comment": "Shows example of map layout, and brushes. 'impmf' is 'ImmersivEngine Plaintext Map File'"
 	},
 	"map":{
