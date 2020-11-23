@@ -16,3 +16,14 @@
 #include "../base/bsc_dat_ent.h"
 //Import mapbase
 #include "../base/mapbase.h"
+namespace rendBase {
+	//Use relative floats on the screenspace when rendering.
+	namespace overlay { //2D render objects which have higher priority in render ORDER
+		struct UIobj {
+			
+		};
+	}
+	namespace world {
+		
+	}
+}
