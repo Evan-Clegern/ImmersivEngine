@@ -5,8 +5,8 @@ PURPOSE: Provides format bases for entities
 This File Has Been Debugged Fully (branch testing-nov2020)
 VERSION: 26
 */
-#define __IECAI_FVERSION 1.25
-#define __IECAI_BASE_ENTITY__
+#define __IMVENG_FVERSION 1.25
+#define __IMVENG_BASE_ENTITY__
 #include <vector>
 #include <string>
 #include <cmath>
@@ -229,7 +229,7 @@ namespace entbaseFIN {
 			if (obj.get(n,-5).asInt() == 0) {
 				throw "No Linked points exist in class!";
 			}
-			for (int i = 0; i < obj.get(n, 1).asInt() - 1; i++) { //i love you jsoncpp
+			for (int i = 0; i < obj.get(n, 1).asInt() - 1; i++) { //i love you jsoncpp (for this)
 				const Json::Value list = obj["spacelocal"][i];				
 				const linked_point yuh = fetch_linkedPoint(list);
 				bruh.push_back(yuh);
@@ -259,7 +259,8 @@ namespace entbaseFIN {
 			int total = listA.size();
 			const Json::Value listB = entit["valuedata"];
 			std::vector<entbaseD::entityValue> burh;
-			for (int i = 0; i < total - 1; i++) { //jsoncpp example says it may treat "size" with respect to index... I doubt it.
+			for (int i = 0; i < total - 1; i++) {
+				//jsoncpp example says it may treat "size" with respect to index... I doubt it.
 				burh.push_back( get_entvalue(listB, listA[i].asString()) );
 			}
 			return burh;
@@ -270,9 +271,9 @@ namespace entbaseFIN {
 	const int throwback_cnt = 1;
 	namespace f_tests {
 		bool validmeta(Json::Value fileoper, std::string purpose) {
-			float d = simple::f_fetchnested(fileoper, "metadata", "iecai-vers");
-			if (d == __IECAI_FVERSION) {
-				std::string b = simple::s_fetchnested(fileoper, "metadata","iecai-purpose");
+			float d = simple::f_fetchnested(fileoper, "metadata", "imveng-vers");
+			if (d == __IMVENG_FVERSION) {
+				std::string b = simple::s_fetchnested(fileoper, "metadata","imveng-purpose");
 				if (b == purpose) {
 					return true;
 				} else {
@@ -289,7 +290,7 @@ namespace entbaseFIN {
 					}
 				}
 				if (t) {
-					std::string b = simple::s_fetchnested(fileoper, "metadata","iecai-purpose");
+					std::string b = simple::s_fetchnested(fileoper, "metadata","imveng-purpose");
 					if (b == purpose) {
 						return true;
 					} else {
@@ -339,7 +340,7 @@ namespace entbaseFOUT {
 		//We'll overwrite the entire file with this
 		//Why? We mirrored its contents in a Json::Value
 		std::fstream streame(file, std::fstream::in | std::fstream::out | std::fstream::binary | std::fstream::trunc);
-		newstream["metadata"]["iecai-vers"] = __IECAI_FVERSION;
+		newstream["metadata"]["imveng-vers"] = __IECAI_FVERSION;
 		newstream["metadata"]["file-vers"] = (oldstream["metadata"].get("file-vers",0).asInt() + 1);
 		//Once we determine if it's replacing or not, change this accordingly.
 		unsigned short int t = oldstream["metadata"].get("ent-count",0).asInt();
@@ -352,7 +353,7 @@ namespace entbaseFOUT {
 		//Reverse Construct the entBase class.
 		newstream[name]["volume"] = base.volume;
 		newstream[name]["npc_class"] = base.npcclassID;
-		//THE BATCH CONSTRUCTOR FOR LINKED POINTS!!!!!!!!!!!!!!!!!!!!!!
+		//THE BATCH CONSTRUCTOR FOR LINKED POINTS!!!!
 		for (int A = 0; A < base.occupiedSpaceLocal.size() - 1; A++) {
 			linked_point pnt = base.occupiedSpaceLocal.at(A);
 			newstream[name]["spacelocal"][A]["main"][0] = pnt.base.posX;
@@ -385,7 +386,6 @@ namespace entbaseFOUT {
 			newstream[name]["valuedata"][d.title][1] = d.defaultValue;
 		}
 		for (int i = 0; base.realtime_children.size() - 1; i++) {
-			//Round 6 Fix: naming error (realtime_children, not addressChildren)
 			newstream[name]["children"][i] = base.realtime_children.at(i);
 		}
 		//Last thing: options
