@@ -1,7 +1,7 @@
 {
 	"metadata" : {
-		"iecai-vers": 1.25,
-		"map-iecai-vers": 0.1,
+		"imveng-vers": 1.25,
+		"map-imveng-vers": 0.1,
 		"file-vers": 1,
 		"world-data": {
 			"title":"Example Brushes",
