@@ -1,8 +1,6 @@
 #define __IMVENG_OPENGL_IMPLEMENT
 //Import FreeGLUT
 #include <GL/glut.h>
-//Import GLAD
-#include <glad/glad.h>
 //Import basic OpenGL mathematics modules
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -14,3 +12,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
+//Import entbaseD
+#include "../base/bsc_dat_ent.h"
+//Import mapbase
+#include "../base/mapbase.h"
