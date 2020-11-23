@@ -8,7 +8,6 @@ ImmersivEngine began as IECAI - a C++ project which was aiming to improve how vi
 ### :ledger: Includes
 - [Free OpenGL Utilities Toolkit](http://freeglut.sourceforge.net/docs/api.php) : OpenGL Provider w/ extra Utils
 - [OpenGL Math](https://github.com/g-truc/glm) : Advanced Rendering Mathematics
-- [GLAD](https://github.com/Dav1dde/glad) : Rendering Loader  (note: needs `-ldl` when GCC'ing)
 - [Assimp](https://github.com/assimp/assimp) : Model Format Loading
 - [Bullet3](https://github.com/bulletphysics/bullet3) : Physics Engine and Collisions
 - [Open-Source-Parsers/JSONCPP](https://github.com/open-source-parsers/jsoncpp) - :warning: Requiring [Implementation](https://github.com/Evan-Clegern/ImmersivEngine/tree/testing-nov2020/basic) Debug! : File Persistence I/O
