@@ -10,9 +10,6 @@ using namespace entbaseD;
 using namespace std;
 //I would recommend using custom properties with each item to provide for the 'entity&' data point.
 namespace npc_actions { //WILL BE "OBSOLETED" IN FAVOR OF FILESIDE OPERATIONS.
-    void updateMidpoint(entity& obj) {}
-    void rotate(entity& obj, point rot) {}
-    point getRotation(entity& obj) {}
     void setAnimation(entity& obj, string what) {}
     //NOTE: For below - Start at the terrain at (at), and then work it out to the maximum 'X' chunk before "curling" around
     //Like this (A to I)
@@ -28,14 +25,11 @@ namespace npc_actions { //WILL BE "OBSOLETED" IN FAVOR OF FILESIDE OPERATIONS.
     void kill(entity& npc, entity& inflictor) {}
 }
 namespace eng_actions { //Will continue to exist here.
-    bool waitMs(int milliseconds) {}
-    //Engines have timing; we need this to return 'true' once the time has elapsed. Simple.
-    void setEngineOValue(entity& obj, string where, string value) {}
-    string getEngineOValue(entity& obj, string where) {}
+    bool waitMs(int milliseconds) {} //We need to find out *how* to do this.
     void triggerEvent(string what, string data) {}
     void log(string text) {}
     void logAIonly(string text) {} //*may* be moved
     void destroy(entity& obj) {}
-    void hide(entity& obj) {}
-    void show(entity& obj) {}
+    //void hide(entity& obj) {}
+    //void show(entity& obj) {}
 }
