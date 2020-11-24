@@ -29,6 +29,8 @@ All other issues resolved, but final is not making much sense - see issue A2 (li
 The issue was, oddly, that the point class wanted to be set within the pre-function declaration area.
 ###### :memo: 10 Nov 2020  11:27 MST - creating sample CMAKE script
 Will be preparing a 'cmake' script for preparing the project. Still unsure about linking errors.
+###### :memo: 24 Nov 2020 14:07 MST - Found Issue with jsoncpp
+It was because, foolishly, I didn't `make install`. Found that out when working with `libsdl`
 #### Compile `jsoncpp` Script:
 ```
 meson wrap install jsoncpp
