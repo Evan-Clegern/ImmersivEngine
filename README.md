@@ -3,21 +3,19 @@
 
 |  Target System  | Status |
 |-----------------|--------|
-| :penguin: Ubuntu 20.04.1 LTS | :warning: :repeat: |
+| :penguin: Ubuntu 20.04.1 LTS | :heavy_check_mark: Good |
 | :computer: Windows 10 | :x: :no_entry: |
 
 
 
-#### :warning: 8 November 2020, Ubuntu 20
+#### :heavy_check_mark: 8 November 2020, Ubuntu 20
 |     Build item      |  Current status  |
 |---------------------|---------------|
 |`meson wrap install jsoncpp`|  Operation successful :heavy_check_mark: |
 | `cmake` and `make`  jsoncpp 1.8.4   |   Compile Passed  :heavy_check_mark:  |
 | `dist/json/json.h` inclusion| Seems to be passing :heavy_check_mark:  |
 | `base_entity.h` inclusion | Passing :heavy_check_mark: |
-| `gcc` Compiling | Passing :heavy_check_mark: |
-| `gcc` Assembling  | Passing :heavy_check_mark: |
-| `ld` Link to `libjsoncpp.so` | Failing *[log](https://github.com/Evan-Clegern/IECAI-project/blob/testing-nov2020/basic/Compile-Errors.log)* :x: |
+| `g++ -ljsoncpp` compile | Passing :heavy_check_mark: |
 
 ###### :memo:  13:27 MST - found potential workaround
 Ran `amalgamate.py` after compilation and copied `dist` folder. Testing soon.
@@ -45,14 +43,17 @@ cd ..
 python3 ./amalgamate.py
 cp -r ./dist ./{Location}
 ```
+#### Lib Path:
+```
+/lib:/usr/lib:/usr/local/lib:/usr/local/include
+```
 #### Compile Command:
 ```
-sudo gcc -L. -ljsoncpp -o temp.o {thing}.cpp
+sudo g++ -ljsoncpp error-finding.cpp -o out.o
 ```
 
 ##### To-Do List for November 2020 branch, part 1:
 - [x] Produce commands to include `jsoncpp` in compiler
 - [x] Run tests on `error-finding.cpp` and log results
 - [x] Produce basic compile script
-- [ ] Produce CMAKE script sample
 - [x] Find why 2,000 `ld` errors come up - Was failing to use the proper libraries.
