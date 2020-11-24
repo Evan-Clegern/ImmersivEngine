@@ -22,7 +22,7 @@ COMPILATION NOTE: g++ -lSDL2 -ljsoncpp (file) -o out.o
 using namespace std;
 using namespace entbaseD;
 namespace rendBase {
-	class window {
+	class window { //This existing window class is 100% functional as of 24 Nov 2020!!!
 		//from txr_base.h; we're using 0-255 CHARs for RGB
 		//anyways, SDL uses 0x## RGB colors.
 		SDL_window* object;
@@ -31,7 +31,9 @@ namespace rendBase {
 		int width, height;
 		string title = "ImmersivEngine";
 		float xmult, ymult; //how 0.0%-100.0% reflects to pixels
+		char red, green, blue = 0xFF, 0x00, 0x00;
 		short int makeSDLwindow() {
+			//Makes window open up.
 			int c = SDL_init(SDL_INIT_VIDEO);
 			if (c < 0) {
 				cout << "Error when initializing Simple Directmedia Layer : " << c << '\n';
@@ -41,8 +43,8 @@ namespace rendBase {
 					cout << "Error when creating SDL Window!\n";
 				} else {
 					this->surface = SDL_GetWindowSurface(this->object);
-					SDL_FillRect( this->surface,NULL, SDL_MapRGB(this->surface.format, 0xFF, 0xFF, 0xFF));
-					//White Screen
+					SDL_FillRect( this->surface,NULL, SDL_MapRGB(this->surface.format, red, green, blue));
+					//Red Screen
 					cout << "Window and surface initialized.\n";
 				}
 			}
@@ -55,6 +57,12 @@ namespace rendBase {
 			SDL_DestroyWindow( this->object );
 			SDL_Quit();
 		}
-		//There is loadMedia() options for SDL
+		//Easy constructor
+		window(int w, int h, string ti) {
+			width = w;
+			height = h;
+			title = ti;
+			makeSDLwindow();
+		}
 	};
 }
