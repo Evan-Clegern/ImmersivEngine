@@ -1,12 +1,5 @@
 # IECAI Testing Branch - November 2020
-### November 2020 Application
-
-|  Target System  | Status |
-|-----------------|--------|
-| :penguin: Ubuntu 20.04.1 LTS | :heavy_check_mark: Good |
-| :computer: Windows 10 | :x: :no_entry: |
-
-
+### November 2020 - bsc_dat_ent.h (OLD, COMBINED JSON)
 
 #### :heavy_check_mark: 8 November 2020, Ubuntu 20
 |     Build item      |  Current status  |
@@ -57,3 +50,12 @@ sudo g++ -ljsoncpp error-finding.cpp -o out.o
 - [x] Run tests on `error-finding.cpp` and log results
 - [x] Produce basic compile script
 - [x] Find why 2,000 `ld` errors come up - Was failing to use the proper libraries.
+
+
+### November 2020 - libSDL2 operations
+| Build Item | Status |
+|---------|--|
+|`make` and `make install` SDL2 | Passing :heavy_check_mark: |
+|  Including `/usr/local/include/SDL.h` ... | Passing :heavy_check_mark: |
+| `g++ -lSDL2 $((sdl2-config --cflags --libs))` | Passing :heavy_check_mark: |
+| Execution | Failing :x: |
