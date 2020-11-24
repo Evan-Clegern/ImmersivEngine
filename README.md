@@ -53,4 +53,4 @@ sudo gcc -L. -ljsoncpp -o temp.o {thing}.cpp
 - [x] Run tests on `error-finding.cpp` and log results
 - [x] Produce basic compile script
 - [ ] Produce CMAKE script sample
-- [ ] Find why 2,000 `ld` errors come up
+- [x] Find why 2,000 `ld` errors come up - Was failing to use the proper libraries.
