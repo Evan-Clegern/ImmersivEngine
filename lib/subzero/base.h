@@ -47,6 +47,7 @@ namespace rendBase {
 					this->surface = SDL_GetWindowSurface(this->object);
 					SDL_FillRect( this->surface,NULL, SDL_MapRGB(this->surface->format, red, green, blue));
 					//Red Screen
+					SDL_UpdateWindowSurface(this->object);
 					cout << "Window and surface initialized.\n";
 				}
 			}
