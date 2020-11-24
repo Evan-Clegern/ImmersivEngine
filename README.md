@@ -59,3 +59,5 @@ sudo g++ -ljsoncpp error-finding.cpp -o out.o
 |  Including `/usr/local/include/SDL.h` ... | Passing :heavy_check_mark: |
 | `g++ -lSDL2 $((sdl2-config --cflags --libs))` | Passing :heavy_check_mark: |
 | Execution | Failing :x: |
+
+Failing notes: `libGL error` missing `raedonsi` (need to fix search path?)
