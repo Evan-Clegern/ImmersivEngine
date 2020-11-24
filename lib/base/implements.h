@@ -7,6 +7,7 @@ REVISION: 6.5
 #define __IECAI_ENGINE_IMPLEMENT__
 #include "bsc_dat_ent.h"
 #include "bsc_json.h"
+#include <SDL.h>
 using namespace entbaseD;
 using namespace std;
 //I would recommend using custom properties with each item to provide for the 'entity&' data point.
@@ -26,10 +27,12 @@ namespace npc_actions { //These operations will not be ready for some time.
     void kill(entity& npc, entity& inflictor) {}
 }
 namespace eng_actions { //Will continue to exist here.
-    bool waitMs(int milliseconds) {} //We need to find out *how* to do this.
+    //SDL has a Delay function!!
+    bool waitMs(int ms) {
+        SDL_Delay( ms);
+        return true;
+    }
     void triggerEvent(string what, string data) {}
-    void log(string text) {}
-    void logAIonly(string text) {} //*may* be moved
     void destroy(entity& obj) {}
     //void hide(entity& obj) {} //need to be done after graphics engine operational
     //void show(entity& obj) {}
