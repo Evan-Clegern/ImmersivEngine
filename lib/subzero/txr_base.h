@@ -71,6 +71,7 @@ namespace lighting {
 		//The light reaches everywhere, but is brighter in the direction of the holder
 		snum intensity, iRotX, iRotZ;
 		float get_level_at(point input) {
+			//Apply light shifting
 			point where = input + p(iRotX, 0.0, iRotZ);
 			float intens = this->intensity;
 			if (where.posZ <= Rhigh) {
@@ -83,11 +84,11 @@ namespace lighting {
 				return 0.0; //not in range
 			}
 			float dist = this->origin >> where;
+			//Removes NaN's
 			dist += (this->intensity / 100);
-			float pseudolin = (0.0004 * intens);
 			///PSEUDOLINear provides a scaled "cutoff" subtraction from each equation
 			//Stronger lights have a stronger dropoff rate than weaker ones, but still have longer range
-			float l = ((intens / dist) + pow(0.95, dist) - (pseudolin * dist));
+			float l = ((intens / dist) + pow(0.95, dist) - (0.01 * dist));
 			if (l > 100.0) {
 				l = 100.0;
 			} else if (l < 0.0) {
@@ -101,29 +102,26 @@ namespace lighting {
 		void calc_all_max() {
 			sint dist = 1;
 			float intens = this->intensity;
-			float pseudolin = (0.0004 * intens);
-			float temp = ((intens / dist) + pow(0.95, dist) - (pseudolin * dist));
+			float temp = ((intens / dist) + pow(0.95, dist) - (0.01 * dist));
 			while (temp > 0) {
 				dist++;
-				temp = ((intens / dist) + pow(0.95, dist) - (pseudolin * dist));
+				temp = ((intens / dist) + pow(0.95, dist) - (0.01 * dist));
 			}
 			this->Hmax_distance = dist;
-			dist = 0;
+			dist = 1;
 			intens*=0.8;
-			pseudolin = (0.0004 * intens);
-			temp = ((intens / dist) + pow(0.95, dist) - (pseudolin * dist));
+			temp = ((intens / dist) + pow(0.95, dist) - (0.01 * dist));
 			while (temp > 0) {
 				dist++;
-				temp = ((intens / dist) + pow(0.95, dist) - (pseudolin * dist));
+				temp = ((intens / dist) + pow(0.95, dist) - (0.01 * dist));
 			}
 			this->Mmax_distance = dist;
-			dist = 0;
+			dist = 1;
 			intens*=0.55;
-			pseudolin = (0.0004 * intens);
-			temp = ((intens / dist) + pow(0.95, dist) - (pseudolin * dist));
+			temp = ((intens / dist) + pow(0.95, dist) - (0.01 * dist));
 			while (temp > 0) {
 				dist++;
-				temp = ((intens / dist) + pow(0.95, dist) - (pseudolin * dist));
+				temp = ((intens / dist) + pow(0.95, dist) - (0.01 * dist));
 			}
 			this->Lmax_distance = dist;
 		}
