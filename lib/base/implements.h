@@ -2,10 +2,11 @@
 FILE: implements.h
 TITLE: Base Engine-IECAI Implentations
 PURPOSE: Simplified 
-REVISION: 6
+REVISION: 6.5
 */
 #define __IECAI_ENGINE_IMPLEMENT__
-#include "base_entity.h"
+#include "bsc_dat_ent.h"
+#include "bsc_json.h"
 using namespace entbaseD;
 using namespace std;
 //I would recommend using custom properties with each item to provide for the 'entity&' data point.
