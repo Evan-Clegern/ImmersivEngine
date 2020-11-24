@@ -3,6 +3,7 @@ FILE: subzero/base.h
 TITLE: SubZER0 Rendering Engine - Base
 PURPOSE: Provides essential video rendering and some objects for it.
 VERSION: 3
+COMPILATION NOTE: g++ -lSDL2 -ljsoncpp (file) -o out.o
 */
 #define __IMVENG_SUBZERO_BASE
 //Import Simple Directmedia Layer (no more OpenGL)
