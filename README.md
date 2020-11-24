@@ -52,12 +52,12 @@ sudo g++ -ljsoncpp error-finding.cpp -o out.o
 - [x] Find why 2,000 `ld` errors come up - Was failing to use the proper libraries.
 
 
-### November 2020 - libSDL2 operations
+### :heavy_check_mark: November 2020 - libSDL2 operations
 | Build Item | Status |
 |---------|--|
 |`make` and `make install` SDL2 | Passing :heavy_check_mark: |
 |  Including `/usr/local/include/SDL.h` ... | Passing :heavy_check_mark: |
 | `g++ -lSDL2 $((sdl2-config --cflags --libs))` | Passing :heavy_check_mark: |
-| Execution | Failing :x: |
+| Execution | Passing :heavy_check_mark: |
 
-Failing notes: `libGL error` missing `raedonsi` (need to fix search path?)
+Failing notes: Cannot be executed in my fancy terminal
