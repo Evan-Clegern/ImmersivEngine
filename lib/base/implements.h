@@ -1,7 +1,7 @@
 /*
 FILE: implements.h
 TITLE: Base Engine-IECAI Implentations
-PURPOSE: Provide 'hollow functions' to interface with target game engine 
+PURPOSE: Simplified 
 REVISION: 6
 */
 #define __IECAI_ENGINE_IMPLEMENT__
@@ -9,7 +9,7 @@ REVISION: 6
 using namespace entbaseD;
 using namespace std;
 //I would recommend using custom properties with each item to provide for the 'entity&' data point.
-namespace npc_actions { //WILL BE "OBSOLETED" IN FAVOR OF FILESIDE OPERATIONS.
+namespace npc_actions { //These operations will not be ready for some time.
     void setAnimation(entity& obj, string what) {}
     //NOTE: For below - Start at the terrain at (at), and then work it out to the maximum 'X' chunk before "curling" around
     //Like this (A to I)
@@ -30,6 +30,6 @@ namespace eng_actions { //Will continue to exist here.
     void log(string text) {}
     void logAIonly(string text) {} //*may* be moved
     void destroy(entity& obj) {}
-    //void hide(entity& obj) {}
+    //void hide(entity& obj) {} //need to be done after graphics engine operational
     //void show(entity& obj) {}
 }
