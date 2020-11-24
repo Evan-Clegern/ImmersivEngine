@@ -17,8 +17,8 @@ VERSION: 3
 #include <cmath>
 //Import entbaseD
 #include "../base/bsc_dat_ent.h"
-//Import mapbase
-#include "../base/mapbase.h"
+using namespace std;
+using namespace entbaseD;
 namespace rendBase {
 	class window {
 		//from txr_base.h; we're using 0-255 CHARs for RGB
@@ -26,11 +26,20 @@ namespace rendBase {
 		SDL_surface* surface;
 	public:
 		int width, height;
+		string title = "ImmersivEngine";
 		float xmult, ymult; //how 0.0%-100.0% reflects to pixels
-		int initwindow() {
+		short int makewindow() {
 			int c = SDL_init(SDL_INIT_VIDEO);
 			if (c < 0) {
-				std::cout << "Error when initializing Simple Directmedia Layer : " << c << '\n';
+				cout << "Error when initializing Simple Directmedia Layer : " << c << '\n';
+			} else {
+				this->object = SDL_CreateWindow(title,SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,height, SDL_WINDOW_SHOWN);
+				if (this->object == NULL) {
+					cout << "Error when creating SDL Window!\n";
+				} else {
+					this->surface = SDL_GetWindowSurface(this->object);
+					cout << "Window and surface initialized.\n";
+				}				
 			}
 			return c;
 		}
