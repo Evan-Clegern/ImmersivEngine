@@ -1,4 +1,4 @@
-# IECAI Testing Branch - November 2020
+# IECAI / ImmersivEngine Testing Branch - November 2020
 ### November 2020 - bsc_dat_ent.h (OLD, COMBINED JSON)
 
 #### :heavy_check_mark: 8 November 2020, Ubuntu 20
