@@ -11,9 +11,8 @@ typedef unsigned char snum; //0 to 255
 typedef unsigned short int sint; //0 to 65,536
 namespace lighting {
 	struct colornum {
-		snum Red, Green, Blue;
+		snum Red, Green, Blue, Alpha;
 	};
-	
 	class light_field {
 		//Light_Field calculations are out of 100% of the Intensity (this side of the lighting is only for intensity/tracing calculations!)
 		float* cheaprange[14];
