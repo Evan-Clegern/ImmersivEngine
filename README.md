@@ -21,7 +21,9 @@ The issue was, oddly, that the point class wanted to be set within the pre-funct
 ###### :memo: 10 Nov 2020  11:27 MST - creating sample CMAKE script
 Will be preparing a 'cmake' script for preparing the project. Still unsure about linking errors.
 ###### :memo: 24 Nov 2020 14:07 MST - Found Issue with jsoncpp
-It was because, foolishly, I didn't `make install`. Found that out when working with `libsdl`
+It was because of two issues:
+1. `$LD_LIBRARY_PATH` on my machine was reset in `/etc/environment`
+2. Used `gcc` and not `g++`, and also didn't properly include `-ljsonscpp` in the options.
 #### Compile `jsoncpp` Script:
 ```
 meson wrap install jsoncpp
@@ -35,10 +37,6 @@ ninja
 cd ..
 python3 ./amalgamate.py
 cp -r ./dist ./{Location}
-```
-#### Lib Path:
-```
-/lib:/usr/lib:/usr/local/lib:/usr/local/include
 ```
 #### Compile Command:
 ```
