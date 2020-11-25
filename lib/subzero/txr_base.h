@@ -37,7 +37,7 @@ namespace lighting {
 		snum minbump, maxbump, emissiveness, anisotropy, ani_min, ani_max, ani_addang, extra_reflect;
 		bool anisotropicReflect, anisotropicCoat; //Whether to add extra anisotropy to Reflect and Coat features
 		//NOTE! Anisotropy is how color/shading changes depending on our angle!
-		bool validate() {
+		virtual bool validate() {
 			sint voxels = mat_voxels.size();
 			sint bumps = bumpmap.size();
 			if (not voxels = bumps) {
@@ -70,7 +70,7 @@ namespace lighting {
 		//If X = 180, Y = 75 and Z = 25, it'd be like a light bulb in a translucent holder
 		//The light reaches everywhere, but is brighter in the direction of the holder
 		snum intensity, iRotX, iRotZ;
-		float get_level_at(point input) {
+		virtual float get_level_at(point input) {
 			//Apply light shifting
 			point where = input + p(iRotX, 0.0, iRotZ);
 			float intens = this->intensity;
