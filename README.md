@@ -59,3 +59,8 @@ sudo g++ -ljsoncpp error-finding.cpp -o out.o
 | Execution | Passing :heavy_check_mark: |
 
 Failing notes: Cannot be executed in my fancy terminal
+
+#### Compile Command:
+```
+g++ -I/usr/local/include/SDL2 -D_REENTRANT -L/usr/local/lib -Wl,-rpath,/usr/local/lib -Wl,--enable-new-dtags -lSDL2 TEST2.cpp
+```
