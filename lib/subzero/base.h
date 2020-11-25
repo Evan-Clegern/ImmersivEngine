@@ -10,7 +10,7 @@ COMPILATION NOTE: g++ -lSDL2 -ljsoncpp (file) -o out.o
 #include <SDL.h>
 #include <SDL_video.h>
 #include <SDL_pixels.h>
-#include <SDL_render.h> //SDL 2D Acceleration
+#include <SDL_render.h> //SDL 2D Acceleration - use this for textures and rectangles
 #include <SDL_surface.h>
 //Import standard C++ modules
 #include <iostream> //Console logs
@@ -21,7 +21,13 @@ COMPILATION NOTE: g++ -lSDL2 -ljsoncpp (file) -o out.o
 #include "../base/bsc_dat_ent.h"
 using namespace std;
 using namespace entbaseD;
+typedef short int sint;
+//2D acceleration can do linear interpolation to be stretched into 3D
 namespace rendBase {
+	struct pix {
+		unsigned char r,g,b;
+		float x, y; //PERCENTAGES OF SCREENSPACE, not position
+	};
 	class window { //This existing window class is 100% functional as of 24 Nov 2020!!!
 		//from txr_base.h; we're using 0-255 CHARs for RGB
 		//anyways, SDL uses 0x## RGB colors.
@@ -30,7 +36,7 @@ namespace rendBase {
 	public:
 		int width, height;
 		string title = "ImmersivEngine";
-		float xmult, ymult; //how 0.0%-100.0% reflects to pixels
+		float xmult, ymult; //how 0-
 		char red = 0xFF;
 		char green = 0x00;
 		char blue = 0x00;
@@ -67,4 +73,5 @@ namespace rendBase {
 			title = ti;
 		}
 	};
+	
 }
