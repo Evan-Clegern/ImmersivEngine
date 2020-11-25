@@ -1,6 +1,6 @@
 /*
 FILE: subzero/txr_base.h
-TITLE: SubZER0 Rendering Engine - Lighting and Textures Base
+TITLE: SubZER0 Rendering Engine - Lighting Base
 PURPOSE: Provide basic lighting objects, materials and vis calculationa
 VERSION: 2
 */
@@ -13,42 +13,7 @@ namespace lighting {
 	struct colornum {
 		snum Red, Green, Blue;
 	};
-	struct r_voxel {
-		colornum a_c, b_c;
-		//RGB_b is what normally goes into "coat"s
-		snum sharpness, shine, coat, coatMix, blendLevel, alpha;
-	};
-	struct fr_voxel {
-		r_voxel base;
-		colornum shadow_c, reflect_subc, fluff_c;
-		snum clearness, clearBlur, clearFrost, coatSharp, blendSharp, fluff, fluffSharp;
-	};
-	struct ray {
-		float intensity;
-		snum pitch, yaw;
-		r_voxel light, aniso_adds;
-	};
-	template<class T> class texture {
-	public:
-		std::vector<T> mat_voxels;
-		std::vector<snum> bumpmap;
-		colornum emissive_c, anisoShift_lvlc;
-		sint width, length;
-		snum minbump, maxbump, emissiveness, anisotropy, ani_min, ani_max, ani_addang, extra_reflect;
-		bool anisotropicReflect, anisotropicCoat; //Whether to add extra anisotropy to Reflect and Coat features
-		//NOTE! Anisotropy is how color/shading changes depending on our angle!
-		virtual bool validate() {
-			sint voxels = mat_voxels.size();
-			sint bumps = bumpmap.size();
-			if (not voxels = bumps) {
-				return false;
-			}
-			if (not voxels = (width * length)) {
-				return false;
-			}
-			return true;
-		}
-	};
+	
 	class light_field {
 		//Light_Field calculations are out of 100% of the Intensity (this side of the lighting is only for intensity/tracing calculations!)
 		float* cheaprange[14];
