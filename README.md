@@ -9,7 +9,7 @@ ImmersivEngine began as IECAI - a C++ project which was aiming to improve how vi
 - [LibSDL](http://www.libsdl.org/hg.php)  : [Graphics API](http://wiki.libsdl.org/APIByCategory) Layer
 - [Assimp](https://github.com/assimp/assimp) : Model Format Loading
 - [Bullet3](https://github.com/bulletphysics/bullet3) : Physics Engine and Collisions
-- [Open-Source-Parsers/JSONCPP](https://github.com/open-source-parsers/jsoncpp) - :warning: Requiring [Implementation](https://github.com/Evan-Clegern/ImmersivEngine/tree/testing-nov2020/basic) Debug! : File Persistence I/O
+- [Open-Source-Parsers/JSONCPP](https://github.com/open-source-parsers/jsoncpp)  : File Persistence I/O
 
 ## Systems
 ImmersivEngine uses a mostly-custom setup for *materials* during rendering to reflect the needs of the Engine, but will be utilizing Collada-type models (via Assimp), Simple Directmedia for rendering and custom-named JSON files (via `jsoncpp`), providing a fair amount of standardization.
