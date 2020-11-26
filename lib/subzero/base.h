@@ -2,8 +2,8 @@
 FILE: subzero/base.h
 TITLE: SubZER0 Rendering Engine - Base
 PURPOSE: Provides essential video rendering and some objects for it.
-VERSION: 3
-COMPILATION NOTE: g++ -lSDL2 -ljsoncpp (file) -o out.o
+VERSION: 4 (tested on 25 Nov 2020)
+COMPILATION NOTE: g++ (file) `sdl2-config --cflags --libs` -lGL -ljsoncpp
 */
 #define __IMVENG_SUBZERO_BASE
 //Import Simple Directmedia Layer for windowing and 2D overlays
@@ -19,22 +19,19 @@ COMPILATION NOTE: g++ -lSDL2 -ljsoncpp (file) -o out.o
 #include <cmath>
 //Import entbaseD
 #include "../base/bsc_dat_ent.h"
-using namespace std;
-using namespace entbaseD;
 namespace rendBase {
 	struct color{
-		char red, green, blue, alpha;
+		chr red, green, blue, alpha;
 	};
 	GLubyte* clrtoGL(color d) {
-		GLubyte* bruh[] = {d.red, d.green, d.blue, d.alpha};
-		return bruh;
+		GLubyte bruh[4] = {d.red, d.green, d.blue, d.alpha};
+		return (bruh);
 	}
 	//Screenspace in OpenGL is represented by -1.0f to 1.0f
 	//An SDL-OpenGL window object
 	class window {
 		SDL_Window* object;
 		SDL_Surface* surface;
-		SDL_VideoInfo* info;
 	public:
 		int width, height;
 		string title = "ImmersivEngine";
@@ -45,44 +42,35 @@ namespace rendBase {
 		short int makeSDLwindow() {
 			//Makes window open up.
 			int c = SDL_Init(SDL_INIT_VIDEO);
-			this->info = SDL_GetVideoInfo();
-			if ((c < 0) or (!this->info)) {
+			if (c < 0) {
 				cout << "Error when initializing Simple Directmedia Layer : " << c << '\n';
 			} else {
 				if ((this->deepColor) && (this->ultraDeep)) {
-					//Very Resource Intensive
-					SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 40);
-					SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 17);
-					SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 17);
-					SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 17);
-				} else if (this->ultraDeep) {
-					SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+					//42-bit mode (expensive!)
+					SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 42);
 					SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 14);
 					SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 14);
 					SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 14);
+				} else if (this->ultraDeep) {
+					//30-bit mode
+					SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 30);
+					SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 10);
+					SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 10);
+					SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 10);
 				} else if (this->deepColor) {
-					//8-bit colors and 24-bit depth
+					//24-bit color mode
 					SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-					SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 11);
-					SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 1);
-					SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 11);
-				} else {
-					//5-bit colors and 16-bit depth
-					SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 					SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 					SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 					SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+				} else {
+					//16-bit color mode
+					SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+					SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 4);
+					SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
+					SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 4);
 				}
 				SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-				int flags;
-				if (this->fullscreen) {
-					flags = SDL_OPENGL | SDL_FULLSCREEN;	
-				} else {
-					flags = SDL_OPENGL;
-				}
-				if (SDL_SetVideoMode(width, height, info->vfmt->BitsPerPixel, flags) == 0) {
-					cout << "Error when initializing OpenGL Video mode!";
-				}
 				this->object = SDL_CreateWindow( title.c_str() ,SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,height, SDL_WINDOW_SHOWN);
 				if (this->object == NULL) {
 					cout << "Error when creating SDL Window!\n";
@@ -91,7 +79,7 @@ namespace rendBase {
 					SDL_FillRect( this->surface,NULL, SDL_MapRGB(this->surface->format, this->SDLclr.red, this->SDLclr.green, this->SDLclr.blue));
 					//Red Screen
 					SDL_UpdateWindowSurface(this->object);
-					cout << "Window and surface initialized. OpenGL configured.\n";
+					cout << "Window and surface initialized. OpenGL-SDL Bridge Variables configured.\n";
 				}
 			}
 			return c;
@@ -102,22 +90,6 @@ namespace rendBase {
 		~window() {
 			SDL_DestroyWindow( this->object );
 			SDL_Quit();
-		}
-		//Easy constructor
-		window(int w, int h, string ti, bool rsc_intens_A, bool rsc_intens_B, bool fScrn) {
-			width = w;
-			height = h;
-			title = ti;
-			deepColor = rsc_intens_B;
-			ultraDeep = rsc_intens_A;
-			fullscreen = fScrn;
-			color t;
-			t.red = 255;
-			t.green = 50;
-			t.blue = 50;
-			t.alpha = 255
-			SDLclr = t;
-			makeSDLwindow();
 		}
 		void reconfigGL() {
 			float ratio = (float)this->width;
@@ -130,8 +102,48 @@ namespace rendBase {
 			glViewport(0, 0, this->width, this->height);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
+			this->refreshSurfaceSDL();
+			cout << "Gl Viewport and Identity modes configured!\n";
+			//to be honest, im surprised htis worked
+			//the tutorial i was using was for SDL1.0 and an older GL version
+		}
+		//Easy constructor
+		window(int w, int h, string ti, bool rsc_intens_A, bool rsc_intens_B, bool fScrn) {
+			width = w;
+			height = h;
+			title = ti;
+			deepColor = rsc_intens_B;
+			ultraDeep = rsc_intens_A;
+			fullscreen = fScrn;
+			color t;
+			t.red = (chr)255;
+			t.green = (chr)150;
+			t.blue = (chr)50;
+			t.alpha = (chr)155;
+			SDLclr = t;
+			makeSDLwindow();
+		}
+		window(int w, int h, string ti, bool rsc_intens_A, bool rsc_intens_B, bool fScrn, color back, bool autoConfGL) {
+			width = w;
+			height = h;
+			title = ti;
+			deepColor = rsc_intens_B;
+			ultraDeep = rsc_intens_A;
+			fullscreen = fScrn;
+			SDLclr = back;
+			makeSDLwindow();
+			if (autoConfGL) {
+				reconfigGL();
+			}
 		}
 	};
-	//TODO: Finish OpenGL-SDL Bridging
-	//Check tutorials/documentation. CRITICAL!!!!!
 }
+/*TESTING-ONLY CODE!!
+int main() {
+	rendBase::window nyet(500,500,"GL test",true,false,false);
+	nyet.reconfigGL();
+	SDL_Delay( 7500 );
+	return 0;
+}
+*/
+
