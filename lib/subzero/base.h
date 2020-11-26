@@ -11,7 +11,7 @@ COMPILATION NOTE: g++ (file) `sdl2-config --cflags --libs` -lGL -ljsoncpp
 #include <SDL_video.h>
 #include <SDL_surface.h>
 //Import OpenGL
-#include <gl.h>
+#include <GL/gl.h>
 //Import standard C++ modules
 #include <iostream> //Console logs
 #include <string>
