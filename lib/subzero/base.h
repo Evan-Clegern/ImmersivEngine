@@ -2,14 +2,15 @@
 FILE: subzero/base.h
 TITLE: SubZER0 Rendering Engine - Base
 PURPOSE: Provides essential video rendering and some objects for it.
-VERSION: 4 (tested on 25 Nov 2020)
-COMPILATION NOTE: g++ (file) `sdl2-config --cflags --libs` -lGL -ljsoncpp
+VERSION: 5 (tested on 27 Nov 2020)
+COMPILATION NOTE: g++ (file) -lSDL2 -lGL
 */
 #define __IMVENG_SUBZERO_BASE
 //Import Simple Directmedia Layer for windowing and 2D overlays
-#include <SDL.h>
-#include <SDL_video.h>
-#include <SDL_surface.h>
+#include <SDL2/SDL.h> //update: moved the naming to SDL2/**** to remove unneccesary commands!
+#include <SDL2/SDL_video.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_cpuinfo.h>
 //Import OpenGL
 #include <GL/gl.h>
 //Import standard C++ modules
@@ -19,6 +20,11 @@ COMPILATION NOTE: g++ (file) `sdl2-config --cflags --libs` -lGL -ljsoncpp
 #include <cmath>
 //Import entbaseD
 #include "../base/bsc_dat_ent.h"
+using namespace std;
+typedef unsigned char chr;
+typedef unsigned int unt; //in Geany, i'm getting something that says a  uint  is already defined, so there
+typedef unsigned short int snt;
+//using namespace entbaseD;
 namespace rendBase {
 	struct color{
 		chr red, green, blue, alpha;
@@ -29,9 +35,36 @@ namespace rendBase {
 	}
 	//Screenspace in OpenGL is represented by -1.0f to 1.0f
 	//An SDL-OpenGL window object
+	struct vertex {
+		float x,y,z;
+		unt _id;
+	};	
+	struct vertice { //Connection list between vertex IDs
+		vector<unt> cncted_ids;
+	};
+	class VBOframe { //Vertex Buffer Object Frame
+		vector<vertex> verts;
+		vector<vertice> connections;
+	public:
+		VBOframe(vector<vertex> points, vector<vertice> verts) : verts(points), connections(verts) {}
+		void addVertex(vertex what, vertice with) {
+			verts.push_back(what);
+			connections.push_back(with);
+		}
+		void newSubvertice(unt objID, unt to) {
+			//todo
+		}
+		void removeSubvertice(unt objID, unt to) {
+			
+		}
+		void renderFrame() {
+			
+		}
+	};
 	class window {
 		SDL_Window* object;
 		SDL_Surface* surface;
+		snt rldNum, rendNum;
 	public:
 		int width, height;
 		string title = "ImmersivEngine";
@@ -102,10 +135,9 @@ namespace rendBase {
 			glViewport(0, 0, this->width, this->height);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
+			this->rldNum++;
 			this->refreshSurfaceSDL();
 			cout << "Gl Viewport and Identity modes configured!\n";
-			//to be honest, im surprised htis worked
-			//the tutorial i was using was for SDL1.0 and an older GL version
 		}
 		//Easy constructor
 		window(int w, int h, string ti, bool rsc_intens_A, bool rsc_intens_B, bool fScrn) {
@@ -136,14 +168,10 @@ namespace rendBase {
 				reconfigGL();
 			}
 		}
+		bool GLrender() {
+			this->rendNum++;
+			return true;
+		}
 	};
+	
 }
-/*TESTING-ONLY CODE!!
-int main() {
-	rendBase::window nyet(500,500,"GL test",true,false,false);
-	nyet.reconfigGL();
-	SDL_Delay( 7500 );
-	return 0;
-}
-*/
-
