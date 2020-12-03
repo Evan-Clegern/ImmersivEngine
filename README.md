@@ -1,5 +1,7 @@
 # ImmersivEngine
 PROTECTED UNDER GNU AFFERO PUBLIC LICENSE.
+## Current Version
+```ImmersivEngine-v0.0-ba27-sz0.3:7```, passing current compile tests.
 
 ## About
 ImmersivEngine is a prototype game engine written in C++, applying to OpenGL and aimed at Ubuntu-derived Linux installations. It is still heavily under construction.
@@ -13,4 +15,4 @@ ImmersivEngine began as IECAI - a C++ project which was aiming to improve how vi
 - [Open-Source-Parsers/JSONCPP](https://github.com/open-source-parsers/jsoncpp)  : File Persistence I/O
 
 ## Systems
-ImmersivEngine uses a mostly-custom setup for *materials* during rendering to reflect the needs of the Engine, but will be utilizing Collada-type models (via Assimp), Simple Directmedia for rendering and custom-named JSON files (via `jsoncpp`), providing a fair amount of standardization.
+ImmersivEngine uses a mostly-custom setup for *materials* and *lighting* when rendering, but will be utilizing Collada-type models (via Assimp), Simple Directmedia and OpenGL for rendering and custom-named JSON files (via `jsoncpp`), providing a fair amount of standardization.
