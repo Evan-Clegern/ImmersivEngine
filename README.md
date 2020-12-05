@@ -1,7 +1,7 @@
 # ImmersivEngine
 PROTECTED UNDER GNU AFFERO PUBLIC LICENSE.
 ## Current Version
-```ImmersivEngine-v0.0-ba27-sz0.3:7```, passing current compile tests.
+```ImmersivEngine-v0.0-ba27-sz0.3:3```, passing current compile tests.
 
 ## About
 ImmersivEngine is a prototype game engine written in C++, applying to OpenGL and aimed at Ubuntu-derived Linux installations. It is still heavily under construction.
